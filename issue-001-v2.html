@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission: Math Blast 🚀 — Issue #1</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0d0630;
+    font-family: 'Nunito', Arial, sans-serif;
+    color: #fff;
+    background-image: radial-gradient(ellipse at 50% 0%, rgba(120,0,255,0.2) 0%, transparent 70%);
+    min-height: 100vh;
+  }
+
+  .starfield { position: fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .star { position:absolute; width:2px; height:2px; background:white; border-radius:50%; opacity:0.6; animation:twinkle 3s infinite alternate; }
+  @keyframes twinkle { from{opacity:0.2} to{opacity:0.9} }
+
+  .wrapper { max-width:680px; margin:0 auto; position:relative; z-index:1; padding-bottom:60px; }
+
+  /* ===== TITLE SCREEN ===== */
+  .title-screen { text-align:center; padding:48px 24px 36px; }
+  .rocket-emoji { font-size:72px; display:block; margin-bottom:16px; animation:float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  .title-screen h1 { font-size:46px; font-weight:900; line-height:1.1; text-shadow:0 0 24px rgba(180,100,255,0.8); }
+  .title-screen h1 span { color:#ffdd00; }
+  .issue-label { font-size:13px; font-weight:900; color:#aa77ff; letter-spacing:3px; text-transform:uppercase; margin:10px 0 4px; }
+  .tagline { font-size:16px; color:#b090e0; margin-bottom:6px; }
+  .meta { font-size:13px; color:#6655aa; margin-bottom:30px; }
+  .start-btn {
+    display:inline-block; background:linear-gradient(135deg,#7b2fff,#ff2fff);
+    color:white; font-size:20px; font-weight:900; padding:18px 48px;
+    border-radius:50px; border:none; cursor:pointer;
+    box-shadow:0 6px 30px rgba(123,47,255,0.5);
+    transition:transform 0.15s, box-shadow 0.15s; font-family:'Nunito',Arial,sans-serif;
+  }
+  .start-btn:hover { transform:scale(1.05); box-shadow:0 10px 40px rgba(123,47,255,0.7); }
+
+  /* ===== PROGRESS ===== */
+  .progress-wrap { padding:16px 24px 0; display:none; }
+  .progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .progress-label { font-size:13px; color:#8877aa; font-weight:700; }
+  .progress-score { font-size:13px; color:#ffdd00; font-weight:900; }
+  .progress-bar { background:#1a0f30; border-radius:20px; height:14px; overflow:hidden; }
+  .progress-fill { background:linear-gradient(90deg,#7b2fff,#ff2fff); height:100%; border-radius:20px; transition:width 0.5s ease; }
+
+  /* ===== CHAPTER ===== */
+  .chapter { display:none; padding:20px 20px 0; animation:fadeIn 0.4s ease; }
+  .chapter.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  .chapter-badge {
+    display:inline-block; background:linear-gradient(135deg,#7b2fff,#ff2fff);
+    color:white; font-size:11px; font-weight:900; padding:5px 16px;
+    border-radius:20px; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px;
+  }
+  .chapter h2 { font-size:26px; font-weight:900; margin-bottom:16px; line-height:1.3; }
+
+  .chapter-img {
+    width:100%; border-radius:16px; display:block; margin-bottom:20px;
+    border:3px solid rgba(180,100,255,0.4); box-shadow:0 8px 30px rgba(0,0,0,0.5);
+    background:#1a0f30; min-height:180px; object-fit:cover;
+  }
+
+  .story-text {
+    background:rgba(255,255,255,0.05); border-left:4px solid #7b2fff;
+    border-radius:0 12px 12px 0; padding:18px 22px;
+    font-size:16px; line-height:1.85; color:#ddd; margin-bottom:24px;
+  }
+  .story-text strong { color:#ffdd00; }
+  .story-text em { color:#ff88ff; font-style:normal; font-weight:700; }
+
+  /* ===== QUIZ ===== */
+  .quiz-box {
+    background:rgba(123,47,255,0.12); border:2px solid rgba(123,47,255,0.4);
+    border-radius:16px; padding:22px; margin-bottom:20px;
+  }
+  .quiz-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .difficulty { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; }
+  .diff-warmup { background:rgba(100,200,255,0.2); color:#66ddff; border:1px solid #66ddff; }
+  .diff-easy   { background:rgba(0,220,100,0.2);   color:#00dc64; border:1px solid #00dc64; }
+  .diff-medium { background:rgba(255,200,0,0.2);   color:#ffcc00; border:1px solid #ffcc00; }
+  .diff-hard   { background:rgba(255,80,80,0.2);   color:#ff8888; border:1px solid #ff8888; }
+  .diff-boss   { background:rgba(255,0,200,0.2);   color:#ff44ee; border:1px solid #ff44ee; }
+  .acara-tag { display:inline-block; font-size:10px; font-weight:700; padding:3px 10px; border-radius:10px; background:rgba(255,255,255,0.08); color:#9988cc; border:1px solid rgba(255,255,255,0.12); text-transform:uppercase; letter-spacing:0.5px; }
+
+  .quiz-icon { font-size:26px; display:block; margin-bottom:6px; }
+  .quiz-label { font-size:12px; font-weight:900; color:#aa77ff; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+  .question { font-size:18px; font-weight:900; color:#fff; margin-bottom:18px; line-height:1.45; }
+
+  .options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .opt-btn {
+    background:rgba(255,255,255,0.07); border:2px solid rgba(255,255,255,0.15);
+    color:#fff; font-family:'Nunito',Arial,sans-serif; font-size:17px; font-weight:700;
+    padding:14px 10px; border-radius:12px; cursor:pointer; transition:all 0.15s;
+  }
+  .opt-btn:hover:not(:disabled) { background:rgba(123,47,255,0.3); border-color:#7b2fff; transform:scale(1.03); }
+  .opt-btn.correct { background:rgba(0,220,100,0.2)!important; border-color:#00dc64!important; color:#00ff88!important; }
+  .opt-btn.wrong   { background:rgba(255,50,50,0.2)!important;  border-color:#ff3232!important; color:#ff8888!important; animation:shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  .feedback { margin-top:16px; padding:14px 18px; border-radius:10px; font-size:15px; font-weight:700; display:none; line-height:1.5; }
+  .feedback.show { display:block; }
+  .feedback.good { background:rgba(0,220,100,0.15); border:2px solid #00dc64; color:#00ff88; }
+  .feedback.bad  { background:rgba(255,50,50,0.15);  border:2px solid #ff3232; color:#ff9999; }
+
+  .next-btn {
+    display:none; width:100%; margin-top:16px;
+    background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900;
+    padding:16px; border-radius:50px; border:none; cursor:pointer;
+    box-shadow:0 4px 20px rgba(123,47,255,0.4); transition:transform 0.15s;
+  }
+  .next-btn:hover { transform:scale(1.03); }
+  .next-btn.show { display:block; }
+
+  /* ===== WIN SCREEN ===== */
+  #win-screen { display:none; text-align:center; padding:48px 24px 24px; animation:fadeIn 0.5s ease; }
+  .trophy { font-size:80px; display:block; margin-bottom:16px; animation:bounce 0.8s ease infinite alternate; }
+  @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.15)} }
+  #win-screen h2 { font-size:38px; font-weight:900; color:#ffdd00; text-shadow:0 0 24px rgba(255,220,0,0.5); margin-bottom:8px; }
+  .win-score { font-size:22px; font-weight:900; color:#ff88ff; margin-bottom:16px; }
+  .win-stars { font-size:36px; margin-bottom:20px; }
+  #win-screen > p { font-size:17px; color:#c0a0ff; line-height:1.75; margin-bottom:20px; }
+  .win-summary { background:rgba(255,255,255,0.05); border-radius:14px; padding:18px 20px; margin-bottom:24px; text-align:left; }
+  .win-summary h3 { font-size:14px; color:#ffdd00; font-weight:900; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .win-summary ul { list-style:none; }
+  .win-summary li { font-size:14px; color:#c0a0ff; padding:4px 0; }
+  .replay-btn {
+    display:inline-block; background:linear-gradient(135deg,#ffdd00,#ff8800);
+    color:#1a0630; font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900;
+    padding:16px 40px; border-radius:50px; border:none; cursor:pointer;
+    box-shadow:0 4px 20px rgba(255,220,0,0.3); transition:transform 0.15s; margin-bottom:16px;
+  }
+  .replay-btn:hover { transform:scale(1.04); }
+
+  /* ===== PARENT GUIDE ===== */
+  #parent-guide {
+    display:none; margin:32px 20px 0; border-top:2px dashed rgba(255,255,255,0.15);
+    padding-top:28px; animation:fadeIn 0.5s ease;
+  }
+  .pg-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+  .pg-title { font-size:22px; font-weight:900; color:#ffdd00; }
+  .pg-subtitle { font-size:13px; color:#8877aa; margin-top:4px; }
+  .print-btn {
+    background:rgba(255,255,255,0.08); border:2px solid rgba(255,255,255,0.2);
+    color:#ddd; font-family:'Nunito',Arial,sans-serif; font-size:14px; font-weight:700;
+    padding:8px 18px; border-radius:20px; cursor:pointer; transition:all 0.15s;
+  }
+  .print-btn:hover { background:rgba(255,255,255,0.15); }
+  .pg-section { background:rgba(255,255,255,0.04); border-radius:14px; padding:18px 20px; margin-bottom:16px; }
+  .pg-section h4 { font-size:14px; font-weight:900; color:#aa77ff; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .pg-section p, .pg-section li { font-size:14px; color:#c0a0ff; line-height:1.7; }
+  .pg-section ul { padding-left:16px; }
+  .pg-section li { margin-bottom:6px; }
+  .pg-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .pg-card { background:rgba(255,255,255,0.04); border-radius:12px; padding:14px 16px; }
+  .pg-card h5 { font-size:12px; font-weight:900; color:#7b2fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+  .pg-card p { font-size:13px; color:#c0a0ff; line-height:1.6; }
+  .acara-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .acara-table th { text-align:left; color:#aa77ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; padding:6px 8px; border-bottom:1px solid rgba(255,255,255,0.1); }
+  .acara-table td { padding:7px 8px; color:#c0a0ff; border-bottom:1px solid rgba(255,255,255,0.05); vertical-align:top; }
+  .acara-table tr:last-child td { border-bottom:none; }
+  .strand-pill { display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:8px; background:rgba(123,47,255,0.25); color:#cc99ff; }
+
+  @media print {
+    body { background:white!important; color:#000!important; }
+    .starfield, #title-screen, .progress-wrap, .chapter, #win-screen { display:none!important; }
+    #parent-guide { display:block!important; margin:0; border-top:2px solid #ccc; }
+    .print-btn { display:none; }
+    .pg-section { border:1px solid #ddd; background:#f9f9f9; }
+    .pg-section h4 { color:#333; }
+    .pg-section p, .pg-section li, .pg-card p, .acara-table td { color:#333; }
+    .pg-card h5 { color:#5500bb; }
+    .acara-table th { color:#5500bb; }
+    .strand-pill { background:#eee; color:#333; }
+    .pg-title { color:#aa6600; }
+  }
+</style>
+</head>
+<body>
+
+<div class="starfield" id="starfield"></div>
+
+<div class="wrapper">
+
+  <!-- ======================== TITLE SCREEN ======================== -->
+  <div id="title-screen" class="title-screen">
+    <span class="rocket-emoji">🚀</span>
+    <p class="issue-label">Issue #1</p>
+    <h1>MISSION:<br><span>MATH BLAST</span></h1>
+    <p class="tagline">An adventure story where YOU solve the puzzles!</p>
+    <p class="meta">5 chapters · 10 challenges · ACARA-aligned · Year 2–4 content</p>
+    <button class="start-btn" onclick="startGame()">🚀 START MISSION</button>
+    <p style="font-size:12px;color:#443366;margin-top:20px;">For kids aged 7–10 &nbsp;·&nbsp; Recommended with a parent for ages 7–8</p>
+  </div>
+
+  <!-- ======================== PROGRESS BAR ======================== -->
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label" id="progress-label">Chapter 1 of 5</div>
+      <div class="progress-score" id="progress-score">⭐ 0 / 10</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  CHAPTER 1 — BLAST FROM THE PAST (Warm-Up) + TIMES TABLES        -->
+  <!-- ================================================================ -->
+  <div class="chapter" id="chapter-1">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">⚡ Chapter 1 — The Crashed Rocket</div>
+      <h2>Jake's Fuel Crystals Are Scattered!</h2>
+    </div>
+    <img class="chapter-img" src="https://placehold.co/640x340/0d0630/7b2fff?text=🚀+Chapter+1%3A+The+Crashed+Rocket" alt="Jake's rocket crashed on Planet Zog" />
+    <div class="story-text">
+      Jake the astronaut cadet was hurtling through the Zorblax Nebula — munching a space sandwich and humming to himself — when <em>BANG! CRASH! CLONK!</em><br><br>
+      His rocket had smashed straight into <strong>Planet Zog!</strong> Through the smoke and sparks, Jake stumbled out and inspected the damage. But first — his training kicked in. Before any mission, his computer always ran a <strong>Pre-Launch Check</strong>. Even crashed on an alien planet, the rules were the rules.
+    </div>
+
+    <!-- Q1 — BLAST FROM THE PAST (warm-up retrieval, Number strand, Year 2) -->
+    <div class="quiz-box">
+      <div class="quiz-meta">
+        <span class="difficulty diff-warmup">🔁 Blast from the Past</span>
+        <span class="acara-tag">Number · Year 2</span>
+      </div>
+      <span class="quiz-icon">🖥️</span>
+      <div class="quiz-label">Warm-Up — Skip Counting</div>
+      <div class="question">The mission computer is counting down fuel reserves: <br><br>
+      <strong>5, 10, 15, ___, 25, ___</strong><br><br>
+      What are the two missing numbers?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q1')">18 and 26</button>
+        <button class="opt-btn" onclick="answer(this,true,'q1')">20 and 30</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">19 and 27</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">22 and 32</button>
+      </div>
+      <div class="feedback" id="feedback-q1"></div>
+      <button class="next-btn" id="next-q1" onclick="showQ('q2')">Main Mission ➜</button>
+    </div>
+
+    <!-- Q2 — Times Tables (Number strand, Year 3) -->
+    <div id="q2-block" style="display:none">
+      <div class="story-text">
+        With the computer check complete, Jake turned to the real problem. The engine room was a mess — fuel crystals scattered everywhere! He needed exactly <strong>24 crystals</strong> to launch, arranged in rows of 6. Jake grabbed his maths notebook...
+      </div>
+      <div class="quiz-box">
+        <div class="quiz-meta">
+          <span class="difficulty diff-easy">⭐ Easy</span>
+          <span class="acara-tag">Number · Year 3</span>
+        </div>
+        <span class="quiz-icon">💎</span>
+        <div class="quiz-label">Question 2 — Times Tables</div>
+        <div class="question">Jake needs 24 fuel crystals.<br>They come in rows of 6.<br>How many rows does he need to collect?</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q2')">3 rows</button>
+          <button class="opt-btn" onclick="answer(this,true,'q2')">4 rows</button>
+          <button class="opt-btn" onclick="answer(this,false,'q2')">5 rows</button>
+          <button class="opt-btn" onclick="answer(this,false,'q2')">6 rows</button>
+        </div>
+        <div class="feedback" id="feedback-q2"></div>
+        <button class="next-btn" id="next-q2" onclick="nextChapter(2)">Next Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  CHAPTER 2 — FRACTIONS                                           -->
+  <!-- ================================================================ -->
+  <div class="chapter" id="chapter-2">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🍕 Chapter 2 — The Alien Feast</div>
+      <h2>The Zoglings Want to Share!</h2>
+    </div>
+    <img class="chapter-img" src="https://placehold.co/640x340/0d0630/ff2fff?text=🍕+Chapter+2%3A+The+Alien+Feast" alt="Jake and three aliens sharing a pizza" />
+    <div class="story-text">
+      Before Jake could fire up the engines, three small green aliens waddled over. The tallest one — wearing a tiny purple crown — bowed deeply.<br><br>
+      <em>"GREETINGS, SPACE HUMAN! I AM BLOOP. THESE ARE ZIBBLE AND MORK. WE MUST SHARE FOOD BEFORE YOU LEAVE. IT IS THE ZOG LAW."</em><br><br>
+      A giant glowing pizza appeared from nowhere. There were <strong>4 of them</strong> altogether, and Bloop insisted everyone got an <strong>equal share</strong>.
+    </div>
+
+    <!-- Q3 — Unit fractions (Number strand, Year 2) -->
+    <div class="quiz-box">
+      <div class="quiz-meta">
+        <span class="difficulty diff-easy">⭐ Easy</span>
+        <span class="acara-tag">Number · Year 2</span>
+      </div>
+      <span class="quiz-icon">🍕</span>
+      <div class="quiz-label">Question 3 — Fractions</div>
+      <div class="question">4 friends share 1 pizza equally.<br>What fraction does each person get?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q3')">1/2</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">1/3</button>
+        <button class="opt-btn" onclick="answer(this,true,'q3')">1/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">1/6</button>
+      </div>
+      <div class="feedback" id="feedback-q3"></div>
+      <button class="next-btn" id="next-q3" onclick="showQ('q4')">Next Question ➜</button>
+    </div>
+
+    <!-- Q4 — Fractions of fractions (Number strand, Year 3/4) -->
+    <div id="q4-block" style="display:none">
+      <div class="story-text">
+        Mork looked at his slice thoughtfully and pushed most of it toward Jake.<br>
+        <em>"MORK NOT HUNGRY. MORK EAT ONLY HALF OF MORK'S SLICE."</em><br><br>
+        Jake wondered: if Mork's slice was one quarter of the whole pizza, and Mork only ate half of that — what fraction of the <em>whole</em> pizza did Mork eat?
+      </div>
+      <div class="quiz-box">
+        <div class="quiz-meta">
+          <span class="difficulty diff-medium">⭐⭐ Medium</span>
+          <span class="acara-tag">Number · Year 3–4</span>
+        </div>
+        <span class="quiz-icon">🧮</span>
+        <div class="quiz-label">Question 4 — Fractions</div>
+        <div class="question">Mork's slice = 1/4 of the pizza.<br>Mork eats half of his slice.<br>What fraction of the whole pizza did Mork eat?</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q4')">1/4</button>
+          <button class="opt-btn" onclick="answer(this,true,'q4')">1/8</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">1/6</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">1/3</button>
+        </div>
+        <div class="feedback" id="feedback-q4"></div>
+        <button class="next-btn" id="next-q4" onclick="nextChapter(3)">Next Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  CHAPTER 3 — TELLING THE TIME (new concept this issue)           -->
+  <!-- ================================================================ -->
+  <div class="chapter" id="chapter-3">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🕐 Chapter 3 — The Launch Window!</div>
+      <h2>Jake Must Leave at Exactly the Right Time!</h2>
+    </div>
+    <img class="chapter-img" src="https://placehold.co/640x340/0d0630/00ccff?text=🕐+Chapter+3%3A+The+Launch+Window" alt="Jake in the cockpit looking at the clock" />
+    <div class="story-text">
+      Jake was climbing back to his rocket when Mork suddenly grabbed his arm.<br><br>
+      <em>"WAIT! LAUNCH WINDOW IS CRITICAL! Leave too early or too late and you will be TRAPPED in the Zog Gravitational Loop for 47 years!"</em><br><br>
+      Jake peered at the cockpit clock. He had to read it correctly — there was <strong>no room for error</strong>.
+    </div>
+
+    <!-- Q5 — Reading a clock (Measurement strand, Year 2) — NEW CONCEPT -->
+    <div class="quiz-box">
+      <div class="quiz-meta">
+        <span class="difficulty diff-medium">⭐⭐ Medium</span>
+        <span class="acara-tag">Measurement · Year 2 · ✨ New Concept</span>
+      </div>
+      <span class="quiz-icon">🕐</span>
+      <div class="quiz-label">Question 5 — Telling the Time</div>
+      <div class="question">The short hand is just past the 3.<br>The long hand points at the 3.<br><br>What time does the clock show?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q5')">3:00</button>
+        <button class="opt-btn" onclick="answer(this,true,'q5')">3:15</button>
+        <button class="opt-btn" onclick="answer(this,false,'q5')">3:30</button>
+        <button class="opt-btn" onclick="answer(this,false,'q5')">3:45</button>
+      </div>
+      <div class="feedback" id="feedback-q5"></div>
+      <button class="next-btn" id="next-q5" onclick="showQ('q6')">Next Question ➜</button>
+    </div>
+
+    <!-- Q6 — Adding time intervals (Measurement strand, Year 3) -->
+    <div id="q6-block" style="display:none">
+      <div class="story-text">
+        <em>"The Launch Window closes in exactly 30 minutes!"</em> Mork warned. It was 3:15 now. Jake sprinted to the rocket, buckled his helmet, and punched the pre-launch sequence.<br><br>
+        "I need to be off the ground by...?"
+      </div>
+      <div class="quiz-box">
+        <div class="quiz-meta">
+          <span class="difficulty diff-medium">⭐⭐ Medium</span>
+          <span class="acara-tag">Measurement · Year 3</span>
+        </div>
+        <span class="quiz-icon">⏰</span>
+        <div class="quiz-label">Question 6 — Adding Time</div>
+        <div class="question">It is 3:15 now.<br>The Launch Window closes in 30 minutes.<br>What time must Jake launch by?</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q6')">3:30</button>
+          <button class="opt-btn" onclick="answer(this,true,'q6')">3:45</button>
+          <button class="opt-btn" onclick="answer(this,false,'q6')">4:00</button>
+          <button class="opt-btn" onclick="answer(this,false,'q6')">4:15</button>
+        </div>
+        <div class="feedback" id="feedback-q6"></div>
+        <button class="next-btn" id="next-q6" onclick="nextChapter(4)">Next Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  CHAPTER 4 — MULTIPLICATION & DIVISION                           -->
+  <!-- ================================================================ -->
+  <div class="chapter" id="chapter-4">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌌 Chapter 4 — The Asteroid Belt</div>
+      <h2>Danger! Asteroids Ahead!</h2>
+    </div>
+    <img class="chapter-img" src="https://placehold.co/640x340/0d0630/ffaa00?text=🌌+Chapter+4%3A+The+Asteroid+Belt" alt="Jake's rocket weaving through the asteroid belt" />
+    <div class="story-text">
+      <em>WHOOOOSH!</em> Jake blasted off just in time. Ahead lay the <strong>Zorblax Asteroid Belt</strong> — a stretch of spinning space rocks every pilot dreaded. To get through safely, Jake had to calculate his exact route.
+    </div>
+
+    <!-- Q7 — Multiplication (Number strand, Year 3) -->
+    <div class="quiz-box">
+      <div class="quiz-meta">
+        <span class="difficulty diff-medium">⭐⭐ Medium</span>
+        <span class="acara-tag">Number · Year 3</span>
+      </div>
+      <span class="quiz-icon">🌑</span>
+      <div class="quiz-label">Question 7 — Multiplication</div>
+      <div class="question">There are 6 asteroids in Jake's path.<br>Each one is 7 light-seconds wide.<br>How many light-seconds does Jake need to cross in total?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q7')">36</button>
+        <button class="opt-btn" onclick="answer(this,false,'q7')">40</button>
+        <button class="opt-btn" onclick="answer(this,true,'q7')">42</button>
+        <button class="opt-btn" onclick="answer(this,false,'q7')">48</button>
+      </div>
+      <div class="feedback" id="feedback-q7"></div>
+      <button class="next-btn" id="next-q7" onclick="showQ('q8')">Next Question ➜</button>
+    </div>
+
+    <!-- Q8 — Division (Number strand, Year 3) -->
+    <div id="q8-block" style="display:none">
+      <div class="story-text">
+        Jake emerged from the asteroid belt — barely! He checked the storage bay. He'd brought <strong>36 star-coins</strong> to share equally between his <strong>4 Zogling friends</strong>. Better calculate it now before he landed back on Earth.
+      </div>
+      <div class="quiz-box">
+        <div class="quiz-meta">
+          <span class="difficulty diff-hard">⭐⭐⭐ Hard</span>
+          <span class="acara-tag">Number · Year 3</span>
+        </div>
+        <span class="quiz-icon">🪙</span>
+        <div class="quiz-label">Question 8 — Division</div>
+        <div class="question">Jake has 36 star-coins.<br>He shares them equally between 4 friends.<br>How many coins does each friend get?</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q8')">6</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">8</button>
+          <button class="opt-btn" onclick="answer(this,true,'q8')">9</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">12</button>
+        </div>
+        <div class="feedback" id="feedback-q8"></div>
+        <button class="next-btn" id="next-q8" onclick="nextChapter(5)">Final Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  CHAPTER 5 — BOSS ROUND (mixed)                                  -->
+  <!-- ================================================================ -->
+  <div class="chapter" id="chapter-5">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🔥 Chapter 5 — Home At Last!</div>
+      <h2>The Final Approach — Boss Challenge!</h2>
+    </div>
+    <img class="chapter-img" src="https://placehold.co/640x340/0d0630/ff4444?text=🔥+Chapter+5%3A+BOSS+ROUND" alt="Jake's rocket approaching Earth" />
+    <div class="story-text">
+      Earth was in sight! The blue-green marble shimmered through the cockpit window. But Mission Control crackled over the radio: <em>"Cadet Jake — two final anomalies before landing. Solve them to clear your re-entry path. Over."</em><br><br>
+      Two problems. Then home. Jake reached for his notebook one last time.
+    </div>
+
+    <!-- Q9 — Mixed: multiplication + addition (Number strand, Year 3–4) -->
+    <div class="quiz-box">
+      <div class="quiz-meta">
+        <span class="difficulty diff-hard">⭐⭐⭐ Hard</span>
+        <span class="acara-tag">Number · Year 3–4</span>
+      </div>
+      <span class="quiz-icon">🛸</span>
+      <div class="quiz-label">Question 9 — Mixed (Multiply then Add)</div>
+      <div class="question">Jake passes 4 space stations.<br>At each station, 7 new rockets join his convoy.<br>He started with 3 rockets already.<br><br>How many rockets are in the convoy altogether?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q9')">28</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">30</button>
+        <button class="opt-btn" onclick="answer(this,true,'q9')">31</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">35</button>
+      </div>
+      <div class="feedback" id="feedback-q9"></div>
+      <button class="next-btn" id="next-q9" onclick="showQ('q10')">Final Question ➜</button>
+    </div>
+
+    <!-- Q10 — BOSS: subtract time (Measurement strand, Year 3–4) -->
+    <div id="q10-block" style="display:none">
+      <div class="story-text">
+        Mission Control again: <em>"Re-entry window opens at 4:10. Your heat shield takes exactly 35 minutes to warm up. What time do you need to START warming it up?"</em><br><br>
+        Jake stared at the clock. The final maths problem of the whole mission. Get it right and he'd be home for dinner.
+      </div>
+      <div class="quiz-box">
+        <div class="quiz-meta">
+          <span class="difficulty diff-boss">👑 Boss Challenge</span>
+          <span class="acara-tag">Measurement · Year 3–4</span>
+        </div>
+        <span class="quiz-icon">🔥</span>
+        <div class="quiz-label">Question 10 — BOSS: Subtracting Time</div>
+        <div class="question">Re-entry window opens at 4:10.<br>Heat shield warm-up takes 35 minutes.<br><br>What time must Jake START the warm-up?</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q10')">3:25</button>
+          <button class="opt-btn" onclick="answer(this,true,'q10')">3:35</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">3:45</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">4:45</button>
+        </div>
+        <div class="feedback" id="feedback-q10"></div>
+        <button class="next-btn" id="next-q10" onclick="showWin()">🌍 LAND THE ROCKET!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  WIN SCREEN                                                       -->
+  <!-- ================================================================ -->
+  <div id="win-screen">
+    <span class="trophy">🏆</span>
+    <h2>MISSION COMPLETE!</h2>
+    <div class="win-score" id="win-score">You scored 10 / 10!</div>
+    <div class="win-stars" id="win-stars">⭐⭐⭐</div>
+    <p>Jake's rocket touched down on Earth with a perfect landing — and it was all thanks to <strong>YOU</strong>! 🌍</p>
+    <div class="win-summary">
+      <h3>What You Mastered Today 🧠</h3>
+      <ul>
+        <li>✅ <strong>Skip Counting</strong> — counting in 5s (Number, Year 2)</li>
+        <li>✅ <strong>Times Tables</strong> — 6×4=24 (Number, Year 3)</li>
+        <li>✅ <strong>Fractions</strong> — quarters + half of a quarter (Number, Year 2–3)</li>
+        <li>✅ <strong>Telling the Time</strong> — quarter past, adding 30 mins (Measurement, Year 2–3)</li>
+        <li>✅ <strong>Multiplication</strong> — 6×7=42 (Number, Year 3)</li>
+        <li>✅ <strong>Division</strong> — 36÷4=9 (Number, Year 3)</li>
+        <li>✅ <strong>Boss</strong> — multi-step problem + subtracting time</li>
+      </ul>
+    </div>
+    <p style="font-size:14px;color:#6655aa;margin-bottom:8px;">Issue #2 coming next week — Jake discovers a <strong>robot factory</strong> hidden in the rings of Saturn! 🤖</p>
+    <button class="replay-btn" onclick="replayGame()">🔄 Play Again</button>
+    <br>
+    <button class="print-btn" onclick="showParentGuide()">📋 Parent Guide</button>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  PARENT GUIDE                                                     -->
+  <!-- ================================================================ -->
+  <div id="parent-guide">
+    <div class="pg-header">
+      <div>
+        <div class="pg-title">📋 Parent Guide — Issue #1</div>
+        <div class="pg-subtitle">Mission: Math Blast · For parents of kids aged 7–10</div>
+      </div>
+      <button class="print-btn" onclick="window.print()">🖨️ Print This</button>
+    </div>
+
+    <div class="pg-section">
+      <h4>What We Covered This Issue</h4>
+      <table class="acara-table">
+        <tr><th>Topic</th><th>ACARA Strand</th><th>Year Level</th><th>Question</th></tr>
+        <tr><td>Skip counting in 5s</td><td><span class="strand-pill">Number</span></td><td>Year 2</td><td>Q1 (Warm-Up)</td></tr>
+        <tr><td>Multiplication — 6× tables</td><td><span class="strand-pill">Number</span></td><td>Year 3</td><td>Q2</td></tr>
+        <tr><td>Unit fractions (quarters)</td><td><span class="strand-pill">Number</span></td><td>Year 2</td><td>Q3</td></tr>
+        <tr><td>Fractions of fractions</td><td><span class="strand-pill">Number</span></td><td>Year 3–4</td><td>Q4</td></tr>
+        <tr><td>Telling the time (quarter past)</td><td><span class="strand-pill">Measurement</span></td><td>Year 2</td><td>Q5 ✨ New</td></tr>
+        <tr><td>Adding time intervals</td><td><span class="strand-pill">Measurement</span></td><td>Year 3</td><td>Q6</td></tr>
+        <tr><td>Multiplication — 7× tables</td><td><span class="strand-pill">Number</span></td><td>Year 3</td><td>Q7</td></tr>
+        <tr><td>Division — sharing equally</td><td><span class="strand-pill">Number</span></td><td>Year 3</td><td>Q8</td></tr>
+        <tr><td>Multi-step (×, then +)</td><td><span class="strand-pill">Number</span></td><td>Year 3–4</td><td>Q9</td></tr>
+        <tr><td>Subtracting time intervals</td><td><span class="strand-pill">Measurement</span></td><td>Year 3–4</td><td>Q10 👑 Boss</td></tr>
+      </table>
+    </div>
+
+    <div class="pg-row">
+      <div class="pg-card">
+        <h5>✨ New This Issue</h5>
+        <p><strong>Telling the Time</strong> — reading an analog clock to the quarter hour, and adding/subtracting 30-minute intervals. This is a Year 2–3 ACARA Measurement skill.</p>
+      </div>
+      <div class="pg-card">
+        <h5>🔁 Spaced Review</h5>
+        <p>Q1 warmed up <strong>skip counting in 5s</strong> — a Year 2 Number skill. Future issues will revisit topics from previous weeks to keep them fresh in memory.</p>
+      </div>
+    </div>
+
+    <div class="pg-section">
+      <h4>💬 Conversation Starters</h4>
+      <ul>
+        <li><strong>After Q4 (tricky fractions):</strong> "If you cut a quarter of a cake in half, how many pieces would you need to cut the whole cake into to make them all equal?"</li>
+        <li><strong>After Q5–6 (time):</strong> "If dinner is at 6:00, and it takes 20 minutes to cook, what time should we start?" — use a real clock if you can!</li>
+        <li><strong>After Q10 (boss):</strong> "How did you work backwards from 4:10? Can you show me on paper?"</li>
+        <li><strong>Any time:</strong> "Which question was hardest? Can you explain why?"</li>
+      </ul>
+    </div>
+
+    <div class="pg-section">
+      <h4>⚠️ Common Mistakes to Watch For</h4>
+      <ul>
+        <li><strong>Fractions of fractions (Q4):</strong> Kids often think "half of a quarter = a quarter". Use physical objects — fold a piece of paper into quarters, then fold one quarter in half.</li>
+        <li><strong>Clock reading (Q5):</strong> Confusing the short and long hands is common. Try: "Short = hours (because it doesn't travel far), Long = minutes (because it has a long way to go)."</li>
+        <li><strong>Subtracting time (Q10):</strong> Many kids add instead of subtract when working with time. Ask: "Do we need to go forward or backward on the clock?"</li>
+        <li><strong>Multi-step problems (Q9):</strong> Kids often forget the first step. Encourage them to underline each piece of information and number the steps before calculating.</li>
+      </ul>
+    </div>
+
+    <div class="pg-section">
+      <h4>📚 How This Aligns with School</h4>
+      <p>This issue covers content from <strong>ACARA Australian Curriculum v9.0</strong> across the <strong>Number</strong> and <strong>Measurement</strong> strands, primarily at Year 2–3 level with stretch challenges at Year 4. If your child is in Year 2, Q1–Q5 are the core targets. Year 3 students should aim for Q1–Q8. Year 4 students should attempt the full Boss Round.</p>
+    </div>
+
+    <div class="pg-section">
+      <h4>⏭️ Coming Up in Issue #2</h4>
+      <p>Jake discovers a robot factory hidden in the rings of Saturn. New concept: <strong>multiplication with larger numbers and arrays</strong> (Year 3–4). We'll also bring back <strong>fractions</strong> from this issue as a spaced review question.</p>
+    </div>
+
+    <p style="font-size:12px;color:#443366;text-align:center;margin-top:20px;">Mission: Math Blast · Aligned to ACARA Australian Curriculum v9.0 · mathblast.com.au</p>
+  </div>
+
+</div><!-- /wrapper -->
+
+<script>
+  // Starfield
+  const sf = document.getElementById('starfield');
+  for (let i = 0; i < 90; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = Math.random() * 3 + 's';
+    s.style.animationDuration = (2 + Math.random() * 3) + 's';
+    sf.appendChild(s);
+  }
+
+  let score = 0;
+  let questionsAnswered = 0;
+  const totalQuestions = 10;
+
+  const correctMsg = {
+    q1:  '🎉 Yes! The pattern counts up in 5s: 5, 10, 15, <strong>20</strong>, 25, <strong>30</strong>. Pre-launch check: passed!',
+    q2:  '🎉 Right! 6 × 4 = 24. Jake swept up all four rows and stuffed them into the engine. The rocket hummed back to life!',
+    q3:  '🎉 Correct! 1 ÷ 4 = ¼. Each friend got a quarter of the pizza. Bloop did a little happy dance.',
+    q4:  '🎉 Nailed it! Half of ¼ = ⅛. Mork only nibbled an eighth of the whole pizza — that\'s tiny!',
+    q5:  '🎉 Correct! Long hand on the 3 = 15 minutes past. It\'s <strong>3:15</strong> — quarter past three!',
+    q6:  '🎉 Right! 3:15 + 30 minutes = <strong>3:45</strong>. Jake hit the launch button with 2 minutes to spare!',
+    q7:  '🎉 Yes! 6 × 7 = <strong>42</strong>. Jake had 42 light-seconds of asteroid — and he nailed every one!',
+    q8:  '🎉 Spot on! 36 ÷ 4 = <strong>9</strong>. Each Zogling gets 9 star-coins. Bloop looked very pleased.',
+    q9:  '🎉 Correct! 4 × 7 = 28, then 28 + 3 = <strong>31</strong>. Jake led a convoy of 31 rockets home!',
+    q10: '🎉 BOSS CLEARED! Count back 35 minutes from 4:10: 4:10 → 4:00 (10 mins) → 3:35 (25 more). Start at <strong>3:35</strong>. Jake\'s going HOME! 🌍'
+  };
+
+  const wrongMsg = {
+    q1:  '❌ Not quite! The pattern goes up by 5 each time: 5, 10, 15... what comes after 15? And after 25?',
+    q2:  '❌ Not quite! Think: 6 × ? = 24. Try counting your 6 times table: 6, 12, 18, 24... how many jumps?',
+    q3:  '❌ Not quite! If 4 friends share 1 pizza equally, we divide 1 by 4. That fraction is written 1/4.',
+    q4:  '❌ Tricky! Mork\'s slice was 1/4 of the pizza. He ate HALF of that slice. Half of 1/4 = 1/8 — think of cutting a quarter into two equal pieces.',
+    q5:  '❌ Not quite! When the long hand points at the 3, that means 15 minutes past the hour. The short hand just passed 3...',
+    q6:  '❌ Almost! Start at 3:15 and add 30 minutes. 3:15 → 3:30 is 15 mins, then 3:30 → 3:45 is another 15. Total = 30!',
+    q7:  '❌ Not quite! 6 × 7: try counting in 7s six times: 7, 14, 21, 28, 35, 42.',
+    q8:  '❌ Not quite! 36 ÷ 4 = splitting 36 into 4 equal groups. Think: 4 × ? = 36.',
+    q9:  '❌ Two steps here! Step 1: 4 stations × 7 rockets = ? Step 2: add the 3 he started with.',
+    q10: '❌ Close! We need to go BACKWARDS from 4:10. Subtract 35 minutes: 4:10 → 4:00 is 10 mins back, then 4:00 → 3:35 is 25 mins back. Total = 35!'
+  };
+
+  function startGame() {
+    document.getElementById('title-screen').style.display = 'none';
+    document.getElementById('progress-wrap').style.display = 'block';
+    showChapter(1);
+  }
+
+  function showChapter(n) {
+    document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
+    const ch = document.getElementById('chapter-' + n);
+    if (ch) { ch.classList.add('active'); updateProgress(n); window.scrollTo({top:0,behavior:'smooth'}); }
+  }
+
+  function updateProgress(n) {
+    const labels = ['','Chapter 1 of 5 — Times Tables','Chapter 2 of 5 — Fractions','Chapter 3 of 5 — Telling the Time ✨','Chapter 4 of 5 — Multiplication & Division','Chapter 5 of 5 — Boss Round 🔥'];
+    document.getElementById('progress-label').textContent = labels[n];
+    document.getElementById('progress-fill').style.width = ((questionsAnswered/totalQuestions)*100) + '%';
+    document.getElementById('progress-score').textContent = '⭐ ' + score + ' / ' + totalQuestions;
+  }
+
+  function showQ(qId) {
+    const block = document.getElementById(qId + '-block');
+    if (block) { block.style.display = 'block'; block.scrollIntoView({behavior:'smooth',block:'start'}); }
+  }
+
+  function answer(btn, correct, qId) {
+    const quizBox = btn.closest('.quiz-box');
+    quizBox.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+    const feedback = document.getElementById('feedback-' + qId);
+    const nextBtn  = document.getElementById('next-' + qId);
+    if (correct) {
+      btn.classList.add('correct');
+      score++; questionsAnswered++;
+      feedback.className = 'feedback show good';
+      feedback.innerHTML = correctMsg[qId];
+      updateProgress(currentChapter());
+      nextBtn.classList.add('show');
+    } else {
+      btn.classList.add('wrong');
+      feedback.className = 'feedback show bad';
+      feedback.innerHTML = wrongMsg[qId];
+      setTimeout(() => {
+        quizBox.querySelectorAll('.opt-btn').forEach(b => {
+          if (!b.classList.contains('correct')) { b.disabled = false; b.classList.remove('wrong'); }
+        });
+        feedback.className = 'feedback';
+      }, 2400);
+    }
+  }
+
+  function currentChapter() {
+    const active = document.querySelector('.chapter.active');
+    return active ? parseInt(active.id.replace('chapter-','')) : 1;
+  }
+
+  function nextChapter(n) { showChapter(n); }
+
+  function showWin() {
+    document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
+    document.getElementById('progress-wrap').style.display = 'none';
+    const win = document.getElementById('win-screen');
+    win.style.display = 'block';
+    document.getElementById('win-score').textContent = 'You scored ' + score + ' / ' + totalQuestions + '!';
+    document.getElementById('win-stars').textContent = score >= 9 ? '⭐⭐⭐' : score >= 6 ? '⭐⭐' : '⭐';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function showParentGuide() {
+    document.getElementById('parent-guide').style.display = 'block';
+    document.getElementById('parent-guide').scrollIntoView({behavior:'smooth'});
+  }
+
+  function replayGame() {
+    score = 0; questionsAnswered = 0;
+    document.getElementById('win-screen').style.display = 'none';
+    document.getElementById('parent-guide').style.display = 'none';
+    document.querySelectorAll('.opt-btn').forEach(b => { b.disabled=false; b.classList.remove('correct','wrong'); });
+    document.querySelectorAll('.feedback').forEach(f => f.className = 'feedback');
+    document.querySelectorAll('.next-btn').forEach(b => b.classList.remove('show'));
+    ['q2','q4','q6','q8','q10'].forEach(id => {
+      const block = document.getElementById(id + '-block');
+      if (block) block.style.display = 'none';
+    });
+    document.getElementById('progress-wrap').style.display = 'none';
+    document.getElementById('title-screen').style.display = 'block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+</script>
+</body>
+</html>
