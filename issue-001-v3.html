@@ -123,7 +123,6 @@
   #win-screen { display:none; text-align:center; padding:48px 24px 24px; animation:fadeIn 0.5s ease; }
   .trophy { font-size:80px; display:block; margin-bottom:16px; animation:bounce 0.8s ease infinite alternate; }
   @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.15)} }
-@keyframes pulse-btn { 0%,100%{box-shadow:0 4px 20px rgba(123,47,255,0.5)} 50%{box-shadow:0 4px 30px rgba(123,47,255,0.9)} }
   #win-screen h2 { font-size:38px; font-weight:900; color:#ffdd00; text-shadow:0 0 24px rgba(255,220,0,0.5); margin-bottom:8px; }
   .win-score { font-size:22px; font-weight:900; color:#ff88ff; margin-bottom:16px; }
   .win-stars { font-size:36px; margin-bottom:20px; }
@@ -209,19 +208,9 @@
 <body>
 
 <!-- Mute button -->
-<!-- Sound enable button (shown until audio is unlocked) -->
-<div id="sound-prompt" style="
-  position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
-  z-index:999; background:rgba(123,47,255,0.9); border:2px solid rgba(255,255,255,0.3);
-  color:white; font-size:15px; font-weight:700; padding:10px 22px;
-  border-radius:50px; cursor:pointer; white-space:nowrap;
-  box-shadow:0 4px 20px rgba(123,47,255,0.5); font-family:'Nunito',Arial,sans-serif;
-  animation:pulse-btn 2s ease-in-out infinite;
-" onclick="enableSound()" title="Enable sound">🔊 Tap to enable sound</div>
-
-<!-- Mute toggle (shown after audio is enabled) -->
+<!-- Mute toggle -->
 <button id="mute-btn" onclick="toggleMute()" style="
-  display:none; position:fixed; top:14px; right:14px; z-index:999;
+  position:fixed; top:14px; right:14px; z-index:999;
   background:rgba(0,0,0,0.45); border:2px solid rgba(255,255,255,0.2);
   color:white; font-size:20px; width:42px; height:42px;
   border-radius:50%; cursor:pointer; line-height:1;
@@ -799,193 +788,61 @@
 <!-- ===== WEB AUDIO SOUND SYSTEM ===== -->
 <script>
 (function() {
-  var audioCtx = null;
   var soundMuted = false;
-  var audioEnabled = false;
-  var ambientStarted = false;
-  var ambientMainGain = null;
-  var ambientHumGain = null;
-  var audioLayerLevel = 0;
-  var pulseActive = false;
-  var melodyIntervalId = null;
-  var melodyIdx = 0;
-  var melodyNotes = [261, 294, 330, 349, 392, 349, 330, 294];
-
-  function getCtx() {
-    if (!audioCtx) {
-      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return null; }
-    }
-    return audioCtx;
-  }
-
-  // Called when user explicitly taps the enable sound button
-  window.enableSound = function() {
-    // Create context inside the click handler for max browser compatibility
-    if (!audioCtx) {
-      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return; }
-    }
-    // Set enabled + update UI synchronously (still inside user gesture)
-    audioEnabled = true;
-    var prompt = document.getElementById('sound-prompt');
-    var muteBtn = document.getElementById('mute-btn');
-    if (prompt) prompt.style.display = 'none';
-    if (muteBtn) muteBtn.style.display = 'block';
-    // Resume and play — synchronous resume attempt first, then scheduled tones
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    setTimeout(function() {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      playTone(523, 0.15, 'sine', 0.3, 0);
-      playTone(784, 0.25, 'sine', 0.3, 0.18);
-      startAmbient();
-    }, 50);
-  };
 
   window.toggleMute = function() {
     soundMuted = !soundMuted;
     var btn = document.getElementById('mute-btn');
     if (btn) btn.textContent = soundMuted ? '🔇' : '🔊';
-    var ctx = getCtx();
-    if (!ctx) return;
-    var t = ctx.currentTime;
-    if (ambientMainGain) ambientMainGain.gain.setTargetAtTime(soundMuted ? 0 : 0.05, t, 0.3);
-    if (ambientHumGain) ambientHumGain.gain.setTargetAtTime(soundMuted ? 0 : 0.025, t, 0.3);
   };
 
-  function playTone(freq, duration, type, volume, startDelay) {
-    if (!audioEnabled || soundMuted) return;
-    var ctx = getCtx();
-    if (!ctx) return;
-    type = type || 'sine'; volume = (volume !== undefined) ? volume : 0.3; startDelay = startDelay || 0;
+  function beep(notes) {
+    if (soundMuted) return;
     try {
-      var osc = ctx.createOscillator();
-      var gain = ctx.createGain();
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.type = type; osc.frequency.value = freq;
-      var t = ctx.currentTime + startDelay;
-      gain.gain.setValueAtTime(0.001, t);
-      gain.gain.linearRampToValueAtTime(volume, t + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + Math.max(duration, 0.05));
-      osc.start(t); osc.stop(t + duration + 0.05);
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      notes.forEach(function(n) {
+        var freq = n[0], delay = n[1], dur = n[2], vol = n[3] || 0.3, type = n[4] || 'sine';
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        var t = ctx.currentTime + delay;
+        gain.gain.setValueAtTime(0.001, t);
+        gain.gain.linearRampToValueAtTime(vol, t + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        osc.start(t);
+        osc.stop(t + dur + 0.05);
+      });
+      var maxTime = notes.reduce(function(m, n) { return Math.max(m, n[1] + n[2]); }, 0);
+      setTimeout(function() { try { ctx.close(); } catch(e) {} }, (maxTime + 0.5) * 1000);
     } catch(e) {}
-  }
-
-  function startAmbient() {
-    if (ambientStarted || !audioEnabled) return;
-    ambientStarted = true;
-    var ctx = getCtx();
-    if (!ctx) return;
-    try {
-      ambientMainGain = ctx.createGain();
-      ambientMainGain.gain.setValueAtTime(0.001, ctx.currentTime);
-      ambientMainGain.gain.linearRampToValueAtTime(soundMuted ? 0 : 0.05, ctx.currentTime + 3);
-      ambientMainGain.connect(ctx.destination);
-      var osc1 = ctx.createOscillator();
-      osc1.type = 'sine'; osc1.frequency.value = 55;
-      osc1.connect(ambientMainGain); osc1.start();
-
-      ambientHumGain = ctx.createGain();
-      ambientHumGain.gain.setValueAtTime(soundMuted ? 0 : 0.025, ctx.currentTime);
-      ambientHumGain.connect(ctx.destination);
-      var osc2 = ctx.createOscillator();
-      osc2.type = 'sine'; osc2.frequency.value = 57.5;
-      osc2.connect(ambientHumGain); osc2.start();
-    } catch(e) {}
-  }
-
-  function addPulseLayer() {
-    if (pulseActive || audioLayerLevel >= 1) return;
-    audioLayerLevel = 1; pulseActive = true;
-    var beat = 0;
-    function pulse() {
-      if (!pulseActive) return;
-      playTone(110, 0.18, 'sine', 0.08, 0);
-      beat++;
-      setTimeout(pulse, beat % 2 === 0 ? 500 : 700);
-    }
-    setTimeout(pulse, 800);
-  }
-
-  function addMelodyLayer() {
-    if (melodyIntervalId || audioLayerLevel >= 2) return;
-    audioLayerLevel = 2;
-    melodyIntervalId = setInterval(function() {
-      playTone(melodyNotes[melodyIdx % melodyNotes.length], 0.35, 'triangle', 0.06, 0);
-      melodyIdx++;
-    }, 750);
   }
 
   function playCorrect() {
-    playTone(523, 0.18, 'sine', 0.3, 0);
-    playTone(659, 0.18, 'sine', 0.3, 0.12);
-    playTone(784, 0.38, 'sine', 0.3, 0.24);
+    beep([[523,0,0.18,0.3,'sine'],[659,0.12,0.18,0.3,'sine'],[784,0.24,0.38,0.3,'sine']]);
   }
 
   function playWrong() {
-    playTone(280, 0.12, 'sawtooth', 0.18, 0);
-    playTone(210, 0.28, 'sawtooth', 0.14, 0.13);
-    playTone(180, 0.22, 'sawtooth', 0.10, 0.32);
+    beep([[280,0,0.12,0.18,'sawtooth'],[210,0.13,0.28,0.14,'sawtooth'],[180,0.32,0.22,0.10,'sawtooth']]);
   }
 
-  function playChapterTransition() {
-    if (!audioEnabled || soundMuted) return;
-    var ctx = getCtx();
-    if (!ctx) return;
-    [[200, 900, 'sine', 0.22], [400, 1600, 'triangle', 0.10]].forEach(function(p) {
-      try {
-        var osc = ctx.createOscillator(); var g = ctx.createGain();
-        osc.type = p[2];
-        osc.frequency.setValueAtTime(p[0], ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(p[1], ctx.currentTime + 0.55);
-        g.gain.setValueAtTime(p[3], ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.55);
-        osc.connect(g); g.connect(ctx.destination);
-        osc.start(); osc.stop(ctx.currentTime + 0.6);
-      } catch(e) {}
-    });
+  function playTransition() {
+    beep([[300,0,0.08,0.15,'sine'],[450,0.09,0.08,0.15,'sine'],[600,0.18,0.08,0.15,'sine'],[800,0.27,0.18,0.20,'sine']]);
   }
 
-  function playWinJingle() {
-    [[523,0],[659,0.18],[784,0.36],[1047,0.54],
-     [880,0.78],[988,0.96],[1047,1.14],
-     [784,1.38],[880,1.56],[1047,1.74],
-     [784,2.0],[659,2.18],[784,2.36],[880,2.6],[1047,2.9]
-    ].forEach(function(n) { playTone(n[0], 0.32, 'triangle', 0.28, n[1]); });
-    [[130,0],[165,0.54],[196,1.38],[130,2.0],[196,2.6]].forEach(function(n) {
-      playTone(n[0], 0.45, 'sine', 0.12, n[1]);
-    });
+  function playWin() {
+    beep([
+      [523,0,0.18,0.28,'triangle'],[659,0.18,0.18,0.28,'triangle'],[784,0.36,0.18,0.28,'triangle'],
+      [1047,0.54,0.28,0.28,'triangle'],[880,0.78,0.18,0.28,'triangle'],[988,0.96,0.18,0.28,'triangle'],
+      [1047,1.14,0.38,0.30,'triangle'],[784,1.38,0.18,0.28,'triangle'],[880,1.56,0.18,0.28,'triangle'],
+      [1047,1.74,0.48,0.32,'triangle'],[130,0,0.45,0.12,'sine'],[196,0.54,0.45,0.12,'sine'],
+      [130,1.38,0.45,0.12,'sine'],[196,1.74,0.55,0.14,'sine']
+    ]);
   }
-
-  // Resume AudioContext when page becomes visible again (tab switch / phone wake)
-  document.addEventListener('visibilitychange', function() {
-    if (document.visibilityState === 'visible' && audioEnabled) {
-      var ctx = getCtx();
-      if (ctx && ctx.state === 'suspended') {
-        ctx.resume().catch(function() {
-          audioEnabled = false;
-          var prompt = document.getElementById('sound-prompt');
-          var muteBtn = document.getElementById('mute-btn');
-          if (prompt) prompt.style.display = 'block';
-          if (muteBtn) muteBtn.style.display = 'none';
-        });
-      }
-    }
-  });
-
-  // Also attempt resume on any click/touch after initial enable
-  document.addEventListener('click', function() {
-    if (audioEnabled) {
-      var ctx = getCtx();
-      if (ctx && ctx.state === 'suspended') ctx.resume();
-    }
-  }, { passive: true });
 
   window.addEventListener('load', function() {
-    var _startGame = window.startGame;
-    window.startGame = function() {
-      startAmbient();
-      if (_startGame) _startGame();
-    };
-
     var _answer = window.answer;
     window.answer = function(btn, correct, qId) {
       if (correct) { playCorrect(); } else { playWrong(); }
@@ -994,16 +851,14 @@
 
     var _nextChapter = window.nextChapter;
     window.nextChapter = function(n) {
-      playChapterTransition();
-      if (n >= 3) addPulseLayer();
-      if (n >= 5) addMelodyLayer();
+      playTransition();
       if (_nextChapter) _nextChapter(n);
     };
 
     var _showWin = window.showWin;
     window.showWin = function() {
       if (_showWin) _showWin();
-      setTimeout(playWinJingle, 400);
+      setTimeout(playWin, 300);
     };
   });
 
