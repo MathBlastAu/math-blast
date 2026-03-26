@@ -353,7 +353,7 @@
         <span class="quiz-icon">🧮</span>
         <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 4 — Fractions</div>
         <div class="question">Mork's slice = 1/4 of the pizza.<br>Mork eats half of his slice.<br>What fraction of the whole pizza did Mork eat?</div>
-      <img src="https://mathblastau.github.io/math-blast/images/q4-issue001.png?v=2" alt="Question illustration" class="question-img" />
+      <img src="https://mathblastau.github.io/math-blast/images/q4-issue001.png?v=3" alt="Question illustration" class="question-img" />
         <div class="options">
           <button class="opt-btn" onclick="answer(this,false,'q4')">1/4</button>
           <button class="opt-btn" onclick="answer(this,true,'q4')">1/8</button>
@@ -390,7 +390,7 @@
       <span class="quiz-icon">🕐</span>
       <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 5 — Telling the Time</div>
       <div class="question">The short hand is just past the 3.<br>The long hand points at the 3.<br><br>What time does the clock show?</div>
-      <img src="https://mathblastau.github.io/math-blast/images/q5-issue001.png?v=2" alt="Question illustration" class="question-img" />
+      <img src="https://mathblastau.github.io/math-blast/images/q5-issue001.png?v=3" alt="Question illustration" class="question-img" />
       <div class="options">
         <button class="opt-btn" onclick="answer(this,false,'q5')">3:00</button>
         <button class="opt-btn" onclick="answer(this,true,'q5')">3:15</button>
@@ -415,7 +415,7 @@
         <span class="quiz-icon">⏰</span>
         <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 6 — Adding Time</div>
         <div class="question">It is 3:15 now.<br>The Launch Window closes in 30 minutes.<br>What time must Jake launch by?</div>
-      <img src="https://mathblastau.github.io/math-blast/images/q6-issue001.png?v=2" alt="Question illustration" class="question-img" />
+      <img src="https://mathblastau.github.io/math-blast/images/q6-issue001.png?v=3" alt="Question illustration" class="question-img" />
         <div class="options">
           <button class="opt-btn" onclick="answer(this,false,'q6')">3:30</button>
           <button class="opt-btn" onclick="answer(this,true,'q6')">3:45</button>
@@ -535,7 +535,7 @@
         <span class="quiz-icon">🔥</span>
         <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 10 — BOSS: Subtracting Time</div>
         <div class="question">Re-entry window opens at 4:10.<br>Heat shield warm-up takes 35 minutes.<br><br>What time must Jake START the warm-up?</div>
-      <img src="https://mathblastau.github.io/math-blast/images/q10-issue001.png?v=2" alt="Question illustration" class="question-img" />
+      <img src="https://mathblastau.github.io/math-blast/images/q10-issue001.png?v=3" alt="Question illustration" class="question-img" />
         <div class="options">
           <button class="opt-btn" onclick="answer(this,false,'q10')">3:25</button>
           <button class="opt-btn" onclick="answer(this,true,'q10')">3:35</button>
@@ -824,6 +824,28 @@
     beep([[523,0,0.18,0.3,'sine'],[659,0.12,0.18,0.3,'sine'],[784,0.24,0.38,0.3,'sine']]);
   }
 
+  function playStart() {
+    // Dramatic rocket launch countdown: 3 deep pulses then blast-off!
+    beep([
+      // Three countdown pulses
+      [150, 0,    0.18, 0.20, 'sine'],
+      [150, 0.28, 0.18, 0.22, 'sine'],
+      [150, 0.56, 0.18, 0.25, 'sine'],
+      // Blast-off rising sweep
+      [200, 0.82, 0.08, 0.20, 'sine'],
+      [300, 0.91, 0.08, 0.22, 'sine'],
+      [450, 1.00, 0.08, 0.25, 'sine'],
+      [650, 1.09, 0.08, 0.28, 'sine'],
+      [900, 1.18, 0.35, 0.32, 'triangle'],
+      // Soaring high note
+      [1174,1.55, 0.45, 0.30, 'triangle'],
+      [1319,2.00, 0.55, 0.28, 'triangle'],
+      // Bass rumble underneath
+      [80,  0.82, 0.80, 0.18, 'sine'],
+      [110, 1.18, 0.60, 0.15, 'sine']
+    ]);
+  }
+
   function playWrong() {
     beep([[280,0,0.12,0.18,'sawtooth'],[210,0.13,0.28,0.14,'sawtooth'],[180,0.32,0.22,0.10,'sawtooth']]);
   }
@@ -872,6 +894,12 @@
   }
 
   window.addEventListener('load', function() {
+    var _startGame = window.startGame;
+    window.startGame = function() {
+      playStart();
+      if (_startGame) _startGame();
+    };
+
     var _answer = window.answer;
     window.answer = function(btn, correct, qId) {
       if (correct) { playCorrect(); } else { playWrong(); }

@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Math Blast 🚀 — Space Adventure Math for Kids!</title>
+  <meta name="description" content="Math Blast is a free space-adventure math magazine for kids in Years 3–4. Join Jake on exciting missions and blast through fun math challenges every month!" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0630;
+      --purple: #a855f7;
+      --yellow: #fbbf24;
+      --cyan: #22d3ee;
+      --white: #f0e6ff;
+      --card-bg: rgba(255,255,255,0.05);
+      --card-border: rgba(168,85,247,0.3);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ===== STARFIELD ===== */
+    .stars-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--dur) ease-in-out infinite;
+      opacity: 0;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(0.8); }
+      50%       { opacity: var(--max-op); transform: scale(1.2); }
+    }
+
+    /* ===== NAV ===== */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,6,48,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(168,85,247,0.2);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .nav-logo {
+      font-size: 1.4rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--purple), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.2rem;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      transition: opacity 0.2s, color 0.2s;
+    }
+
+    .nav-links a:hover { opacity: 1; color: var(--cyan); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--purple), #7c3aed);
+      color: white !important;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      opacity: 1 !important;
+      font-weight: 800 !important;
+      transition: transform 0.2s, box-shadow 0.2s !important;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(168,85,247,0.5);
+    }
+
+    /* ===== SECTIONS WRAPPER ===== */
+    section, footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== HERO ===== */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5rem 1.5rem 3rem;
+      background: radial-gradient(ellipse at 50% 0%, rgba(168,85,247,0.2) 0%, transparent 70%);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(168,85,247,0.15);
+      border: 1px solid rgba(168,85,247,0.4);
+      border-radius: 999px;
+      padding: 0.3rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--purple);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-title .blast {
+      background: linear-gradient(90deg, var(--yellow), #f97316, var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-weight: 700;
+      color: var(--cyan);
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-desc {
+      max-width: 580px;
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      font-weight: 600;
+      opacity: 0.85;
+      line-height: 1.7;
+      margin: 0 auto 2rem;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--yellow), #f97316);
+      color: #1a0a00;
+      font-weight: 900;
+      font-size: 1.1rem;
+      padding: 0.85rem 2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(251,191,36,0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 8px 32px rgba(251,191,36,0.6);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 0.85rem 2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      border: 2px solid rgba(168,85,247,0.5);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--purple);
+      background: rgba(168,85,247,0.1);
+      transform: translateY(-2px);
+    }
+
+    .hero-image-wrap {
+      position: relative;
+      display: inline-block;
+      margin-top: 1rem;
+    }
+
+    .hero-image-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(168,85,247,0.3), transparent 70%);
+      animation: glow-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50%       { opacity: 1;   transform: scale(1.08); }
+    }
+
+    .hero-image {
+      width: min(320px, 80vw);
+      height: auto;
+      border-radius: 1rem;
+      position: relative;
+      filter: drop-shadow(0 0 40px rgba(168,85,247,0.5));
+    }
+
+    /* ===== SECTION COMMON ===== */
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem;
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900;
+      margin-bottom: 1rem;
+      line-height: 1.15;
+    }
+
+    .section-title .accent-purple { color: var(--purple); }
+    .section-title .accent-yellow { color: var(--yellow); }
+    .section-title .accent-cyan   { color: var(--cyan); }
+
+    .section-desc {
+      font-size: 1.05rem;
+      font-weight: 600;
+      opacity: 0.8;
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    #how-it-works {
+      background: linear-gradient(180deg, transparent, rgba(34,211,238,0.04), transparent);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1.25rem;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--purple), var(--cyan));
+      border-radius: 1.25rem 1.25rem 0 0;
+    }
+
+    .step-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(168,85,247,0.6);
+      box-shadow: 0 12px 40px rgba(168,85,247,0.2);
+    }
+
+    .step-num {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 900;
+      margin: 0 auto 1rem;
+      box-shadow: 0 4px 16px rgba(168,85,247,0.4);
+    }
+
+    .step-emoji {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    .step-card h3 {
+      font-size: 1.25rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      color: var(--yellow);
+    }
+
+    .step-card p {
+      font-size: 0.95rem;
+      font-weight: 600;
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+
+    /* ===== ISSUES ===== */
+    #issues {
+      background: linear-gradient(180deg, transparent, rgba(168,85,247,0.04), transparent);
+    }
+
+    .issues-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .issue-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .issue-card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 20px 60px rgba(168,85,247,0.25);
+      border-color: rgba(168,85,247,0.7);
+    }
+
+    .issue-badge-strip {
+      padding: 1.2rem 1.5rem 1rem;
+      background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(34,211,238,0.1));
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .issue-num-badge {
+      background: linear-gradient(135deg, var(--purple), #7c3aed);
+      border-radius: 0.75rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .issue-badge-strip .issue-emoji {
+      font-size: 2rem;
+    }
+
+    .issue-body {
+      padding: 1.25rem 1.5rem 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .issue-title {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--yellow);
+    }
+
+    .issue-tagline {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+
+    .issue-desc {
+      font-size: 0.9rem;
+      font-weight: 600;
+      opacity: 0.78;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .issue-meta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .issue-chip {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      opacity: 0.85;
+    }
+
+    .issue-play-btn {
+      display: block;
+      text-align: center;
+      background: linear-gradient(135deg, var(--yellow), #f97316);
+      color: #1a0a00;
+      font-weight: 900;
+      font-size: 1rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: 0 0 1.5rem 1.5rem;
+      text-decoration: none;
+      transition: filter 0.2s, transform 0.2s;
+      margin-top: auto;
+    }
+
+    .issue-play-btn:hover {
+      filter: brightness(1.1);
+      transform: scale(1.01);
+    }
+
+    /* ===== SUBSCRIBE ===== */
+    #subscribe {
+      background: linear-gradient(180deg, transparent, rgba(251,191,36,0.04), transparent);
+    }
+
+    .subscribe-box {
+      max-width: 640px;
+      margin: 2rem auto 0;
+      background: var(--card-bg);
+      border: 1px solid rgba(251,191,36,0.3);
+      border-radius: 1.5rem;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(251,191,36,0.08);
+    }
+
+    .subscribe-box .rocket-icon {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 1rem;
+      animation: rocket-float 3s ease-in-out infinite;
+    }
+
+    @keyframes rocket-float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    .subscribe-box h3 {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--yellow);
+      margin-bottom: 0.5rem;
+    }
+
+    .subscribe-box p {
+      font-size: 1rem;
+      font-weight: 600;
+      opacity: 0.85;
+      line-height: 1.6;
+      margin-bottom: 1.8rem;
+    }
+
+    .subscribe-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+
+    @media (max-width: 480px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .subscribe-form input {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 0.75rem;
+      padding: 0.85rem 1rem;
+      color: var(--white);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .subscribe-form input::placeholder { opacity: 0.5; }
+
+    .subscribe-form input:focus {
+      border-color: var(--purple);
+      background: rgba(168,85,247,0.08);
+    }
+
+    .subscribe-form button {
+      width: 100%;
+      background: linear-gradient(135deg, var(--purple), #7c3aed);
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1.05rem;
+      padding: 0.9rem 1.5rem;
+      border-radius: 0.75rem;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+      box-shadow: 0 4px 20px rgba(168,85,247,0.35);
+    }
+
+    .subscribe-form button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(168,85,247,0.55);
+      filter: brightness(1.1);
+    }
+
+    .subscribe-note {
+      font-size: 0.8rem;
+      opacity: 0.55;
+      margin-top: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: rgba(0,0,0,0.35);
+      border-top: 1px solid rgba(168,85,247,0.15);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-size: 1.6rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--purple), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-tagline {
+      font-size: 0.9rem;
+      font-weight: 600;
+      opacity: 0.55;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-social {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .social-chip {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .footer-copy {
+      font-size: 0.82rem;
+      opacity: 0.4;
+      font-weight: 600;
+    }
+
+    /* ===== DIVIDER ===== */
+    .star-divider {
+      text-align: center;
+      font-size: 1.2rem;
+      letter-spacing: 0.5rem;
+      opacity: 0.3;
+      padding: 0.5rem 0;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      nav { padding: 0.6rem 1rem; }
+      .subscribe-box { padding: 2rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Starfield -->
+  <div class="stars-container" id="stars"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">🚀 Math Blast</a>
+    <ul class="nav-links">
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#issues">Issues</a></li>
+      <li><a href="#subscribe" class="nav-cta">🔔 Get Notified</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-badge">⭐ Free · New Issues Monthly</div>
+
+    <h1 class="hero-title">
+      Math is an<br>
+      <span class="blast">Adventure!</span> 🚀
+    </h1>
+
+    <p class="hero-subtitle">Space stories + math challenges for kids in Years 3–4</p>
+
+    <p class="hero-desc">
+      Join <strong>Jake</strong> on epic space missions where solving maths problems saves the day.
+      Each issue is a story + 10 challenges — free forever.
+    </p>
+
+    <div class="hero-btns">
+      <a href="#issues" class="btn-primary">🎮 Play Now — It's Free!</a>
+      <a href="#how-it-works" class="btn-secondary">📖 How It Works</a>
+    </div>
+
+    <div class="hero-image-wrap">
+      <img
+        src="https://mathblastau.github.io/math-blast/images/ch1-crashed-rocket.png"
+        alt="Jake in his orange space suit next to a crashed rocket"
+        class="hero-image"
+      />
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how-it-works">
+    <div class="section-inner">
+      <div class="star-divider">✦ ✦ ✦</div>
+      <span class="section-tag">🛸 How It Works</span>
+      <h2 class="section-title">Three easy steps to <span class="accent-cyan">blast off</span></h2>
+      <p class="section-desc">No downloads, no logins — just click and go. Perfect for home or classroom.</p>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <span class="step-emoji">📚</span>
+          <div class="step-num">1</div>
+          <h3>Pick Your Mission</h3>
+          <p>Choose any issue from the launch pad. New missions drop every month for free!</p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-emoji">🌌</span>
+          <div class="step-num">2</div>
+          <h3>Read the Story</h3>
+          <p>Follow Jake through the galaxy. Each chapter is a fast, exciting adventure packed with action.</p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-emoji">🧮</span>
+          <div class="step-num">3</div>
+          <h3>Answer the Challenges</h3>
+          <p>10 maths questions tied to the story. Get them right to unlock the next part of Jake's mission!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ISSUES -->
+  <section id="issues">
+    <div class="section-inner">
+      <div class="star-divider">✦ ✦ ✦</div>
+      <span class="section-tag">🚀 Launch Pad</span>
+      <h2 class="section-title">Pick a <span class="accent-yellow">Mission</span></h2>
+      <p class="section-desc">Two missions are live and ready to play. Which one will you choose, astronaut?</p>
+
+      <div class="issues-grid">
+
+        <!-- Issue 1 -->
+        <div class="issue-card">
+          <div class="issue-badge-strip">
+            <span class="issue-num-badge">Issue #1</span>
+            <span class="issue-emoji">🛸</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-title">The Crashed Rocket</div>
+            <div class="issue-tagline">Jake's first mission — and it's already going wrong!</div>
+            <p class="issue-desc">
+              Jake crash-lands on an alien planet with no fuel and no signal. Can you solve the maths puzzles and help him get home before the battery dies?
+            </p>
+            <div class="issue-meta">
+              <span class="issue-chip">⏱ ~20 min</span>
+              <span class="issue-chip">🧮 10 questions</span>
+              <span class="issue-chip">⭐ Years 3–4</span>
+            </div>
+          </div>
+          <a href="https://mathblastau.github.io/math-blast/issue-001-v3.html" class="issue-play-btn" target="_blank" rel="noopener">
+            🚀 Launch Mission #1
+          </a>
+        </div>
+
+        <!-- Issue 2 -->
+        <div class="issue-card">
+          <div class="issue-badge-strip">
+            <span class="issue-num-badge">Issue #2</span>
+            <span class="issue-emoji">🌙</span>
+          </div>
+          <div class="issue-body">
+            <div class="issue-title">The Space Station Rescue</div>
+            <div class="issue-tagline">Someone's trapped — and only maths can save them!</div>
+            <p class="issue-desc">
+              Jake gets a distress signal from a failing space station. Solve the challenges to restore power, seal the airlocks, and bring the crew home safely.
+            </p>
+            <div class="issue-meta">
+              <span class="issue-chip">⏱ ~20 min</span>
+              <span class="issue-chip">🧮 10 questions</span>
+              <span class="issue-chip">⭐ Years 3–4</span>
+            </div>
+          </div>
+          <a href="https://mathblastau.github.io/math-blast/issue-002-v1.html" class="issue-play-btn" target="_blank" rel="noopener">
+            🚀 Launch Mission #2
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SUBSCRIBE -->
+  <section id="subscribe">
+    <div class="section-inner">
+      <div class="star-divider">✦ ✦ ✦</div>
+      <span class="section-tag">🔔 Stay in the Loop</span>
+      <h2 class="section-title">Never miss a <span class="accent-purple">launch</span></h2>
+
+      <div class="subscribe-box">
+        <span class="rocket-icon">🚀</span>
+        <h3>Mission Alert — Sign Up!</h3>
+        <p>New issues drop every month — free!<br>Sign up to get notified when the next mission launches.</p>
+
+        <form
+          action="https://formspree.io/f/xpwzgkqb"
+          method="POST"
+          class="subscribe-form"
+        >
+          <div class="form-row">
+            <input type="text" name="name" placeholder="Your name" required autocomplete="name" />
+            <input type="email" name="email" placeholder="Your email" required autocomplete="email" />
+          </div>
+          <button type="submit">
+            🚀 Join the Mission — It's Free!
+          </button>
+        </form>
+
+        <p class="subscribe-note">No spam. No cost. Just awesome maths adventures. Unsubscribe any time.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">🚀 Math Blast</div>
+    <p class="footer-tagline">Space adventures + maths skills for kids in Years 3–4</p>
+    <div class="footer-social">
+      <span class="social-chip">📘 Facebook — coming soon</span>
+      <span class="social-chip">📸 Instagram — coming soon</span>
+    </div>
+    <p class="footer-copy">© 2026 Math Blast. All rights reserved. Made with ❤️ for curious kids everywhere.</p>
+  </footer>
+
+  <script>
+    // ===== GENERATE STARFIELD =====
+    (function() {
+      const container = document.getElementById('stars');
+      const count = 120;
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 2.5 + 0.5;
+        const maxOp = (Math.random() * 0.5 + 0.3).toFixed(2);
+        const dur = (Math.random() * 4 + 2).toFixed(1) + 's';
+        const delay = (Math.random() * 6).toFixed(1) + 's';
+        star.style.cssText = `
+          width: ${size}px;
+          height: ${size}px;
+          top: ${Math.random() * 100}%;
+          left: ${Math.random() * 100}%;
+          --dur: ${dur};
+          --max-op: ${maxOp};
+          animation-delay: ${delay};
+        `;
+        container.appendChild(star);
+      }
+    })();
+  </script>
+
+</body>
+</html>
