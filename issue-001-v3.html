@@ -828,17 +828,46 @@
     beep([[280,0,0.12,0.18,'sawtooth'],[210,0.13,0.28,0.14,'sawtooth'],[180,0.32,0.22,0.10,'sawtooth']]);
   }
 
+  function playNextQ() {
+    // Soft ascending two-note pip - lighter than chapter transition
+    beep([
+      [440, 0,    0.08, 0.15, 'sine'],
+      [554, 0.09, 0.12, 0.18, 'sine']
+    ]);
+  }
+
   function playTransition() {
     beep([[300,0,0.08,0.15,'sine'],[450,0.09,0.08,0.15,'sine'],[600,0.18,0.08,0.15,'sine'],[800,0.27,0.18,0.20,'sine']]);
   }
 
   function playWin() {
+    // Dramatic fanfare: rising intro, big chord, then celebratory run
     beep([
-      [523,0,0.18,0.28,'triangle'],[659,0.18,0.18,0.28,'triangle'],[784,0.36,0.18,0.28,'triangle'],
-      [1047,0.54,0.28,0.28,'triangle'],[880,0.78,0.18,0.28,'triangle'],[988,0.96,0.18,0.28,'triangle'],
-      [1047,1.14,0.38,0.30,'triangle'],[784,1.38,0.18,0.28,'triangle'],[880,1.56,0.18,0.28,'triangle'],
-      [1047,1.74,0.48,0.32,'triangle'],[130,0,0.45,0.12,'sine'],[196,0.54,0.45,0.12,'sine'],
-      [130,1.38,0.45,0.12,'sine'],[196,1.74,0.55,0.14,'sine']
+      // Rising intro
+      [392, 0,    0.12, 0.25, 'square'],
+      [523, 0.13, 0.12, 0.25, 'square'],
+      [659, 0.26, 0.12, 0.25, 'square'],
+      [784, 0.39, 0.12, 0.28, 'square'],
+      // Big landing chord (staggered hits)
+      [1047,0.55, 0.55, 0.35, 'triangle'],
+      [784, 0.58, 0.55, 0.30, 'triangle'],
+      [523, 0.61, 0.55, 0.28, 'triangle'],
+      // Celebratory run
+      [784, 1.20, 0.10, 0.25, 'triangle'],
+      [880, 1.31, 0.10, 0.25, 'triangle'],
+      [988, 1.42, 0.10, 0.25, 'triangle'],
+      [1047,1.53, 0.10, 0.28, 'triangle'],
+      [1175,1.64, 0.10, 0.28, 'triangle'],
+      [1319,1.75, 0.55, 0.35, 'triangle'],
+      // Echo finish
+      [1047,2.40, 0.18, 0.22, 'sine'],
+      [1319,2.62, 0.35, 0.28, 'sine'],
+      // Bass underpinning
+      [130, 0.55, 0.50, 0.18, 'sine'],
+      [196, 1.20, 0.50, 0.15, 'sine'],
+      [261, 1.75, 0.60, 0.18, 'sine'],
+      [196, 2.40, 0.55, 0.15, 'sine'],
+      [261, 2.62, 0.55, 0.20, 'sine']
     ]);
   }
 
@@ -847,6 +876,12 @@
     window.answer = function(btn, correct, qId) {
       if (correct) { playCorrect(); } else { playWrong(); }
       if (_answer) _answer(btn, correct, qId);
+    };
+
+    var _showQ = window.showQ;
+    window.showQ = function(qId) {
+      playNextQ();
+      if (_showQ) _showQ(qId);
     };
 
     var _nextChapter = window.nextChapter;
