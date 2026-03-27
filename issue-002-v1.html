@@ -858,6 +858,7 @@
 <script>
 (function() {
   var soundMuted = false;
+
   var _unlocked = false;
   var _unlockCtx = null;
 
@@ -887,13 +888,13 @@
     if (btn) btn.textContent = soundMuted ? '🔇' : '🔊';
   };
 
+  // Rich multi-oscillator beep: notes = [freq, delay, dur, vol, type]
   function beep(notes) {
     if (soundMuted) return;
     try {
       var ctx = new (window.AudioContext || window.webkitAudioContext)();
-      if (ctx.state === 'suspended') { ctx.resume(); }
       notes.forEach(function(n) {
-        var freq = n[0], delay = n[1], dur = n[2], vol = n[3] || 0.3, type = n[4] || 'sine';
+        var freq = n[0], delay = n[1], dur = n[2], vol = n[3] || 0.5, type = n[4] || 'sine';
         var osc = ctx.createOscillator();
         var gain = ctx.createGain();
         osc.type = type;
@@ -908,68 +909,243 @@
         osc.stop(t + dur + 0.05);
       });
       var maxTime = notes.reduce(function(m, n) { return Math.max(m, n[1] + n[2]); }, 0);
-      setTimeout(function() { try { ctx.close(); } catch(e) {} }, (maxTime + 0.5) * 1000);
+      setTimeout(function() { try { ctx.close(); } catch(e) {} }, (maxTime + 0.6) * 1000);
     } catch(e) {}
   }
 
+  // Layer multiple oscillators on the same notes for richness/depth
+  function richBeep(layers) {
+    // layers: array of note-arrays, each played simultaneously
+    if (soundMuted) return;
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var maxTime = 0;
+      layers.forEach(function(notes) {
+        notes.forEach(function(n) {
+          var freq = n[0], delay = n[1], dur = n[2], vol = n[3] || 0.5, type = n[4] || 'sine';
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = type;
+          osc.frequency.value = freq;
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          var t = ctx.currentTime + delay;
+          gain.gain.setValueAtTime(0.001, t);
+          gain.gain.linearRampToValueAtTime(vol, t + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+          osc.start(t);
+          osc.stop(t + dur + 0.08);
+          maxTime = Math.max(maxTime, delay + dur);
+        });
+      });
+      setTimeout(function() { try { ctx.close(); } catch(e) {} }, (maxTime + 0.6) * 1000);
+    } catch(e) {}
+  }
+
+  var correctVariant = 0;
   function playCorrect() {
-    beep([[523,0,0.18,0.3,'sine'],[659,0.12,0.18,0.3,'sine'],[784,0.24,0.38,0.3,'sine']]);
+    // 3 variations that cycle — all genuinely rewarding and rich
+    var v = correctVariant % 3;
+    correctVariant++;
+    if (v === 0) {
+      // Bright ascending chord — 3 layers: sine melody + triangle harmony + high sparkle
+      richBeep([
+        // Melody layer (sine)
+        [[523,0,0.20,0.65,'sine'],[659,0.13,0.20,0.65,'sine'],[784,0.26,0.38,0.65,'sine']],
+        // Harmony layer (triangle, slightly softer)
+        [[659,0,0.18,0.40,'triangle'],[784,0.13,0.18,0.40,'triangle'],[988,0.26,0.35,0.40,'triangle']],
+        // Sparkle layer (high sine, quick decay)
+        [[2093,0.26,0.12,0.30,'sine'],[2637,0.35,0.10,0.25,'sine'],[3136,0.44,0.08,0.20,'sine']]
+      ]);
+    } else if (v === 1) {
+      // Punchy power-chord variant — fuller and more triumphant
+      richBeep([
+        [[392,0,0.14,0.60,'sine'],[523,0.10,0.18,0.65,'sine'],[659,0.20,0.18,0.65,'sine'],[880,0.30,0.38,0.70,'sine']],
+        [[392,0,0.12,0.35,'triangle'],[523,0.10,0.14,0.35,'triangle'],[659,0.20,0.14,0.35,'triangle'],[880,0.30,0.35,0.40,'triangle']],
+        [[1760,0.30,0.14,0.28,'sine'],[2093,0.38,0.10,0.22,'sine'],[2637,0.46,0.08,0.18,'sine']]
+      ]);
+    } else {
+      // Bubbly sparkle variant — fast, delightful shimmer
+      richBeep([
+        [[523,0,0.16,0.60,'sine'],[698,0.08,0.16,0.60,'sine'],[880,0.16,0.16,0.65,'sine'],[1047,0.24,0.38,0.70,'sine']],
+        [[1047,0,0.14,0.35,'triangle'],[1175,0.08,0.12,0.35,'triangle'],[1319,0.16,0.12,0.35,'triangle'],[1568,0.24,0.32,0.38,'triangle']],
+        [[2093,0,0.08,0.22,'sine'],[2349,0.08,0.07,0.20,'sine'],[2637,0.16,0.07,0.18,'sine'],[3136,0.24,0.10,0.22,'sine'],[3520,0.32,0.08,0.18,'sine']]
+      ]);
+    }
   }
 
-  function playStart() {
-    beep([
-      [150, 0,    0.18, 0.20, 'sine'],
-      [150, 0.28, 0.18, 0.22, 'sine'],
-      [150, 0.56, 0.18, 0.25, 'sine'],
-      [200, 0.82, 0.08, 0.20, 'sine'],
-      [300, 0.91, 0.08, 0.22, 'sine'],
-      [450, 1.00, 0.08, 0.25, 'sine'],
-      [650, 1.09, 0.08, 0.28, 'sine'],
-      [900, 1.18, 0.35, 0.32, 'triangle'],
-      [1174,1.55, 0.45, 0.30, 'triangle'],
-      [1319,2.00, 0.55, 0.28, 'triangle'],
-      [80,  0.82, 0.80, 0.18, 'sine'],
-      [110, 1.18, 0.60, 0.15, 'sine']
-    ]);
-  }
-
+  var wrongVariant = 0;
   function playWrong() {
-    beep([[280,0,0.12,0.18,'sawtooth'],[210,0.13,0.28,0.14,'sawtooth'],[180,0.32,0.22,0.10,'sawtooth']]);
+    // 3 variations — warm, "oops" feel, not punishing or harsh
+    var v = wrongVariant % 3;
+    wrongVariant++;
+    if (v === 0) {
+      // Warm wah-wah descend using sine (not harsh sawtooth)
+      richBeep([
+        [[440,0,0.15,0.45,'sine'],[330,0.15,0.20,0.45,'sine'],[262,0.32,0.30,0.40,'sine']],
+        [[440,0,0.13,0.25,'triangle'],[330,0.15,0.18,0.25,'triangle'],[262,0.32,0.28,0.20,'triangle']]
+      ]);
+    } else if (v === 1) {
+      // Bouncy descending tones — playful, not sad
+      richBeep([
+        [[392,0,0.12,0.45,'sine'],[294,0.14,0.15,0.45,'sine'],[220,0.30,0.28,0.40,'sine']],
+        [[392,0,0.10,0.20,'triangle'],[294,0.14,0.12,0.20,'triangle'],[220,0.30,0.24,0.18,'triangle']]
+      ]);
+    } else {
+      // Wobbly slide — funny, kid-friendly "oops"
+      richBeep([
+        [[370,0,0.12,0.45,'sine'],[277,0.13,0.18,0.45,'sine'],[196,0.30,0.28,0.40,'sine']],
+        [[370,0,0.10,0.22,'triangle'],[277,0.13,0.14,0.22,'triangle'],[196,0.30,0.24,0.18,'triangle']]
+      ]);
+    }
   }
 
   function playNextQ() {
-    beep([
-      [440, 0,    0.08, 0.15, 'sine'],
-      [554, 0.09, 0.12, 0.18, 'sine']
+    // Quick, bright, forward-moving — "onwards!" pip
+    richBeep([
+      [[523,0,0.07,0.50,'sine'],[659,0.08,0.10,0.55,'sine'],[784,0.18,0.14,0.50,'sine']],
+      [[1047,0.18,0.10,0.28,'triangle'],[1319,0.25,0.08,0.22,'triangle']]
     ]);
   }
 
   function playTransition() {
-    beep([[300,0,0.08,0.15,'sine'],[450,0.09,0.08,0.15,'sine'],[600,0.18,0.08,0.15,'sine'],[800,0.27,0.18,0.20,'sine']]);
+    // Rising arpeggio with reverb-like tail — page-turning adventure feel
+    richBeep([
+      // Main rising arpeggio
+      [[300,0,0.10,0.60,'sine'],[400,0.10,0.10,0.60,'sine'],[533,0.20,0.10,0.60,'sine'],[711,0.30,0.12,0.62,'sine'],[950,0.42,0.12,0.63,'sine'],[1266,0.55,0.45,0.65,'sine']],
+      // Harmony layer
+      [[375,0,0.08,0.35,'triangle'],[500,0.10,0.08,0.35,'triangle'],[667,0.20,0.08,0.35,'triangle'],[889,0.30,0.10,0.37,'triangle'],[1187,0.42,0.10,0.37,'triangle'],[1583,0.55,0.40,0.35,'triangle']],
+      // Echo/reverb tail sparkle
+      [[1266,0.70,0.25,0.22,'sine'],[1583,0.82,0.22,0.18,'sine'],[1900,0.95,0.20,0.14,'sine'],[2400,1.10,0.18,0.10,'sine']]
+    ]);
   }
 
   function playWin() {
-    beep([
-      [392, 0,    0.12, 0.25, 'square'],
-      [523, 0.13, 0.12, 0.25, 'square'],
-      [659, 0.26, 0.12, 0.25, 'square'],
-      [784, 0.39, 0.12, 0.28, 'square'],
-      [1047,0.55, 0.55, 0.35, 'triangle'],
-      [784, 0.58, 0.55, 0.30, 'triangle'],
-      [523, 0.61, 0.55, 0.28, 'triangle'],
-      [784, 1.20, 0.10, 0.25, 'triangle'],
-      [880, 1.31, 0.10, 0.25, 'triangle'],
-      [988, 1.42, 0.10, 0.25, 'triangle'],
-      [1047,1.53, 0.10, 0.28, 'triangle'],
-      [1175,1.64, 0.10, 0.28, 'triangle'],
-      [1319,1.75, 0.55, 0.35, 'triangle'],
-      [1047,2.40, 0.18, 0.22, 'sine'],
-      [1319,2.62, 0.35, 0.28, 'sine'],
-      [130, 0.55, 0.50, 0.18, 'sine'],
-      [196, 1.20, 0.50, 0.15, 'sine'],
-      [261, 1.75, 0.60, 0.18, 'sine'],
-      [196, 2.40, 0.55, 0.15, 'sine'],
-      [261, 2.62, 0.55, 0.20, 'sine']
+    // Full 3.5-second celebration — melody + harmony + bass + sparkle shower
+    richBeep([
+      // MELODY: big rising fanfare run
+      [
+        [392, 0,    0.14, 0.70, 'sine'],
+        [523, 0.14, 0.14, 0.70, 'sine'],
+        [659, 0.28, 0.14, 0.70, 'sine'],
+        [784, 0.42, 0.14, 0.72, 'sine'],
+        // Big landing chord
+        [1047,0.58, 0.55, 0.75, 'sine'],
+        [784, 0.60, 0.55, 0.68, 'sine'],
+        [523, 0.62, 0.55, 0.60, 'sine'],
+        // Celebratory run 1
+        [784, 1.22, 0.10, 0.65, 'sine'],
+        [880, 1.33, 0.10, 0.65, 'sine'],
+        [988, 1.44, 0.10, 0.65, 'sine'],
+        [1047,1.55, 0.10, 0.68, 'sine'],
+        [1175,1.66, 0.10, 0.68, 'sine'],
+        [1319,1.77, 0.55, 0.72, 'sine'],
+        // Echo finish
+        [1175,2.42, 0.18, 0.55, 'sine'],
+        [1319,2.62, 0.22, 0.55, 'sine'],
+        [1568,2.85, 0.40, 0.60, 'sine']
+      ],
+      // HARMONY: triangle layer (fills out the chord)
+      [
+        [494, 0,    0.12, 0.42, 'triangle'],
+        [659, 0.14, 0.12, 0.42, 'triangle'],
+        [784, 0.28, 0.12, 0.42, 'triangle'],
+        [988, 0.42, 0.12, 0.44, 'triangle'],
+        [1319,0.58, 0.52, 0.45, 'triangle'],
+        [988, 0.60, 0.52, 0.38, 'triangle'],
+        [659, 0.62, 0.52, 0.34, 'triangle'],
+        [988, 1.22, 0.09, 0.38, 'triangle'],
+        [1047,1.33, 0.09, 0.38, 'triangle'],
+        [1175,1.44, 0.09, 0.38, 'triangle'],
+        [1319,1.55, 0.09, 0.40, 'triangle'],
+        [1480,1.66, 0.09, 0.40, 'triangle'],
+        [1568,1.77, 0.50, 0.42, 'triangle'],
+        [1480,2.42, 0.16, 0.32, 'triangle'],
+        [1568,2.62, 0.20, 0.32, 'triangle'],
+        [1760,2.85, 0.36, 0.35, 'triangle']
+      ],
+      // BASS: deep warm undertones
+      [
+        [131, 0.58, 0.55, 0.55, 'sine'],
+        [98,  1.22, 0.55, 0.48, 'sine'],
+        [131, 1.77, 0.60, 0.52, 'sine'],
+        [196, 2.42, 0.60, 0.50, 'sine'],
+        [261, 2.85, 0.50, 0.45, 'sine']
+      ],
+      // SPARKLE: high-frequency shimmer shower
+      [
+        [2093,0.58, 0.12, 0.30, 'sine'],
+        [2637,0.65, 0.10, 0.28, 'sine'],
+        [3136,0.72, 0.08, 0.24, 'sine'],
+        [2349,1.22, 0.10, 0.25, 'sine'],
+        [2793,1.30, 0.08, 0.22, 'sine'],
+        [2093,1.77, 0.12, 0.28, 'sine'],
+        [2637,1.85, 0.10, 0.25, 'sine'],
+        [3136,1.93, 0.08, 0.22, 'sine'],
+        [3520,2.01, 0.08, 0.18, 'sine'],
+        [2093,2.85, 0.14, 0.28, 'sine'],
+        [2637,2.95, 0.12, 0.25, 'sine'],
+        [3136,3.05, 0.10, 0.22, 'sine'],
+        [3520,3.15, 0.10, 0.18, 'sine'],
+        [4186,3.25, 0.10, 0.14, 'sine']
+      ]
+    ]);
+  }
+
+  function playStart() {
+    // Dramatic rocket launch: 3 big countdown pulses then BLAST-OFF sweep
+    richBeep([
+      // MAIN countdown + blast-off melody
+      [
+        // Three countdown BOOMS — bigger and punchier
+        [150, 0,    0.22, 0.65, 'sine'],
+        [150, 0.30, 0.22, 0.68, 'sine'],
+        [150, 0.60, 0.22, 0.72, 'sine'],
+        // Blast-off rising sweep
+        [200, 0.88, 0.08, 0.60, 'sine'],
+        [267, 0.96, 0.08, 0.62, 'sine'],
+        [356, 1.04, 0.08, 0.64, 'sine'],
+        [475, 1.12, 0.08, 0.65, 'sine'],
+        [633, 1.20, 0.08, 0.66, 'sine'],
+        [844, 1.28, 0.08, 0.67, 'sine'],
+        // Ignition burst — big triangle chord
+        [1047,1.36, 0.40, 0.70, 'triangle'],
+        [1319,1.38, 0.40, 0.65, 'triangle'],
+        // Soaring high notes
+        [1319,1.76, 0.50, 0.68, 'triangle'],
+        [1568,2.26, 0.60, 0.65, 'triangle'],
+        [1760,2.86, 0.50, 0.60, 'triangle']
+      ],
+      // HARMONY layer
+      [
+        [188, 0,    0.18, 0.38, 'triangle'],
+        [188, 0.30, 0.18, 0.40, 'triangle'],
+        [188, 0.60, 0.18, 0.42, 'triangle'],
+        [1319,1.36, 0.38, 0.38, 'sine'],
+        [1568,1.38, 0.38, 0.34, 'sine'],
+        [1568,1.76, 0.45, 0.36, 'sine'],
+        [1760,2.26, 0.55, 0.33, 'sine'],
+        [2093,2.86, 0.46, 0.30, 'sine']
+      ],
+      // BASS rumble — deep and powerful
+      [
+        [65,  0,    0.25, 0.50, 'sine'],
+        [65,  0.30, 0.25, 0.52, 'sine'],
+        [65,  0.60, 0.25, 0.55, 'sine'],
+        [82,  0.88, 0.80, 0.55, 'sine'],
+        [110, 1.36, 0.60, 0.50, 'sine'],
+        [131, 1.76, 0.55, 0.45, 'sine'],
+        [164, 2.26, 0.65, 0.42, 'sine'],
+        [196, 2.86, 0.55, 0.38, 'sine']
+      ],
+      // IGNITION SPARKLE
+      [
+        [2093,1.36, 0.12, 0.28, 'sine'],
+        [2637,1.44, 0.10, 0.24, 'sine'],
+        [3136,1.52, 0.08, 0.20, 'sine'],
+        [2637,1.76, 0.10, 0.22, 'sine'],
+        [3136,1.84, 0.08, 0.18, 'sine']
+      ]
     ]);
   }
 
