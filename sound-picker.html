@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Blast — Sound Picker</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #0d0630;
+    font-family: 'Nunito', sans-serif;
+    color: #fff;
+    background-image: radial-gradient(ellipse at 50% 0%, rgba(120,0,255,0.2) 0%, transparent 70%);
+    min-height: 100vh;
+    padding: 32px 16px 60px;
+  }
+  h1 { text-align:center; font-size:32px; font-weight:900; margin-bottom:8px;
+    text-shadow: 0 0 20px rgba(168,85,247,0.8); }
+  .subtitle { text-align:center; color:#a0a0c0; margin-bottom:40px; font-size:15px; }
+
+  .section { background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+    border-radius:16px; padding:24px; margin-bottom:24px; max-width:720px; margin-left:auto; margin-right:auto; }
+  .section h2 { font-size:20px; font-weight:900; margin-bottom:16px; }
+
+  .options { display:flex; flex-wrap:wrap; gap:12px; }
+  .option-card { background: rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.1);
+    border-radius:12px; padding:16px; flex:1; min-width:140px; text-align:center;
+    transition: border-color 0.2s; }
+  .option-card.selected { border-color: #a855f7; background: rgba(168,85,247,0.15); }
+  .option-label { font-weight:900; font-size:16px; margin-bottom:10px; color:#fbbf24; }
+
+  .play-btn { background: rgba(34,211,238,0.15); border:1px solid #22d3ee; color:#22d3ee;
+    border-radius:8px; padding:8px 16px; font-family:'Nunito',sans-serif; font-weight:700;
+    font-size:14px; cursor:pointer; width:100%; margin-bottom:8px; transition:all 0.15s; }
+  .play-btn:hover { background: rgba(34,211,238,0.3); }
+  .play-btn.playing { background: rgba(34,211,238,0.4); border-color:#fff; color:#fff; }
+
+  .select-btn { background: rgba(168,85,247,0.2); border:1px solid #a855f7; color:#c084fc;
+    border-radius:8px; padding:8px 16px; font-family:'Nunito',sans-serif; font-weight:700;
+    font-size:13px; cursor:pointer; width:100%; transition:all 0.15s; }
+  .select-btn:hover { background: rgba(168,85,247,0.4); }
+  .option-card.selected .select-btn { background:#a855f7; color:#fff; border-color:#a855f7; }
+
+  .selection-summary { max-width:720px; margin:32px auto 0; background:rgba(168,85,247,0.1);
+    border:2px solid #a855f7; border-radius:16px; padding:24px; }
+  .selection-summary h2 { font-size:20px; font-weight:900; margin-bottom:16px; color:#c084fc; }
+  .code-output { background:rgba(0,0,0,0.4); border-radius:8px; padding:16px; font-family:monospace;
+    font-size:14px; color:#22d3ee; margin-bottom:16px; min-height:60px; word-break:break-all; }
+  .copy-btn { background:#a855f7; border:none; color:#fff; border-radius:10px; padding:12px 28px;
+    font-family:'Nunito',sans-serif; font-weight:900; font-size:16px; cursor:pointer;
+    transition:transform 0.15s; }
+  .copy-btn:hover { transform:scale(1.04); }
+  .copy-btn:active { transform:scale(0.97); }
+
+  .status-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+  .status-pill { background:rgba(255,255,255,0.08); border-radius:20px; padding:4px 12px;
+    font-size:13px; font-weight:700; }
+  .status-pill span { color:#fbbf24; }
+</style>
+</head>
+<body>
+
+<h1>🎵 Sound Picker</h1>
+<p class="subtitle">Tap Play to hear each option — then Select to lock it in. Pick all 6 to generate your selection code.</p>
+
+<!-- CORRECT -->
+<div class="section">
+  <h2>✅ Correct Answer</h2>
+  <div class="options" id="options-correct"></div>
+</div>
+
+<!-- WRONG -->
+<div class="section">
+  <h2>❌ Wrong Answer</h2>
+  <div class="options" id="options-wrong"></div>
+</div>
+
+<!-- NEXT QUESTION -->
+<div class="section">
+  <h2>➡️ Next Question</h2>
+  <div class="options" id="options-next"></div>
+</div>
+
+<!-- TRANSITION -->
+<div class="section">
+  <h2>🌟 Chapter Transition</h2>
+  <div class="options" id="options-transition"></div>
+</div>
+
+<!-- LAUNCH -->
+<div class="section">
+  <h2>🚀 Launch (Game Start)</h2>
+  <div class="options" id="options-launch"></div>
+</div>
+
+<!-- WIN -->
+<div class="section">
+  <h2>🏆 Win / Celebration</h2>
+  <div class="options" id="options-win"></div>
+</div>
+
+<!-- SUMMARY -->
+<div class="selection-summary">
+  <h2>📋 Your Selections</h2>
+  <div class="status-row" id="status-row">
+    <div class="status-pill">Correct: <span id="s-correct">—</span></div>
+    <div class="status-pill">Wrong: <span id="s-wrong">—</span></div>
+    <div class="status-pill">Next: <span id="s-next">—</span></div>
+    <div class="status-pill">Transition: <span id="s-transition">—</span></div>
+    <div class="status-pill">Launch: <span id="s-launch">—</span></div>
+    <div class="status-pill">Win: <span id="s-win">—</span></div>
+  </div>
+  <div class="code-output" id="code-output">Make your selections above to generate the code...</div>
+  <button class="copy-btn" onclick="copyCode()">📋 Copy Selection Code</button>
+</div>
+
+<script>
+const selections = {};
+
+const soundData = {
+  correct: [
+    { label:'Option A', file:'sounds/correct-1.ogg', desc:'Confirmation chime' },
+    { label:'Option B', file:'sounds/correct-2.wav', desc:'Bright confirmation' },
+    { label:'Option C', file:'sounds/correct-3.ogg', desc:'Quick confirm' },
+    { label:'Option D', file:'sounds/correct-4.ogg', desc:'Power-up maximize' },
+  ],
+  wrong: [
+    { label:'Option A', file:'sounds/wrong-1.ogg', desc:'Soft error' },
+    { label:'Option B', file:'sounds/wrong-2.ogg', desc:'Low error buzz' },
+    { label:'Option C', file:'sounds/wrong-3.wav', desc:'Short error blip' },
+    { label:'Option D', file:'sounds/wrong-4.ogg', desc:'Drop thud' },
+  ],
+  next: [
+    { label:'Option A', file:'sounds/next-1.ogg', desc:'Clean click' },
+    { label:'Option B', file:'sounds/next-2.ogg', desc:'Select pip' },
+    { label:'Option C', file:'sounds/next-3.ogg', desc:'Soft tick' },
+    { label:'Option D', file:'sounds/next-4.wav', desc:'Pluck' },
+  ],
+  transition: [
+    { label:'Option A', file:'sounds/transition-1.ogg', desc:'Big maximize sweep' },
+    { label:'Option B', file:'sounds/transition-2.ogg', desc:'Short maximize' },
+    { label:'Option C', file:'sounds/transition-3.ogg', desc:'Open tone' },
+    { label:'Option D', file:'sounds/transition-4.wav', desc:'Open sweep' },
+  ],
+  launch: [
+    { label:'Option A', file:'sounds/launch-1.wav', desc:'Big launch sweep' },
+    { label:'Option B', file:'sounds/launch-2.ogg', desc:'Punchy launch' },
+    { label:'Option C', file:'sounds/launch-3.ogg', desc:'Glitchy blast' },
+    { label:'Option D', file:'sounds/launch-4.ogg', desc:'Sci-fi ignition' },
+  ],
+  win: [
+    { label:'Option A', file:'sounds/win-1.wav', desc:'Space Fanfare (2.8s)' },
+    { label:'Option B', file:'sounds/win-2.wav', desc:'Level Complete (2s)' },
+    { label:'Option C', file:'sounds/win-3.wav', desc:'Epic Victory (4s)' },
+    { label:'Option D', file:'sounds/win-4.wav', desc:'Bouncy Jingle (2.6s)' },
+  ],
+};
+
+let currentAudio = null;
+
+function playSound(file, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  document.querySelectorAll('.play-btn.playing').forEach(b => {
+    b.classList.remove('playing'); b.textContent = '▶ Play'; });
+  const audio = new Audio(file);
+  audio.volume = 0.9;
+  currentAudio = audio;
+  btn.classList.add('playing');
+  btn.textContent = '🔊 Playing…';
+  audio.play();
+  audio.onended = () => { btn.classList.remove('playing'); btn.textContent = '▶ Play'; };
+  audio.onerror = () => { btn.classList.remove('playing'); btn.textContent = '⚠️ Error'; };
+}
+
+function selectOption(category, optionLabel, card) {
+  document.querySelectorAll(`#options-${category} .option-card`).forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll(`#options-${category} .select-btn`).forEach(b => b.textContent = '✅ Select this one');
+  card.classList.add('selected');
+  card.querySelector('.select-btn').textContent = '⭐ Selected!';
+  selections[category] = optionLabel;
+  document.getElementById(`s-${category}`).textContent = optionLabel;
+  updateCode();
+}
+
+function updateCode() {
+  const keys = ['correct','wrong','next','transition','launch','win'];
+  const allDone = keys.every(k => selections[k]);
+  if (allDone) {
+    document.getElementById('code-output').textContent = JSON.stringify(selections, null, 2);
+  } else {
+    const done = keys.filter(k => selections[k]).length;
+    document.getElementById('code-output').textContent = `${done}/6 selected — pick all 6 to generate code...`;
+  }
+}
+
+function copyCode() {
+  const code = document.getElementById('code-output').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy Selection Code', 2000);
+  });
+}
+
+// Build the UI
+Object.entries(soundData).forEach(([category, options]) => {
+  const container = document.getElementById(`options-${category}`);
+  options.forEach(opt => {
+    const card = document.createElement('div');
+    card.className = 'option-card';
+    card.innerHTML = `
+      <div class="option-label">${opt.label}</div>
+      <div style="font-size:12px;color:#8080a0;margin-bottom:10px;">${opt.desc}</div>
+      <button class="play-btn" onclick="playSound('${opt.file}', this)">▶ Play</button>
+      <button class="select-btn" onclick="selectOption('${category}', '${opt.label}', this.closest('.option-card'))">✅ Select this one</button>
+    `;
+    container.appendChild(card);
+  });
+});
+</script>
+</body>
+</html>
