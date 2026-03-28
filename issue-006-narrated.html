@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission: Math Blast 🚀 — Issue #6 (Narrated)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0d0630; font-family:'Nunito',Arial,sans-serif; color:#fff;
+    background-image:radial-gradient(ellipse at 50% 0%,rgba(120,0,255,0.2) 0%,transparent 70%); min-height:100vh; }
+  .starfield { position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .star { position:absolute; background:white; border-radius:50%; opacity:0.6; animation:twinkle 3s infinite alternate; }
+  @keyframes twinkle { from{opacity:0.2} to{opacity:0.9} }
+  .wrapper { max-width:680px; margin:0 auto; position:relative; z-index:1; padding-bottom:90px; }
+  .title-screen { text-align:center; padding:48px 24px 36px; }
+  .rocket-emoji { font-size:72px; display:block; margin-bottom:16px; animation:float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  .title-screen h1 { font-size:46px; font-weight:900; line-height:1.1; text-shadow:0 0 24px rgba(180,100,255,0.8); }
+  .title-screen h1 span { color:#ffdd00; }
+  .issue-label { font-size:13px; font-weight:900; color:#aa77ff; letter-spacing:3px; text-transform:uppercase; margin:10px 0 4px; }
+  .tagline { font-size:16px; color:#b090e0; margin-bottom:4px; }
+  .meta { font-size:13px; color:#6655aa; margin-bottom:8px; }
+  .narrated-badge { display:inline-block; background:rgba(255,200,0,0.15); border:1px solid #ffcc00; color:#ffcc00;
+    font-size:11px; font-weight:900; padding:4px 14px; border-radius:20px; letter-spacing:2px; text-transform:uppercase; margin-bottom:24px; }
+  .start-btn { display:inline-block; background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white;
+    font-size:20px; font-weight:900; padding:18px 48px; border-radius:50px; border:none; cursor:pointer;
+    box-shadow:0 6px 30px rgba(123,47,255,0.5); transition:transform 0.15s; font-family:'Nunito',Arial,sans-serif; }
+  .start-btn:hover { transform:scale(1.05); }
+  .progress-wrap { padding:16px 24px 0; display:none; }
+  .progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .progress-label { font-size:13px; color:#8877aa; font-weight:700; }
+  .progress-score { font-size:13px; color:#ffdd00; font-weight:900; }
+  .progress-bar { background:#1a0f30; border-radius:20px; height:14px; overflow:hidden; }
+  .progress-fill { background:linear-gradient(90deg,#7b2fff,#ff2fff); height:100%; border-radius:20px; transition:width 0.5s ease; }
+  .chapter { display:none; padding:20px 20px 0; animation:fadeIn 0.4s ease; }
+  .chapter.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .chapter-badge { display:inline-block; background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white;
+    font-size:11px; font-weight:900; padding:5px 16px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; }
+  .chapter h2 { font-size:26px; font-weight:900; margin-bottom:16px; line-height:1.3; }
+  .chapter-img { width:100%; border-radius:16px; display:block; margin-bottom:20px;
+    border:3px solid rgba(180,100,255,0.4); box-shadow:0 8px 30px rgba(0,0,0,0.5); background:#1a0f30; min-height:180px; object-fit:cover; }
+  .nar-player { display:flex; align-items:center; gap:12px; background:rgba(123,47,255,0.15);
+    border:2px solid rgba(123,47,255,0.4); border-radius:14px; padding:12px 16px; margin-bottom:16px; }
+  .nar-btn { width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; flex-shrink:0;
+    background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white; font-size:18px;
+    display:flex; align-items:center; justify-content:center; transition:transform 0.15s; }
+  .nar-btn:hover { transform:scale(1.1); }
+  .nar-info { flex:1; min-width:0; }
+  .nar-status { font-size:12px; color:#aa77ff; font-weight:700; }
+  .nar-bar { height:4px; background:#1a0f30; border-radius:4px; margin-top:5px; overflow:hidden; }
+  .nar-bar-fill { height:100%; background:linear-gradient(90deg,#7b2fff,#ff2fff); border-radius:4px; width:0%; transition:width 0.3s; }
+  .story-text { background:rgba(255,255,255,0.05); border-left:4px solid #7b2fff;
+    border-radius:0 12px 12px 0; padding:18px 22px; font-size:18px; line-height:1.9; color:#ddd; margin-bottom:20px;
+    transition:border-color 0.4s, background 0.4s; }
+  .story-text.playing { border-left-color:#ff2fff; background:rgba(123,47,255,0.1); }
+  .story-text.done { border-left-color:#00dc64; background:rgba(0,220,100,0.04); }
+  .story-text strong { color:#ffdd00; }
+  .story-text em { color:#ff88ff; font-style:normal; font-weight:700; }
+  .quiz-lock { text-align:center; padding:16px 20px; background:rgba(123,47,255,0.08);
+    border:2px dashed rgba(123,47,255,0.3); border-radius:16px; margin-bottom:20px;
+    font-size:14px; color:#7755bb; font-weight:700; }
+  .quiz-box { background:rgba(123,47,255,0.12); border:2px solid rgba(123,47,255,0.4);
+    border-radius:16px; padding:22px; margin-bottom:20px; display:none; animation:fadeIn 0.4s ease; }
+  .quiz-box.show { display:block; }
+  .quiz-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .difficulty { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; }
+  .diff-warmup { background:rgba(100,200,255,0.2); color:#66ddff; border:1px solid #66ddff; }
+  .diff-easy   { background:rgba(0,220,100,0.2); color:#00dc64; border:1px solid #00dc64; }
+  .diff-medium { background:rgba(255,200,0,0.2); color:#ffcc00; border:1px solid #ffcc00; }
+  .diff-hard   { background:rgba(255,80,80,0.2); color:#ff8888; border:1px solid #ff8888; }
+  .diff-boss   { background:rgba(255,0,200,0.2); color:#ff44ee; border:1px solid #ff44ee; }
+  .acara-tag { display:inline-block; font-size:10px; font-weight:700; padding:3px 10px; border-radius:10px;
+    background:rgba(255,255,255,0.08); color:#9988cc; border:1px solid rgba(255,255,255,0.12); text-transform:uppercase; letter-spacing:0.5px; }
+  .quiz-icon { font-size:26px; display:block; margin-bottom:6px; }
+  .quiz-label { font-size:12px; font-weight:900; color:#aa77ff; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+  .yr-badge { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; margin-right:6px; }
+  .yr3 { background:rgba(0,180,80,0.2); color:#00cc60; border:1px solid #00cc60; }
+  .yr4 { background:rgba(160,50,255,0.2); color:#bb66ff; border:1px solid #bb66ff; }
+  .question { font-size:20px; font-weight:900; color:#fff; margin-bottom:18px; line-height:1.5; }
+  .question-img { display:block; max-width:300px; width:100%; margin:14px auto 18px; border-radius:8px; border:2px solid rgba(123,47,255,0.3); }
+  .options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .opt-btn { background:rgba(255,255,255,0.07); border:2px solid rgba(255,255,255,0.15); color:#fff;
+    font-family:'Nunito',Arial,sans-serif; font-size:19px; font-weight:700; padding:16px 10px;
+    border-radius:12px; cursor:pointer; transition:all 0.15s; }
+  .opt-btn:hover:not(:disabled) { background:rgba(123,47,255,0.3); border-color:#7b2fff; transform:scale(1.03); }
+  .opt-btn.correct { background:rgba(0,220,100,0.2)!important; border-color:#00dc64!important; color:#00ff88!important; }
+  .opt-btn.wrong   { background:rgba(255,50,50,0.2)!important; border-color:#ff3232!important; color:#ff8888!important; animation:shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .feedback { margin-top:16px; padding:14px 18px; border-radius:10px; font-size:15px; font-weight:700; display:none; line-height:1.5; }
+  .feedback.show { display:block; }
+  .feedback.good { background:rgba(0,220,100,0.15); border:2px solid #00dc64; color:#00ff88; }
+  .feedback.bad  { background:rgba(255,50,50,0.15); border:2px solid #ff3232; color:#ff9999; }
+  .next-btn { display:none; width:100%; margin-top:16px; background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px; border-radius:50px;
+    border:none; cursor:pointer; box-shadow:0 4px 20px rgba(123,47,255,0.4); transition:transform 0.15s; }
+  .next-btn:hover { transform:scale(1.03); }
+  .next-btn.show { display:block; }
+  #win-screen { display:none; text-align:center; padding:48px 24px 24px; animation:fadeIn 0.5s ease; }
+  .trophy { font-size:80px; display:block; margin-bottom:16px; animation:bounce 0.8s ease infinite alternate; }
+  @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.15)} }
+  #win-screen h2 { font-size:38px; font-weight:900; color:#ffdd00; margin-bottom:8px; }
+  .win-score { font-size:22px; font-weight:900; color:#ff88ff; margin-bottom:16px; }
+  .win-stars { font-size:36px; margin-bottom:20px; }
+  #win-screen > p { font-size:17px; color:#c0a0ff; line-height:1.75; margin-bottom:20px; }
+  .win-summary { background:rgba(255,255,255,0.05); border-radius:14px; padding:18px 20px; margin-bottom:24px; text-align:left; }
+  .win-summary h3 { font-size:14px; color:#ffdd00; font-weight:900; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .win-summary ul { list-style:none; }
+  .win-summary li { font-size:14px; color:#c0a0ff; padding:4px 0; }
+  .replay-btn { display:inline-block; background:linear-gradient(135deg,#ffdd00,#ff8800); color:#1a0630;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px 40px;
+    border-radius:50px; border:none; cursor:pointer; box-shadow:0 4px 20px rgba(255,220,0,0.3);
+    transition:transform 0.15s; margin-bottom:16px; }
+  .replay-btn:hover { transform:scale(1.04); }
+  .print-btn { background:rgba(255,255,255,0.08); border:2px solid rgba(255,255,255,0.2); color:#ddd;
+    font-family:'Nunito',Arial,sans-serif; font-size:14px; font-weight:700; padding:8px 18px;
+    border-radius:20px; cursor:pointer; transition:all 0.15s; }
+  #parent-guide { display:none; margin:32px 20px 0; border-top:2px dashed rgba(255,255,255,0.15); padding-top:28px; animation:fadeIn 0.5s ease; }
+  .pg-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+  .pg-title { font-size:22px; font-weight:900; color:#ffdd00; }
+  .pg-subtitle { font-size:13px; color:#8877aa; margin-top:4px; }
+  .pg-section { background:rgba(255,255,255,0.04); border-radius:14px; padding:18px 20px; margin-bottom:16px; }
+  .pg-section h4 { font-size:14px; font-weight:900; color:#aa77ff; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .pg-section p, .pg-section li { font-size:14px; color:#c0a0ff; line-height:1.7; }
+  .pg-section ul { padding-left:16px; }
+  .pg-section li { margin-bottom:6px; }
+  .pg-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .pg-card { background:rgba(255,255,255,0.04); border-radius:12px; padding:14px 16px; }
+  .pg-card h5 { font-size:12px; font-weight:900; color:#7b2fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+  .pg-card p { font-size:13px; color:#c0a0ff; line-height:1.6; }
+  .acara-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .acara-table th { text-align:left; color:#aa77ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; padding:6px 8px; border-bottom:1px solid rgba(255,255,255,0.1); }
+  .acara-table td { padding:7px 8px; color:#c0a0ff; border-bottom:1px solid rgba(255,255,255,0.05); vertical-align:top; }
+  .acara-table tr:last-child td { border-bottom:none; }
+  .strand-pill { display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:8px; background:rgba(123,47,255,0.25); color:#cc99ff; }
+  #ctrl-bar { position:fixed; top:14px; left:14px; display:flex; gap:8px; z-index:999;
+    background:rgba(0,0,0,0.6); padding:6px 10px; border-radius:24px; border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(6px); }
+  .ctrl-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:white;
+    font-family:'Nunito',sans-serif; font-weight:700; font-size:12px; padding:5px 12px; border-radius:16px; cursor:pointer; transition:background 0.15s; }
+  .ctrl-btn:hover { background:rgba(255,255,255,0.18); }
+  .ctrl-btn.muted { background:rgba(255,50,50,0.3); border-color:#ff3232; }
+  #mute-top { display:none; }
+  @media print {
+    body { background:white!important; color:#000!important; }
+    .starfield,#title-screen,.progress-wrap,.chapter,#win-screen,#ctrl-bar { display:none!important; }
+    #parent-guide { display:block!important; margin:0; border-top:2px solid #ccc; }
+    .print-btn { display:none; }
+  }
+</style>
+</head>
+<body>
+<button id="mute-top" onclick="toggleMute()">🔊</button>
+<div class="starfield" id="starfield"></div>
+<div class="wrapper">
+
+  <div id="title-screen" class="title-screen">
+    <span class="rocket-emoji">🌌</span>
+    <p class="issue-label">Issue #6</p>
+    <h1>MISSION:<br><span>MATH BLAST</span></h1>
+    <p class="tagline">The Fraction Core</p>
+    <p class="meta">5 chapters · 10 challenges · ACARA-aligned · Year 4</p>
+    <div class="narrated-badge">🎙️ Narrated Edition</div><br>
+    <button class="start-btn" onclick="startGame()">🚀 START MISSION</button>
+    <p style="font-size:12px;color:#443366;margin-top:16px;">Narrated by George · Jake voiced by Andrew · Phantom voiced by River</p>
+  </div>
+
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label" id="progress-label">Chapter 1 of 5</div>
+      <div class="progress-score" id="progress-score">⭐ 0 / 10</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- CHAPTER 1 -->
+  <div class="chapter" id="chapter-1">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌌 Chapter 1 — Entry Test</div>
+      <h2>What Lies Between 1 and 2?</h2>
+    </div>
+    <img class="chapter-img" src="images/ch1-issue006.png" alt="Jake enters the Zephyr Nebula" />
+    <div class="nar-player" id="player-ch1">
+      <button class="nar-btn" id="btn-ch1" onclick="togglePlayer('ch1')">▶</button>
+      <div class="nar-info"><div class="nar-status" id="status-ch1">Press ▶ to hear the story</div>
+      <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch1"></div></div></div>
+    </div>
+    <div class="story-text" id="story-ch1">
+      Jake blasted into the <strong>Zephyr Nebula</strong> — a dense, beautiful nebula where fractions appeared as visible light patterns swirling through the gas clouds. Deep at the centre pulsed the <strong>Fraction Core</strong>.<br><br>
+      But the nebula tested all visitors. A voice echoed through the cockpit:<br><br>
+      <em>"What lies between 1 and 2?"</em><br><br>
+      Jake smiled. He knew the answer — <strong>improper fractions and mixed numbers</strong> all live in that space.
+    </div>
+    <div id="lock-q1" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
+    <div class="quiz-box" id="quiz-q1">
+      <div class="quiz-meta"><span class="difficulty diff-warmup">🔁 Warm-Up</span><span class="acara-tag">Number · Year 4</span></div>
+      <span class="quiz-icon">🌌</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Warm-Up — Number Line</div>
+      <div class="question">Name a fraction that sits between 1 and 2 on the number line. Which of these is a valid answer?</div>
+      <img src="images/q1-issue006.png" alt="Number line from 0 to 2" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,true,'q1')">1 and 1/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">2 and 1/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">1/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">0</button>
+      </div>
+      <div class="feedback" id="feedback-q1"></div>
+      <button class="next-btn" id="next-q1" onclick="showQ2Story()">Continue Mission ➜</button>
+    </div>
+
+    <div id="block-q2" style="display:none">
+      <div class="nar-player" id="player-q2s">
+        <button class="nar-btn" id="btn-q2s" onclick="togglePlayer('q2s')">▶</button>
+        <div class="nar-info"><div class="nar-status" id="status-q2s">Press ▶ to continue the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-q2s"></div></div></div>
+      </div>
+      <div class="story-text" id="story-q2s">
+        A light signal pulsed at the <strong>1¾ mark</strong>. Jake needed to write this as an improper fraction to enter it into the navigation computer. The first gate was waiting.
+      </div>
+      <div id="lock-q2" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+      <div class="quiz-box" id="quiz-q2">
+        <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Number · Year 4</span></div>
+        <span class="quiz-icon">💡</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 2 — Mixed to Improper</div>
+        <div class="question">Write <strong>1 and 3/4</strong> as an improper fraction.</div>
+        <img src="images/q2-issue006.png" alt="Mixed number conversion" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,true,'q2')">7/4</button>
+          <button class="opt-btn" onclick="answer(this,false,'q2')">5/4</button>
+          <button class="opt-btn" onclick="answer(this,false,'q2')">4/3</button>
+          <button class="opt-btn" onclick="answer(this,false,'q2')">3/4</button>
+        </div>
+        <div class="feedback" id="feedback-q2"></div>
+        <button class="next-btn" id="next-q2" onclick="nextChapter(2)">Next Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 2 -->
+  <div class="chapter" id="chapter-2">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">💡 Chapter 2 — Light Signals</div>
+      <h2>Navigating by Fraction Light Waves!</h2>
+    </div>
+    <img class="chapter-img" src="images/ch2-issue006.png" alt="Jake intercepting light fraction signals" />
+    <div class="nar-player" id="player-ch2">
+      <button class="nar-btn" id="btn-ch2" onclick="togglePlayer('ch2')">▶</button>
+      <div class="nar-info"><div class="nar-status" id="status-ch2">Press ▶ to hear the story</div>
+      <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch2"></div></div></div>
+    </div>
+    <div class="story-text" id="story-ch2">
+      The nebula communicated through <strong>light fraction signals</strong>. Jake intercepted another: the number <strong>11/4</strong>. He needed to convert it to a mixed number to understand exactly where in the nebula it was pointing.
+    </div>
+    <div id="lock-q3" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
+    <div class="quiz-box" id="quiz-q3">
+      <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Number · Year 4</span></div>
+      <span class="quiz-icon">📡</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 3 — Improper to Mixed</div>
+      <div class="question">Convert <strong>11/4</strong> to a mixed number.</div>
+      <img src="images/q3-issue006.png" alt="Improper fraction conversion" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,true,'q3')">2 and 3/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">1 and 3/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">3 and 1/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">2 and 1/4</button>
+      </div>
+      <div class="feedback" id="feedback-q3"></div>
+      <button class="next-btn" id="next-q3" onclick="showQ4Story()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q4" style="display:none">
+      <div class="nar-player" id="player-q4s">
+        <button class="nar-btn" id="btn-q4s" onclick="togglePlayer('q4s')">▶</button>
+        <div class="nar-info"><div class="nar-status" id="status-q4s">Press ▶ to continue the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-q4s"></div></div></div>
+      </div>
+      <div class="story-text" id="story-q4s">
+        The Phantom had set a <strong>fairness problem</strong>. It showed three ships with different tank sizes, and said it took <em>1/3 from each</em>. Jake had to calculate the actual amounts.
+      </div>
+      <div id="lock-q4" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+      <div class="quiz-box" id="quiz-q4">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
+        <span class="quiz-icon">🚢</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 4 — Fractions of Quantities</div>
+        <div class="question">A ship with a <strong>24-unit tank</strong> loses <strong>1/3</strong> of its fuel. How many units did it lose?</div>
+        <img src="images/q4-issue006.png" alt="Ship fuel tank diagram" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,true,'q4')">8 units</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">6 units</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">12 units</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">3 units</button>
+        </div>
+        <div class="feedback" id="feedback-q4"></div>
+        <button class="next-btn" id="next-q4" onclick="nextChapter(3)">Next Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 3 -->
+  <div class="chapter" id="chapter-3">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">⚖️ Chapter 3 — The Fairness Problem</div>
+      <h2>Same Fraction, Different Ships — Is It Fair?</h2>
+    </div>
+    <img class="chapter-img" src="images/ch3-issue006.png" alt="Jake and the Phantom debating fairness" />
+    <div class="nar-player" id="player-ch3">
+      <button class="nar-btn" id="btn-ch3" onclick="togglePlayer('ch3')">▶</button>
+      <div class="nar-info"><div class="nar-status" id="status-ch3">Press ▶ to hear the story</div>
+      <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch3"></div></div></div>
+    </div>
+    <div class="story-text" id="story-ch3">
+      Jake pressed the Phantom on its logic. <em>Another</em> ship had lost <strong>1/3</strong> — but this ship had an <strong>18-unit tank</strong>. Same fraction, different tank size. Jake worked the numbers. The Phantom's eyes flickered.
+    </div>
+    <div id="lock-q5" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
+    <div class="quiz-box" id="quiz-q5">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
+      <span class="quiz-icon">⚖️</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 5 — Fractions of Quantities</div>
+      <div class="question">A ship with an <strong>18-unit tank</strong> loses <strong>1/3</strong> of its fuel. How many units did it lose?</div>
+      <img src="images/q5-issue006.png" alt="Ship with 18-unit tank" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,true,'q5')">6 units</button>
+        <button class="opt-btn" onclick="answer(this,false,'q5')">8 units</button>
+        <button class="opt-btn" onclick="answer(this,false,'q5')">9 units</button>
+        <button class="opt-btn" onclick="answer(this,false,'q5')">3 units</button>
+      </div>
+      <div class="feedback" id="feedback-q5"></div>
+      <button class="next-btn" id="next-q5" onclick="showQ6Story()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q6" style="display:none">
+      <div class="nar-player" id="player-q6s">
+        <button class="nar-btn" id="btn-q6s" onclick="togglePlayer('q6s')">▶</button>
+        <div class="nar-info"><div class="nar-status" id="status-q6s">Press ▶ to continue the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-q6s"></div></div></div>
+      </div>
+      <div class="story-text" id="story-q6s">
+        The <strong>Fraction Core</strong> came into view — a pulsing sphere of fraction bars and number lines. Jake must navigate the final approach: <em>3/4 of a 28-unit journey</em>, then calculate the remaining distance.
+      </div>
+      <div id="lock-q6" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+      <div class="quiz-box" id="quiz-q6">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
+        <span class="quiz-icon">🚀</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 6 — Fractions of Quantities</div>
+        <div class="question">The journey to the Fraction Core is <strong>28 units</strong>. Route 3/4 covers 3/4 of that distance. How many units does Route 3/4 cover?</div>
+        <img src="images/q6-issue006.png" alt="Journey to Fraction Core" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,true,'q6')">21 units</button>
+          <button class="opt-btn" onclick="answer(this,false,'q6')">7 units</button>
+          <button class="opt-btn" onclick="answer(this,false,'q6')">14 units</button>
+          <button class="opt-btn" onclick="answer(this,false,'q6')">24 units</button>
+        </div>
+        <div class="feedback" id="feedback-q6"></div>
+        <button class="next-btn" id="next-q6" onclick="nextChapter(4)">Next Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 4 -->
+  <div class="chapter" id="chapter-4">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🚀 Chapter 4 — The Final Approach</div>
+      <h2>One Whole Hour to the Core!</h2>
+    </div>
+    <img class="chapter-img" src="images/ch4-issue006.png" alt="Jake on final approach to the Fraction Core" />
+    <div class="nar-player" id="player-ch4">
+      <button class="nar-btn" id="btn-ch4" onclick="togglePlayer('ch4')">▶</button>
+      <div class="nar-info"><div class="nar-status" id="status-ch4">Press ▶ to hear the story</div>
+      <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch4"></div></div></div>
+    </div>
+    <div class="story-text" id="story-ch4">
+      Jake calculated the remaining distance and journey time. He had flown <strong>3/4 of the route</strong> — but how much was still ahead? And when all the parts added up, how long would the complete journey take?
+    </div>
+    <div id="lock-q7" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
+    <div class="quiz-box" id="quiz-q7">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
+      <span class="quiz-icon">⏱️</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 7 — Complementary Fractions</div>
+      <div class="question">After flying Route 3/4 (covering <strong>3/4 of the journey</strong>), what fraction of the journey still remains?</div>
+      <img src="images/q7-issue006.png" alt="Journey fraction diagram" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,true,'q7')">1/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q7')">3/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q7')">1/2</button>
+        <button class="opt-btn" onclick="answer(this,false,'q7')">2/4</button>
+      </div>
+      <div class="feedback" id="feedback-q7"></div>
+      <button class="next-btn" id="next-q7" onclick="showQ8Story()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q8" style="display:none">
+      <div class="nar-player" id="player-q8s">
+        <button class="nar-btn" id="btn-q8s" onclick="togglePlayer('q8s')">▶</button>
+        <div class="nar-info"><div class="nar-status" id="status-q8s">Press ▶ to continue the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-q8s"></div></div></div>
+      </div>
+      <div class="story-text" id="story-q8s">
+        The navigation computer gave timing data: flying <strong>3/4 of the route</strong> takes <em>3/4 of an hour</em>. The remaining <strong>1/4</strong> takes <em>1/4 of an hour</em>. How long is the complete journey?
+      </div>
+      <div id="lock-q8" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+      <div class="quiz-box" id="quiz-q8">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
+        <span class="quiz-icon">🕐</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 8 — Adding Fractions</div>
+        <div class="question">Flying 3/4 of the route takes <strong>3/4 of an hour</strong>. The remaining 1/4 takes <strong>1/4 of an hour</strong>. How long does the complete journey take?</div>
+        <img src="images/q8-issue006.png" alt="Journey time diagram" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,true,'q8')">1 full hour</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">3/4 of an hour</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">1 and 1/4 hours</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">1/2 an hour</button>
+        </div>
+        <div class="feedback" id="feedback-q8"></div>
+        <button class="next-btn" id="next-q8" onclick="nextChapter(5)">Final Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 5 -->
+  <div class="chapter" id="chapter-5">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">✨ Chapter 5 — The Fraction Core</div>
+      <h2>The Phantom Listens — Almost!</h2>
+    </div>
+    <img class="chapter-img" src="images/ch5-issue006.png" alt="The Fraction Core pulsing sphere" />
+    <div class="nar-player" id="player-ch5">
+      <button class="nar-btn" id="btn-ch5" onclick="togglePlayer('ch5')">▶</button>
+      <div class="nar-info"><div class="nar-status" id="status-ch5">Press ▶ to hear the story</div>
+      <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch5"></div></div></div>
+    </div>
+    <div class="story-text" id="story-ch5">
+      The <strong>Fraction Core</strong> — a pulsing sphere of fraction bars and number lines, deep in the heart of the Zephyr Nebula. The Phantom's voice resonated through the core.<br><br>
+      <em>"Jake. Calculate the totals from my own records. Then we will discuss the truth."</em><br><br>
+      Jake steadied himself. This was the moment.
+    </div>
+    <div id="lock-q9" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
+    <div class="quiz-box" id="quiz-q9">
+      <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Number · Year 4</span></div>
+      <span class="quiz-icon">👻</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 9 — Fractions as Multiplication</div>
+      <div class="question">The Phantom says: <strong>"I took 1/5 from 15 stations. What is the total I have taken, as a fraction of one full station?"</strong><br><br><em>(Hint: 15 × 1/5 = ?)</em></div>
+      <img src="images/q9-issue006.png" alt="15 stations diagram" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,true,'q9')">3 full stations' worth</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">1/5 of a station</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">15/5 = 1 station</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">5 stations' worth</button>
+      </div>
+      <div class="feedback" id="feedback-q9"></div>
+      <button class="next-btn" id="next-q9" onclick="showQ10Story()">Final Question ➜</button>
+    </div>
+
+    <div id="block-q10" style="display:none">
+      <div class="nar-player" id="player-q10s">
+        <button class="nar-btn" id="btn-q10s" onclick="togglePlayer('q10s')">▶</button>
+        <div class="nar-info"><div class="nar-status" id="status-q10s">Press ▶ to continue the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-q10s"></div></div></div>
+      </div>
+      <div class="story-text" id="story-q10s">
+        The Phantom recited its last redistribution totals. Jake had to add them up — this was the <strong>full scale of what it gave away</strong>. The numbers were striking.
+      </div>
+      <div id="lock-q10" class="quiz-lock">🔒 Listen to the story to unlock the Boss Challenge!</div>
+      <div class="quiz-box" id="quiz-q10">
+        <div class="quiz-meta"><span class="difficulty diff-boss">👑 Boss Challenge</span><span class="acara-tag">Number · Year 4</span></div>
+        <span class="quiz-icon">👑</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 10 — BOSS: Multi-Step Fractions</div>
+        <div class="question">The Phantom's last redistribution:<br><strong>2/3 of 24 units + 3/4 of 16 units + 1/2 of 12 units</strong><br><br>What is the total it gave away?</div>
+        <img src="images/q10-issue006.png" alt="Three fraction calculations" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,true,'q10')">34 units</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">28 units</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">24 units</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">40 units</button>
+        </div>
+        <div class="feedback" id="feedback-q10"></div>
+        <button class="next-btn" id="next-q10" onclick="showWin()">🌌 REACH THE CORE!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIN SCREEN -->
+  <div id="win-screen">
+    <span class="trophy">🏆</span>
+    <h2>MISSION COMPLETE!</h2>
+    <div class="win-score" id="win-score">You scored 10 / 10!</div>
+    <div class="win-stars" id="win-stars">⭐⭐⭐</div>
+    <p>Jake reached the Fraction Core — and the Phantom is starting to listen! It was all thanks to <strong>YOU</strong>! 🌌</p>
+    <div class="win-summary">
+      <h3>What You Mastered Today 🧠</h3>
+      <ul>
+        <li>✅ <strong>Fractions Between 1 and 2</strong> — mixed numbers and improper fractions (Number, Year 4)</li>
+        <li>✅ <strong>Converting Mixed ↔ Improper</strong> — 1¾ = 7/4, 11/4 = 2¾ (Number, Year 4)</li>
+        <li>✅ <strong>Fractions of Quantities</strong> — 1/3 of 24, 1/3 of 18, 3/4 of 28 (Number, Year 4)</li>
+        <li>✅ <strong>Adding Fractions</strong> — 3/4 + 1/4 = 1 whole (Number, Year 4)</li>
+        <li>✅ <strong>Boss</strong> — multi-step: 3 separate fractions of quantities, sum the results</li>
+      </ul>
+    </div>
+    <p style="font-size:14px;color:#6655aa;margin-bottom:8px;">Issue #7 coming next — <strong>Teaching the Phantom!</strong> Jake returns with a full presentation to convince the Phantom why equal fractions ≠ equal fairness. Can he fix the galaxy? 🌍</p>
+    <button class="replay-btn" onclick="location.reload()">🔄 Play Again</button><br>
+    <button class="print-btn" onclick="showParentGuide()">📋 Parent Guide</button>
+  </div>
+
+  <!-- PARENT GUIDE -->
+  <div id="parent-guide">
+    <div class="pg-header">
+      <div><div class="pg-title">📋 Parent Guide — Issue #6</div><div class="pg-subtitle">Mission: Math Blast · For parents of kids aged 7–10</div></div>
+      <button class="print-btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div class="pg-section">
+      <h4>What We Covered</h4>
+      <table class="acara-table">
+        <tr><th>Topic</th><th>Strand</th><th>Year</th><th>Question</th></tr>
+        <tr><td>Mixed numbers between 1 and 2</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q1</td></tr>
+        <tr><td>Mixed to improper — 1¾ = 7/4</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q2</td></tr>
+        <tr><td>Improper to mixed — 11/4 = 2¾</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q3</td></tr>
+        <tr><td>Fractions of quantities — 1/3 of 24</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q4</td></tr>
+        <tr><td>Fractions of quantities — 1/3 of 18</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q5</td></tr>
+        <tr><td>Fractions of quantities — 3/4 of 28</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q6</td></tr>
+        <tr><td>Complementary fractions — 1 − 3/4</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q7</td></tr>
+        <tr><td>Adding fractions — 3/4 + 1/4 = 1</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q8</td></tr>
+        <tr><td>Fractions as multiplication — 15 × 1/5 = 3</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q9</td></tr>
+        <tr><td>Multi-step fractions of quantities (Boss)</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q10 👑</td></tr>
+      </table>
+    </div>
+    <div class="pg-row">
+      <div class="pg-card"><h5>✨ Narrated Edition</h5><p>Read aloud by George (narrator), Andrew (Jake), and River (Fraction Phantom). Questions unlock after each story segment.</p></div>
+      <div class="pg-card"><h5>🔑 Key Insight</h5><p>When you take the same FRACTION from tanks of different sizes, the absolute amounts are different. This is the Phantom's fundamental error — and Issue #7 resolves it.</p></div>
+    </div>
+    <div class="pg-section">
+      <h4>💬 Conversation Starters</h4>
+      <ul>
+        <li><strong>After Q2–3:</strong> "Can you think of another mixed number and convert it to an improper fraction? Try 2 and 1/2."</li>
+        <li><strong>After Q4–5:</strong> "The Phantom took 1/3 from each ship — but one ship lost 8 units and another lost 6. Is that fair? Why or why not?"</li>
+        <li><strong>After Q10 (boss):</strong> "What would happen if the Phantom took 1/4 from ships of 8, 12, and 20 units? Would that be fair?"</li>
+      </ul>
+    </div>
+    <p style="font-size:12px;color:#443366;text-align:center;margin-top:20px;">Mission: Math Blast · ACARA Australian Curriculum v9.0 · mathblast.com.au</p>
+  </div>
+
+</div>
+
+<div id="ctrl-bar">
+  <button class="ctrl-btn" id="mute-ctrl" onclick="toggleMute()">🔊 Sound On</button>
+  <button class="ctrl-btn" onclick="replayCurrent()">🔁 Re-play</button>
+</div>
+
+<script>
+const sf=document.getElementById('starfield');
+for(let i=0;i<90;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.width=s.style.height=(1+Math.random()*2)+'px';s.style.animationDelay=Math.random()*3+'s';s.style.animationDuration=(2+Math.random()*3)+'s';sf.appendChild(s);}
+
+const BASE='sounds/issue006/';
+let muted=false,currentAudio=null,correctVariant=0;
+function stopAll(){if(currentAudio){currentAudio.pause();currentAudio=null;}document.querySelectorAll('.nar-btn').forEach(b=>b.textContent='▶');}
+function playFile(file,onEnd){if(muted){if(onEnd)setTimeout(onEnd,100);return null;}if(currentAudio){currentAudio.pause();currentAudio=null;}const a=new Audio(BASE+file);a.volume=1.0;currentAudio=a;a.play().catch(()=>{currentAudio=null;if(onEnd)onEnd();});a.onended=()=>{currentAudio=null;if(onEnd)onEnd();};a.onerror=()=>{currentAudio=null;if(onEnd)onEnd();};return a;}
+
+const playerConfigs={};let activePlayerId=null;
+function setupPlayer(id,files,labels,storyId,lockId,onDone){playerConfigs[id]={files,labels,storyId,lockId,onDone,active:false};}
+function togglePlayer(id){if(activePlayerId===id&&currentAudio&&!currentAudio.paused){currentAudio.pause();currentAudio=null;document.getElementById('btn-'+id).textContent='▶';document.getElementById('status-'+id).textContent='Paused — press ▶ to resume';activePlayerId=null;return;}stopAll();activePlayerId=id;runPlayer(id);}
+function runPlayer(id){const cfg=playerConfigs[id];if(!cfg)return;cfg.active=true;const btn=document.getElementById('btn-'+id);const statusEl=document.getElementById('status-'+id);const barFill=document.getElementById('bar-'+id);const story=cfg.storyId?document.getElementById(cfg.storyId):null;const totalFiles=cfg.files.length;if(btn)btn.textContent='⏸';if(story)story.classList.add('playing');let fileIdx=0;function playNext(){if(fileIdx>=totalFiles){if(btn)btn.textContent='✓';if(statusEl)statusEl.textContent='✅ Done!';if(barFill)barFill.style.width='100%';if(story){story.classList.remove('playing');story.classList.add('done');}if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(quizId){const quiz=document.getElementById(quizId);if(quiz){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}if(cfg.onDone)cfg.onDone();cfg.active=false;activePlayerId=null;return;}const file=cfg.files[fileIdx];const label=cfg.labels&&cfg.labels[fileIdx]?cfg.labels[fileIdx]:'🎙️ Narrating...';if(statusEl)statusEl.textContent=label;const segStart=(fileIdx/totalFiles)*100;const segEnd=((fileIdx+1)/totalFiles)*100;fileIdx++;const audio=playFile(file,playNext);if(audio&&barFill){const tick=setInterval(()=>{if(!audio||audio.paused||audio.ended){clearInterval(tick);return;}const pct=audio.duration?(segStart+(audio.currentTime/audio.duration)*(segEnd-segStart)):segStart;barFill.style.width=pct+'%';},200);}}playNext();}
+
+function initPlayers(){
+  setupPlayer('ch1',['ch1-intro.mp3','ch1-phantom.mp3','ch1-q1-question.mp3'],['🎙️ George is narrating...','👻 The nebula tests Jake...','🎙️ Listen to the question...'],'story-ch1','lock-q1',null);
+  setupPlayer('q2s',['ch1-q2-story.mp3','ch1-q2-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q2s','lock-q2',null);
+  setupPlayer('ch2',['ch2-intro.mp3','ch2-jake.mp3','ch2-phantom.mp3','ch2-q3-question.mp3'],['🎙️ George is narrating...','👦 Jake thinking...','👻 The Phantom tests him...','🎙️ Listen to the question...'],'story-ch2','lock-q3',null);
+  setupPlayer('q4s',['ch2-q4-story.mp3','ch2-q4-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q4s','lock-q4',null);
+  setupPlayer('ch3',['ch3-intro.mp3','ch3-q5-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-ch3','lock-q5',null);
+  setupPlayer('q6s',['ch3-q6-story.mp3','ch3-q6-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q6s','lock-q6',null);
+  setupPlayer('ch4',['ch4-intro.mp3','ch4-jake.mp3','ch4-q7-question.mp3'],['🎙️ George is narrating...','👦 Jake calculating...','🎙️ Listen to the question...'],'story-ch4','lock-q7',null);
+  setupPlayer('q8s',['ch4-q8-story.mp3','ch4-q8-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q8s','lock-q8',null);
+  setupPlayer('ch5',['ch5-intro.mp3','ch5-phantom.mp3','ch5-phantom-end.mp3','ch5-q9-question.mp3'],['🎙️ George is narrating...','👻 The Phantom speaks...','👻 The Phantom continues...','🎙️ Listen to the question...'],'story-ch5','lock-q9',null);
+  setupPlayer('q10s',['ch5-q10-story.mp3','ch5-q10-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q10s','lock-q10',null);
+}
+
+function showQ2Story(){const b=document.getElementById('block-q2');b.style.display='block';setTimeout(()=>{b.scrollIntoView({behavior:'smooth',block:'start'});},100);setTimeout(()=>togglePlayer('q2s'),600);}
+function showQ4Story(){const b=document.getElementById('block-q4');b.style.display='block';setTimeout(()=>{b.scrollIntoView({behavior:'smooth',block:'start'});},100);setTimeout(()=>togglePlayer('q4s'),600);}
+function showQ6Story(){const b=document.getElementById('block-q6');b.style.display='block';setTimeout(()=>{b.scrollIntoView({behavior:'smooth',block:'start'});},100);setTimeout(()=>togglePlayer('q6s'),600);}
+function showQ8Story(){const b=document.getElementById('block-q8');b.style.display='block';setTimeout(()=>{b.scrollIntoView({behavior:'smooth',block:'start'});},100);setTimeout(()=>togglePlayer('q8s'),600);}
+function showQ10Story(){const b=document.getElementById('block-q10');b.style.display='block';setTimeout(()=>{b.scrollIntoView({behavior:'smooth',block:'start'});},100);setTimeout(()=>togglePlayer('q10s'),600);}
+
+let score=0,questionsAnswered=0;const totalQ=10;
+const correctMsg={
+  q1:'🎉 Correct! 1¼ sits between 1 and 2. Mixed numbers like 1¼, 1½, 1¾ all live between 1 and 2. The nebula\'s first gate opens!',
+  q2:'🎉 Right! 1 and 3/4 = 4/4 + 3/4 = 7/4. The navigation computer accepts the entry — Jake passes the first gate!',
+  q3:'🎉 Correct! 11 ÷ 4 = 2 remainder 3. So 11/4 = 2 and 3/4. The signal points to Sector 2¾ of the nebula!',
+  q4:'🎉 Right! 1/3 of 24 = 24 ÷ 3 = 8 units. Significant — that\'s a lot of fuel for one ship!',
+  q5:'🎉 Correct! 1/3 of 18 = 18 ÷ 3 = 6 units. The 24-unit ship lost 8, the 18-unit ship lost 6. Same fraction — different actual loss. The Phantom\'s eyes flicker.',
+  q6:'🎉 Right! 3/4 of 28 = 28 ÷ 4 × 3 = 7 × 3 = 21 units. Jake is flying through the core\'s outer shell!',
+  q7:'🎉 Correct! 3/4 done, so 1/4 remains. 3/4 + 1/4 = 4/4 = 1 whole journey. Almost there!',
+  q8:'🎉 Right! 3/4 + 1/4 = 4/4 = 1 full hour. The parts add up to the whole — beautiful fraction logic!',
+  q9:'🎉 Correct! 1/5 of each of 15 stations: 15 × 1/5 = 15/5 = 3. The Phantom took the equivalent of 3 complete stations\' worth of fuel!',
+  q10:'🎉 BOSS CLEARED! 2/3 of 24 = 16. 3/4 of 16 = 12. 1/2 of 12 = 6. Total: 16 + 12 + 6 = 34 units. The Phantom pauses. \'I did not consider the size of the whole. Return tomorrow.\' The sphere dims... 🌌'
+};
+const wrongMsg={
+  q1:'❌ We need a number between 1 and 2. 1 and 1/4 means 1 + 1/4 — that\'s more than 1 but less than 2. Which option gives you that?',
+  q2:'❌ To convert: multiply the whole number by the denominator (1 × 4 = 4), then add the numerator (4 + 3 = 7). Write that over the denominator: 7/4.',
+  q3:'❌ Divide: 11 ÷ 4 = 2 (with 3 left over). The remainder 3 becomes 3/4. So 11/4 = 2 and 3/4.',
+  q4:'❌ 1/3 of 24 means 24 ÷ 3. Divide 24 into 3 equal groups — how many in each?',
+  q5:'❌ 1/3 of 18 means 18 ÷ 3. Divide 18 into 3 equal groups.',
+  q6:'❌ 3/4 of 28: first find 1/4 of 28 (28 ÷ 4 = 7), then multiply by 3. 7 × 3 = ?',
+  q7:'❌ If 3/4 of the journey is done, what\'s left? 4/4 (the whole journey) − 3/4 = ?',
+  q8:'❌ Add the times: 3/4 + 1/4. Same denominator, add the tops: 3 + 1 = 4. So 4/4 = 1 whole hour.',
+  q9:'❌ The Phantom took 1/5 from EACH of 15 stations. That\'s 15 lots of 1/5. 15 × 1/5 = 15/5. Simplify 15/5 — how many whole numbers is that?',
+  q10:'❌ Three separate calculations: 2/3 of 24 = ? Then 3/4 of 16 = ? Then 1/2 of 12 = ? Add all three results together.'
+};
+
+function answer(btn,correct,qId){const box=btn.closest('.quiz-box');box.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);const fb=document.getElementById('feedback-'+qId);const next=document.getElementById('next-'+qId);if(correct){btn.classList.add('correct');score++;questionsAnswered++;fb.className='feedback show good';fb.innerHTML=correctMsg[qId];updateProgress();next.classList.add('show');const qNum=parseInt(qId.replace('q',''));if(qNum===1){playFile('feedback-correct-1.mp3',null);}else{const v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];playFile(v[correctVariant%v.length],null);correctVariant++;}}else{btn.classList.add('wrong');fb.className='feedback show bad';fb.innerHTML=wrongMsg[qId];playFile(['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)],null);setTimeout(()=>{box.querySelectorAll('.opt-btn').forEach(b=>{if(!b.classList.contains('correct')){b.disabled=false;b.classList.remove('wrong');}});fb.className='feedback';},2400);}}
+
+function updateProgress(){document.getElementById('progress-fill').style.width=((questionsAnswered/totalQ)*100)+'%';document.getElementById('progress-score').textContent='⭐ '+score+' / '+totalQ;}
+function startGame(){document.getElementById('title-screen').style.display='none';document.getElementById('progress-wrap').style.display='block';initPlayers();showChapter(1);}
+
+let currentChapter=0;
+function showChapter(n){stopAll();document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));const ch=document.getElementById('chapter-'+n);if(!ch)return;ch.classList.add('active');currentChapter=n;window.scrollTo({top:0,behavior:'smooth'});const labels=['','Chapter 1 of 5 — Fractions Between 1 and 2','Chapter 2 of 5 — Converting Fractions','Chapter 3 of 5 — Fractions of Quantities ✨','Chapter 4 of 5 — The Final Approach','Chapter 5 of 5 — Boss Round 🔥'];document.getElementById('progress-label').textContent=labels[n]||'';const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};if(playerMap[n])setTimeout(()=>togglePlayer(playerMap[n]),700);}
+function nextChapter(n){showChapter(n);}
+
+function showWin(){stopAll();document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));document.getElementById('progress-wrap').style.display='none';const win=document.getElementById('win-screen');win.style.display='block';document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+'!';document.getElementById('win-stars').textContent=score>=9?'⭐⭐⭐':score>=6?'⭐⭐':'⭐';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>playFile('win.mp3',null),500);}
+function showParentGuide(){document.getElementById('parent-guide').style.display='block';document.getElementById('parent-guide').scrollIntoView({behavior:'smooth'});}
+function toggleMute(){muted=!muted;const ctrl=document.getElementById('mute-ctrl');ctrl.textContent=muted?'🔇 Muted':'🔊 Sound On';ctrl.classList.toggle('muted',muted);if(muted)stopAll();}
+function replayCurrent(){const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};const pid=playerMap[currentChapter];if(!pid)return;stopAll();const cfg=playerConfigs[pid];if(cfg)cfg.active=false;const story=cfg&&cfg.storyId?document.getElementById(cfg.storyId):null;if(story){story.classList.remove('playing','done');}const barFill=document.getElementById('bar-'+pid);if(barFill)barFill.style.width='0%';const statusEl=document.getElementById('status-'+pid);if(statusEl)statusEl.textContent='Press ▶ to hear the story';const btn=document.getElementById('btn-'+pid);if(btn)btn.textContent='▶';setTimeout(()=>togglePlayer(pid),300);}
+</script>
+</body>
+</html>
