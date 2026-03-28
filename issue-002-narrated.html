@@ -14,7 +14,6 @@
   @keyframes twinkle { from{opacity:0.2} to{opacity:0.9} }
   .wrapper { max-width:680px; margin:0 auto; position:relative; z-index:1; padding-bottom:90px; }
 
-  /* TITLE */
   .title-screen { text-align:center; padding:48px 24px 36px; }
   .rocket-emoji { font-size:72px; display:block; margin-bottom:16px; animation:float 3s ease-in-out infinite; }
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
@@ -30,7 +29,6 @@
     box-shadow:0 6px 30px rgba(123,47,255,0.5); transition:transform 0.15s; font-family:'Nunito',Arial,sans-serif; }
   .start-btn:hover { transform:scale(1.05); }
 
-  /* PROGRESS */
   .progress-wrap { padding:16px 24px 0; display:none; }
   .progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
   .progress-label { font-size:13px; color:#8877aa; font-weight:700; }
@@ -38,7 +36,6 @@
   .progress-bar { background:#1a0f30; border-radius:20px; height:14px; overflow:hidden; }
   .progress-fill { background:linear-gradient(90deg,#7b2fff,#ff2fff); height:100%; border-radius:20px; transition:width 0.5s ease; }
 
-  /* CHAPTER */
   .chapter { display:none; padding:20px 20px 0; animation:fadeIn 0.4s ease; }
   .chapter.active { display:block; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
@@ -48,7 +45,6 @@
   .chapter-img { width:100%; border-radius:16px; display:block; margin-bottom:20px;
     border:3px solid rgba(180,100,255,0.4); box-shadow:0 8px 30px rgba(0,0,0,0.5); background:#1a0f30; min-height:180px; object-fit:cover; }
 
-  /* NARRATION PLAYER */
   .nar-player { display:flex; align-items:center; gap:12px; background:rgba(123,47,255,0.15);
     border:2px solid rgba(123,47,255,0.4); border-radius:14px; padding:12px 16px; margin-bottom:16px; }
   .nar-btn { width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; flex-shrink:0;
@@ -60,7 +56,6 @@
   .nar-bar { height:4px; background:#1a0f30; border-radius:4px; margin-top:5px; overflow:hidden; }
   .nar-bar-fill { height:100%; background:linear-gradient(90deg,#7b2fff,#ff2fff); border-radius:4px; width:0%; transition:width 0.3s; }
 
-  /* STORY TEXT */
   .story-text { background:rgba(255,255,255,0.05); border-left:4px solid #7b2fff;
     border-radius:0 12px 12px 0; padding:18px 22px; font-size:18px; line-height:1.9; color:#ddd; margin-bottom:20px;
     transition:border-color 0.4s, background 0.4s; }
@@ -69,12 +64,10 @@
   .story-text strong { color:#ffdd00; }
   .story-text em { color:#ff88ff; font-style:normal; font-weight:700; }
 
-  /* QUIZ LOCK */
   .quiz-lock { text-align:center; padding:16px 20px; background:rgba(123,47,255,0.08);
     border:2px dashed rgba(123,47,255,0.3); border-radius:16px; margin-bottom:20px;
     font-size:14px; color:#7755bb; font-weight:700; }
 
-  /* QUIZ */
   .quiz-box { background:rgba(123,47,255,0.12); border:2px solid rgba(123,47,255,0.4);
     border-radius:16px; padding:22px; margin-bottom:20px; display:none; animation:fadeIn 0.4s ease; }
   .quiz-box.show { display:block; }
@@ -112,7 +105,6 @@
   .next-btn:hover { transform:scale(1.03); }
   .next-btn.show { display:block; }
 
-  /* WIN */
   #win-screen { display:none; text-align:center; padding:48px 24px 24px; animation:fadeIn 0.5s ease; }
   .trophy { font-size:80px; display:block; margin-bottom:16px; animation:bounce 0.8s ease infinite alternate; }
   @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.15)} }
@@ -133,7 +125,6 @@
     font-family:'Nunito',Arial,sans-serif; font-size:14px; font-weight:700; padding:8px 18px;
     border-radius:20px; cursor:pointer; transition:all 0.15s; }
 
-  /* PARENT GUIDE */
   #parent-guide { display:none; margin:32px 20px 0; border-top:2px dashed rgba(255,255,255,0.15); padding-top:28px; animation:fadeIn 0.5s ease; }
   .pg-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
   .pg-title { font-size:22px; font-weight:900; color:#ffdd00; }
@@ -153,7 +144,6 @@
   .acara-table tr:last-child td { border-bottom:none; }
   .strand-pill { display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:8px; background:rgba(123,47,255,0.25); color:#cc99ff; }
 
-  /* CONTROLS */
   #ctrl-bar { position:fixed; top:14px; left:14px; display:flex; gap:8px; z-index:999;
     background:rgba(0,0,0,0.6); padding:6px 10px; border-radius:24px; border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(6px); }
   .ctrl-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:white;
@@ -164,7 +154,7 @@
 
   @media print {
     body { background:white!important; color:#000!important; }
-    .starfield,#title-screen,.progress-wrap,.chapter,#win-screen,#ctrl-bar,#mute-top { display:none!important; }
+    .starfield,#title-screen,.progress-wrap,.chapter,#win-screen,#ctrl-bar { display:none!important; }
     #parent-guide { display:block!important; margin:0; border-top:2px solid #ccc; }
     .print-btn { display:none; }
   }
@@ -172,7 +162,7 @@
 </head>
 <body>
 
-<button id="mute-top" onclick="toggleMute()" title="Toggle sound">🔊</button>
+<button id="mute-top" onclick="toggleMute()">🔊</button>
 <div class="starfield" id="starfield"></div>
 
 <div class="wrapper">
@@ -186,7 +176,7 @@
     <p class="meta">5 chapters · 10 challenges · ACARA-aligned · Year 3–4</p>
     <div class="narrated-badge">🎙️ Narrated Edition</div><br>
     <button class="start-btn" onclick="startGame()">🚀 START MISSION</button>
-    <p style="font-size:12px;color:#443366;margin-top:16px;">Narrated by George · Jake voiced by Andrew · Aliens &amp; crew voiced by River</p>
+    <p style="font-size:12px;color:#443366;margin-top:16px;">Narrated by George · Jake voiced by Andrew · Crew voiced by River</p>
   </div>
 
   <!-- PROGRESS -->
@@ -204,7 +194,7 @@
       <div class="chapter-badge">🌫️ Chapter 1 — Into the Fog</div>
       <h2>Jake Enters the Vela Fog Nebula!</h2>
     </div>
-    <img class="chapter-img" src="images/ch1-issue002.png" alt="Jake's ship entering the Vela Fog Nebula" />
+    <img class="chapter-img" src="images/ch1-issue002.png" alt="Jake's rocket entering the Vela Fog Nebula" />
     <div class="nar-player" id="player-ch1">
       <button class="nar-btn" id="btn-ch1" onclick="togglePlayer('ch1')">▶</button>
       <div class="nar-info">
@@ -213,27 +203,26 @@
       </div>
     </div>
     <div class="story-text" id="story-ch1">
-      The trail of missing fuel led Jake to the <strong>Vela Fog Nebula</strong> — a vast cloud of cosmic gas so thick that all visual sensors were useless. Outside the viewport, everything was a swirling, purple-grey blur.<br><br>
-      <em>"Navigation by instruments only,"</em> Jake reminded himself, checking the pilot's display. The nebula was divided into <strong>6 equal sectors</strong>. He had already crossed <strong>2</strong> of them. Jake needed to know exactly how far he'd come — in fraction form — before he could plot the next leg.
+      Jake's instruments were going haywire. The <strong>Vela Fog Nebula</strong> swallowed his rocket like a cloud swallowing a moth. Visibility: zero. But his <em>math-based instruments</em> — those still worked perfectly.<br><br>
+      The nebula was divided into <strong>6 equal sectors</strong>. Jake had already passed through <strong>2</strong> of them. He needed to know exactly what fraction of the nebula he'd crossed.
     </div>
     <div id="lock-q1" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
     <div class="quiz-box" id="quiz-q1">
       <div class="quiz-meta"><span class="difficulty diff-warmup">🔁 Warm-Up</span><span class="acara-tag">Number · Year 3</span></div>
       <span class="quiz-icon">🌫️</span>
       <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Warm-Up — Unit Fractions</div>
-      <div class="question">The Vela Fog Nebula is divided into <strong>6 equal sectors</strong>.<br>Jake has crossed <strong>2 sectors</strong>.<br><br>What fraction of the nebula has Jake crossed?</div>
+      <div class="question">The nebula is divided into <strong>6 equal sectors</strong>.<br>Jake has already passed through <strong>2 sectors</strong>.<br><br>What fraction of the nebula has he crossed?</div>
       <img src="images/q1-issue002.png" alt="Nebula sectors diagram" class="question-img" />
       <div class="options">
-        <button class="opt-btn" onclick="answer(this,false,'q1')">1/6</button>
-        <button class="opt-btn" onclick="answer(this,false,'q1')">2/3</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">2/6</button>
         <button class="opt-btn" onclick="answer(this,true,'q1')">1/3</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">1/6</button>
         <button class="opt-btn" onclick="answer(this,false,'q1')">1/2</button>
       </div>
       <div class="feedback" id="feedback-q1"></div>
       <button class="next-btn" id="next-q1" onclick="showQ2Story()">Continue Mission ➜</button>
     </div>
 
-    <!-- Q2 story block -->
     <div id="block-q2" style="display:none">
       <div class="nar-player" id="player-q2s">
         <button class="nar-btn" id="btn-q2s" onclick="togglePlayer('q2s')">▶</button>
@@ -243,21 +232,21 @@
         </div>
       </div>
       <div class="story-text" id="story-q2s">
-        A faint signal crackled through the comm system. <em>"This is the SS Meridian — we are stranded in Sector 4. Our fuel tank is divided into <strong>5 equal sections</strong>, and only <strong>2 sections remain</strong>."</em><br><br>
-        Jake leaned forward. He needed to tell Mission Control exactly what fraction of fuel the Meridian had left.
+        Deep in the fog, a faint signal crackled through the comms. It was the <strong>SS Meridian</strong> — stranded, fuel almost gone, crew rationing every last drop.<br><br>
+        <em>"Mayday, mayday! This is the SS Meridian. Our fuel tank has 5 equal sections. Only 2 remain. We cannot hold much longer!"</em>
       </div>
       <div id="lock-q2" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
       <div class="quiz-box" id="quiz-q2">
         <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Number · Year 3</span></div>
         <span class="quiz-icon">⛽</span>
         <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 2 — Fractions of a Whole</div>
-        <div class="question">The Meridian's tank has <strong>5 equal sections</strong>.<br><strong>2 sections</strong> are still full.<br><br>What fraction of their fuel remains?</div>
-        <img src="images/q2-issue002.png" alt="Fuel tank diagram" class="question-img" />
+        <div class="question">The Meridian's tank has <strong>5 equal sections</strong>.<br>Only <strong>2 sections</strong> remain.<br><br>What fraction of fuel do they have remaining?</div>
+        <img src="images/q2-issue002.png" alt="Fuel tank with 5 sections" class="question-img" />
         <div class="options">
           <button class="opt-btn" onclick="answer(this,false,'q2')">1/5</button>
           <button class="opt-btn" onclick="answer(this,true,'q2')">2/5</button>
           <button class="opt-btn" onclick="answer(this,false,'q2')">3/5</button>
-          <button class="opt-btn" onclick="answer(this,false,'q2')">4/5</button>
+          <button class="opt-btn" onclick="answer(this,false,'q2')">1/2</button>
         </div>
         <div class="feedback" id="feedback-q2"></div>
         <button class="next-btn" id="next-q2" onclick="nextChapter(2)">Next Chapter ➜</button>
@@ -268,10 +257,10 @@
   <!-- ===== CHAPTER 2 ===== -->
   <div class="chapter" id="chapter-2">
     <div style="padding:20px 0 0">
-      <div class="chapter-badge">📡 Chapter 2 — Contact!</div>
-      <h2>The Meridian Is Running on Empty!</h2>
+      <div class="chapter-badge">📡 Chapter 2 — Mayday!</div>
+      <h2>Jake Races to the Meridian!</h2>
     </div>
-    <img class="chapter-img" src="images/ch2-issue002.png" alt="Jake in contact with the SS Meridian" />
+    <img class="chapter-img" src="images/ch2-issue002.png" alt="Jake making contact with the SS Meridian" />
     <div class="nar-player" id="player-ch2">
       <button class="nar-btn" id="btn-ch2" onclick="togglePlayer('ch2')">▶</button>
       <div class="nar-info">
@@ -280,21 +269,21 @@
       </div>
     </div>
     <div class="story-text" id="story-ch2">
-      Jake locked onto the Meridian's signal and hailed them. A tired-looking engineer named Yusra appeared on screen — her hair floating in zero-g, a fuel gauge behind her glowing amber.<br><br>
-      <em>"We're rationing carefully,"</em> she said. <em>"We need to burn <strong>1 more section</strong> to reach the rendezvous point. After that burn, how much do we have left?"</em>
+      Jake punched in the coordinates and boosted toward the signal. He had to think fast — the Meridian was losing fuel by the minute.<br><br>
+      <em>"We will need to use one more section just to reach the rendezvous point. How much will we have left after that?"</em>
     </div>
     <div id="lock-q3" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
     <div class="quiz-box" id="quiz-q3">
       <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Number · Year 3</span></div>
       <span class="quiz-icon">🔥</span>
       <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 3 — Subtracting Fractions</div>
-      <div class="question">The Meridian has <strong>2/5</strong> fuel remaining.<br>They burn <strong>1 more section</strong> to reach the rendezvous.<br><br>What fraction remains after the burn?</div>
-      <img src="images/q3-issue002.png" alt="Fuel gauge" class="question-img" />
+      <div class="question">The Meridian has <strong>2/5</strong> of fuel.<br>They use <strong>1 section</strong> to reach Jake.<br><br>What fraction is left after that burn?</div>
+      <img src="images/q3-issue002.png" alt="Fuel gauge going down" class="question-img" />
       <div class="options">
         <button class="opt-btn" onclick="answer(this,false,'q3')">0</button>
         <button class="opt-btn" onclick="answer(this,true,'q3')">1/5</button>
         <button class="opt-btn" onclick="answer(this,false,'q3')">2/5</button>
-        <button class="opt-btn" onclick="answer(this,false,'q3')">1/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">3/5</button>
       </div>
       <div class="feedback" id="feedback-q3"></div>
       <button class="next-btn" id="next-q3" onclick="showQ4Story()">Next Question ➜</button>
@@ -309,15 +298,15 @@
         </div>
       </div>
       <div class="story-text" id="story-q4s">
-        Jake's long-range scanner lit up. Floating in the nebula just ahead were <strong>12 spare fuel pods</strong> — exactly the kind that worked for both ships.<br><br>
-        <em>"Split them equally?"</em> Yusra asked hopefully. Each ship would get half. Jake needed to work out the exact number.
+        As Jake drew closer, his scanner picked up something incredible — a cloud of spare fuel pods, floating free in the nebula. <strong>Twelve of them</strong>, perfectly intact.<br><br>
+        <em>"Twelve pods! If I split them equally with the Meridian, we each get half. But how many is that exactly?"</em>
       </div>
       <div id="lock-q4" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
       <div class="quiz-box" id="quiz-q4">
         <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 3–4</span></div>
         <span class="quiz-icon">📦</span>
         <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 4 — Fractions of a Collection</div>
-        <div class="question">There are <strong>12 fuel pods</strong> floating in the nebula.<br>Jake and the Meridian share them equally — each gets <strong>½</strong>.<br><br>How many pods does each ship get?</div>
+        <div class="question">Jake finds <strong>12 spare fuel pods</strong> and shares them equally with the Meridian.<br><br>Half of 12 equals how many pods each?</div>
         <img src="images/q4-issue002.png" alt="12 fuel pods" class="question-img" />
         <div class="options">
           <button class="opt-btn" onclick="answer(this,false,'q4')">4</button>
@@ -335,9 +324,9 @@
   <div class="chapter" id="chapter-3">
     <div style="padding:20px 0 0">
       <div class="chapter-badge">📦 Chapter 3 — The Emergency Reserve</div>
-      <h2>The Meridian Keeps Some Pods Aside!</h2>
+      <h2>Yusra Sets Aside the Reserve Pods!</h2>
     </div>
-    <img class="chapter-img" src="images/ch3-issue002.png" alt="Fuel pods being sorted aboard the Meridian" />
+    <img class="chapter-img" src="images/ch3-issue002.png" alt="Fuel pods being sorted on the Meridian" />
     <div class="nar-player" id="player-ch3">
       <button class="nar-btn" id="btn-ch3" onclick="togglePlayer('ch3')">▶</button>
       <div class="nar-info">
@@ -346,17 +335,15 @@
       </div>
     </div>
     <div class="story-text" id="story-ch3">
-      The pods were split — <strong>6 pods each</strong>. But Yusra shook her head.<br><br>
-      <em>"We need to keep <strong>1/3 of our share</strong> as an emergency reserve,"</em> she said firmly. <em>"The regulations are clear. How many pods can we actually use for the rendezvous burn?"</em><br><br>
-      Jake grabbed his notebook. If the Meridian had 6 pods, and they needed to save 1/3...
+      The Meridian's engineer, a sharp-eyed woman named <strong>Yusra</strong>, quickly stowed their share of pods. But she needed some in reserve — exactly <strong>one third</strong> — for emergencies.
     </div>
     <div id="lock-q5" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
     <div class="quiz-box" id="quiz-q5">
       <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
       <span class="quiz-icon">🔒</span>
       <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 5 — Fractions of a Collection</div>
-      <div class="question">The Meridian has <strong>6 fuel pods</strong>.<br>They must keep <strong>1/3</strong> as an emergency reserve.<br><br>How many pods go into the reserve?</div>
-      <img src="images/q5-issue002.png" alt="6 pods with 1/3 reserved" class="question-img" />
+      <div class="question">The Meridian has <strong>6 pods</strong>.<br>Yusra keeps <strong>one third</strong> in emergency reserve.<br><br>How many pods is one third of 6?</div>
+      <img src="images/q5-issue002.png" alt="6 pods with 1/3 set aside" class="question-img" />
       <div class="options">
         <button class="opt-btn" onclick="answer(this,false,'q5')">1</button>
         <button class="opt-btn" onclick="answer(this,true,'q5')">2</button>
@@ -376,18 +363,16 @@
         </div>
       </div>
       <div class="story-text" id="story-q6s">
-        Now came the hard part. The densest zone of the Fog Nebula was ahead — three possible navigation routes. Jake plotted them on his display.<br><br>
-        <strong>Route A</strong> covered <strong>2/3</strong> of the total distance.<br>
-        <strong>Route B</strong> covered <strong>3/4</strong> of the total distance.<br><br>
-        Only one could be chosen. Jake needed to know which route got them closer.
+        Now came the hard part — navigating out. Three routes stretched ahead, each covering a different fraction of the total distance. Jake had to choose wisely.<br><br>
+        <em>"Route A covers two thirds of the distance. Route B covers three quarters. Which gets us further? I need to think about this carefully..."</em>
       </div>
       <div id="lock-q6" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
       <div class="quiz-box" id="quiz-q6">
         <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
         <span class="quiz-icon">🗺️</span>
         <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 6 — Comparing Fractions</div>
-        <div class="question">Route A covers <strong>2/3</strong> of the distance.<br>Route B covers <strong>3/4</strong> of the distance.<br><br>Which route gets Jake and the Meridian further?</div>
-        <img src="images/q6-issue002.png" alt="Route comparison diagram" class="question-img" />
+        <div class="question">Route A covers <strong>2/3</strong> of the total distance.<br>Route B covers <strong>3/4</strong> of the total distance.<br><br>Which route gets Jake and the Meridian further?</div>
+        <img src="images/q6-issue002.png" alt="Two navigation routes comparison" class="question-img" />
         <div class="options">
           <button class="opt-btn" onclick="answer(this,false,'q6')">Route A (2/3)</button>
           <button class="opt-btn" onclick="answer(this,true,'q6')">Route B (3/4)</button>
@@ -404,9 +389,9 @@
   <div class="chapter" id="chapter-4">
     <div style="padding:20px 0 0">
       <div class="chapter-badge">🌀 Chapter 4 — The Dense Zone</div>
-      <h2>Almost Through — Final Navigation Push!</h2>
+      <h2>Three Quarters Through — Almost There!</h2>
     </div>
-    <img class="chapter-img" src="images/ch4-issue002.png" alt="Jake's ship navigating the dense nebula zone" />
+    <img class="chapter-img" src="images/ch4-issue002.png" alt="Ships navigating the dense nebula zone" />
     <div class="nar-player" id="player-ch4">
       <button class="nar-btn" id="btn-ch4" onclick="togglePlayer('ch4')">▶</button>
       <div class="nar-info">
@@ -415,16 +400,15 @@
       </div>
     </div>
     <div class="story-text" id="story-ch4">
-      Route B it was. The ships plunged into the dense zone, instruments barely registering. Jake watched the distance tracker tick down. Route B covered <strong>3/4 of the journey</strong> — but what remained after that?<br><br>
-      He needed to know the remaining distance fraction before he could plan the final burn.
+      They took Route B — the longer fraction, but the smarter choice. <strong>Three quarters</strong> of the way through, Jake checked the instruments. The rest of the journey would take a fraction of the time already spent.
     </div>
     <div id="lock-q7" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
     <div class="quiz-box" id="quiz-q7">
       <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
       <span class="quiz-icon">📏</span>
       <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 7 — Complementary Fractions</div>
-      <div class="question">Route B covers <strong>3/4</strong> of the total distance.<br><br>After taking Route B, what fraction of the journey still remains?</div>
-      <img src="images/q7-issue002.png" alt="Distance tracker" class="question-img" />
+      <div class="question">They have travelled <strong>3/4</strong> of the route.<br><br>What fraction of the route is still remaining?</div>
+      <img src="images/q7-issue002.png" alt="Route progress tracker" class="question-img" />
       <div class="options">
         <button class="opt-btn" onclick="answer(this,true,'q7')">1/4</button>
         <button class="opt-btn" onclick="answer(this,false,'q7')">1/3</button>
@@ -444,15 +428,15 @@
         </div>
       </div>
       <div class="story-text" id="story-q8s">
-        The navigation computer gave Jake one more piece of information: the <strong>3/4 of the route</strong> they were flying took exactly <strong>12 minutes</strong>.<br><br>
-        <em>"So how long will the remaining 1/4 take?"</em> Yusra asked over comms. Jake thought for a moment. If 3/4 took 12 minutes, then 1/4 must take...
+        Three quarters of the route had taken <strong>12 minutes</strong>. Jake needed to calculate the final stretch.<br><br>
+        <em>"If three quarters took 12 minutes, then one quarter takes... let me work this out properly."</em>
       </div>
       <div id="lock-q8" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
       <div class="quiz-box" id="quiz-q8">
         <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Number · Year 4</span></div>
         <span class="quiz-icon">⏱️</span>
         <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 8 — Fractions &amp; Time</div>
-        <div class="question">Flying <strong>3/4 of the route</strong> takes <strong>12 minutes</strong>.<br><br>How many minutes does flying <strong>1/4 of the route</strong> take?</div>
+        <div class="question">Three quarters of the journey takes <strong>12 minutes</strong>.<br><br>How long does one quarter of the journey take?</div>
         <img src="images/q8-issue002.png" alt="Time calculation" class="question-img" />
         <div class="options">
           <button class="opt-btn" onclick="answer(this,false,'q8')">3 minutes</button>
@@ -470,9 +454,9 @@
   <div class="chapter" id="chapter-5">
     <div style="padding:20px 0 0">
       <div class="chapter-badge">🤝 Chapter 5 — Rendezvous!</div>
-      <h2>Three Ships — One Last Maths Problem!</h2>
+      <h2>Three Ships — and a Mysterious Clue!</h2>
     </div>
-    <img class="chapter-img" src="images/ch5-issue002.png" alt="Three ships at the nebula rendezvous point" />
+    <img class="chapter-img" src="images/ch5-issue002.png" alt="Three ships meeting at the nebula exit" />
     <div class="nar-player" id="player-ch5">
       <button class="nar-btn" id="btn-ch5" onclick="togglePlayer('ch5')">▶</button>
       <div class="nar-info">
@@ -481,15 +465,16 @@
       </div>
     </div>
     <div class="story-text" id="story-ch5">
-      The ships broke out of the nebula into clear space. A third vessel was already waiting — the SS Lyra, which had been shadowing them from a distance. With the fuel pods distributed, there were now <strong>9 pods total</strong> between <strong>3 ships</strong>: Jake's, the Meridian, and the Lyra.<br><br>
-      <em>"Equal shares for everyone,"</em> said the Lyra's pilot firmly. <em>"How many does each of us get?"</em>
+      Both ships burst out of the nebula into clear space. The Meridian crew cheered. But as they celebrated, the Meridian's pilot pulled up something on her star map — a glowing blue route, precise and mathematical.<br><br>
+      <em>"This route... no ship travelled it. Something else did. Something that moves through space using pure mathematics."</em><br><br>
+      A third ship, the SS Lyra, had been waiting for them. Combined with Jake and the Meridian, that made <strong>3 ships</strong> and <strong>9 pods</strong> to share equally between them.
     </div>
     <div id="lock-q9" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
     <div class="quiz-box" id="quiz-q9">
       <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Number · Year 3–4</span></div>
       <span class="quiz-icon">🚀</span>
       <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 9 — Fractions of a Set</div>
-      <div class="question"><strong>9 fuel pods</strong> are shared equally between <strong>3 ships</strong>.<br><br>Each ship gets <strong>1/3</strong> of the pods. How many is that?</div>
+      <div class="question">After sharing pods, Jake and the Meridian each have some. Combined with a third rescue ship, there are <strong>9 pods</strong> to share equally between <strong>3 ships</strong>.<br><br>One third of 9 equals how many pods each?</div>
       <img src="images/q9-issue002.png" alt="9 pods shared between 3 ships" class="question-img" />
       <div class="options">
         <button class="opt-btn" onclick="answer(this,false,'q9')">2</button>
@@ -510,16 +495,16 @@
         </div>
       </div>
       <div class="story-text" id="story-q10s">
-        Yusra — the Meridian's engineer — pulled up the theft data. The logs were clear: from <strong>every station</strong> in the galaxy, exactly <strong>1/4</strong> of <strong>1/3</strong> of the total fuel had vanished.<br><br>
-        <em>"That's fractions of fractions,"</em> Jake muttered. He'd never calculated that before. What was 1/4 of 1/3 as a single fraction?
+        Yusra had worked out the theft pattern. The Fraction Phantom hadn't just stolen from this nebula.<br><br>
+        <em>"Each station lost exactly one quarter of one third of their total fuel. I know the fraction — but what does it actually equal?"</em>
       </div>
       <div id="lock-q10" class="quiz-lock">🔒 Listen to the story to unlock the Boss Challenge!</div>
       <div class="quiz-box" id="quiz-q10">
         <div class="quiz-meta"><span class="difficulty diff-boss">👑 Boss Challenge</span><span class="acara-tag">Number · Year 4</span></div>
         <span class="quiz-icon">👻</span>
         <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 10 — BOSS: Fractions of Fractions</div>
-        <div class="question">The Fraction Phantom stole <strong>1/4 of 1/3</strong> of the fuel from every station.<br><br>What single fraction of the total fuel did each station lose?</div>
-        <img src="images/q10-issue002.png" alt="Fraction bar model" class="question-img" />
+        <div class="question">Each station lost <strong>one quarter of one third</strong> of their fuel.<br><br>What single fraction does <strong>1/4 of 1/3</strong> equal?</div>
+        <img src="images/q10-issue002.png" alt="Fraction of a fraction diagram" class="question-img" />
         <div class="options">
           <button class="opt-btn" onclick="answer(this,false,'q10')">1/7</button>
           <button class="opt-btn" onclick="answer(this,true,'q10')">1/12</button>
@@ -538,20 +523,20 @@
     <h2>MISSION COMPLETE!</h2>
     <div class="win-score" id="win-score">You scored 10 / 10!</div>
     <div class="win-stars" id="win-stars">⭐⭐⭐</div>
-    <p>Jake and the Meridian crew navigated the Fog Nebula — and it was all thanks to <strong>YOU</strong>! 🌌</p>
+    <p>Jake and the Meridian crew escaped the Fog Nebula — and you solved every fraction along the way! 🌌</p>
     <div class="win-summary">
       <h3>What You Mastered Today 🧠</h3>
       <ul>
-        <li>✅ <strong>Unit Fractions</strong> — naming and reading fractions (Number, Year 3)</li>
-        <li>✅ <strong>Fractions of a Whole</strong> — reading fuel gauges as fractions (Number, Year 3)</li>
+        <li>✅ <strong>Unit Fractions</strong> — 2/6 = 1/3 (Number, Year 3)</li>
+        <li>✅ <strong>Fractions of a Whole</strong> — reading fuel gauges (Number, Year 3)</li>
         <li>✅ <strong>Subtracting Fractions</strong> — same denominator (Number, Year 3)</li>
-        <li>✅ <strong>Fractions of a Collection</strong> — ½ and ⅓ of groups (Number, Year 4)</li>
-        <li>✅ <strong>Comparing Fractions</strong> — 2/3 vs 3/4 on a number line (Number, Year 4)</li>
+        <li>✅ <strong>Fractions of a Collection</strong> — ½ of 12, ⅓ of 6 (Number, Year 4)</li>
+        <li>✅ <strong>Comparing Fractions</strong> — 2/3 vs 3/4 (Number, Year 4)</li>
         <li>✅ <strong>Complementary Fractions</strong> — what's left after 3/4? (Number, Year 4)</li>
         <li>✅ <strong>Boss</strong> — fractions of fractions: 1/4 × 1/3 = 1/12</li>
       </ul>
     </div>
-    <p style="font-size:14px;color:#6655aa;margin-bottom:8px;">Issue #3 coming next — Jake hits the <strong>Asteroid Market</strong> where everything is traded in equivalent fractions... and someone is cheating! 💎</p>
+    <p style="font-size:14px;color:#6655aa;margin-bottom:8px;">Issue #3 coming next — Jake follows the trail to the <strong>Asteroid Market</strong>, where the Phantom hides its thefts using equivalent fractions! 💎</p>
     <button class="replay-btn" onclick="location.reload()">🔄 Play Again</button><br>
     <button class="print-btn" onclick="showParentGuide()">📋 Parent Guide</button>
   </div>
@@ -566,28 +551,28 @@
       <h4>What We Covered</h4>
       <table class="acara-table">
         <tr><th>Topic</th><th>Strand</th><th>Year</th><th>Question</th></tr>
-        <tr><td>Unit fractions — naming 2/6 = 1/3</td><td><span class="strand-pill">Number</span></td><td>Year 3</td><td>Q1</td></tr>
-        <tr><td>Fractions of a whole — reading gauges</td><td><span class="strand-pill">Number</span></td><td>Year 3</td><td>Q2</td></tr>
-        <tr><td>Subtracting fractions (same denom)</td><td><span class="strand-pill">Number</span></td><td>Year 3</td><td>Q3</td></tr>
+        <tr><td>Unit fractions — 2/6 = 1/3</td><td><span class="strand-pill">Number</span></td><td>Year 3</td><td>Q1</td></tr>
+        <tr><td>Fractions of a whole — 2/5</td><td><span class="strand-pill">Number</span></td><td>Year 3</td><td>Q2</td></tr>
+        <tr><td>Subtracting fractions — same denominator</td><td><span class="strand-pill">Number</span></td><td>Year 3</td><td>Q3</td></tr>
         <tr><td>Fractions of a collection — ½ of 12</td><td><span class="strand-pill">Number</span></td><td>Year 3–4</td><td>Q4</td></tr>
         <tr><td>Fractions of a collection — ⅓ of 6</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q5</td></tr>
         <tr><td>Comparing fractions — 2/3 vs 3/4</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q6</td></tr>
         <tr><td>Complementary fractions — 1 − 3/4</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q7</td></tr>
-        <tr><td>Fractions &amp; time — scaling</td><td><span class="strand-pill">Measurement</span></td><td>Year 4</td><td>Q8</td></tr>
+        <tr><td>Fractions &amp; time — scaling 12 min</td><td><span class="strand-pill">Measurement</span></td><td>Year 4</td><td>Q8</td></tr>
         <tr><td>Fractions of a set — ⅓ of 9</td><td><span class="strand-pill">Number</span></td><td>Year 3–4</td><td>Q9</td></tr>
         <tr><td>Fractions of fractions — 1/4 × 1/3</td><td><span class="strand-pill">Number</span></td><td>Year 4</td><td>Q10 👑</td></tr>
       </table>
     </div>
     <div class="pg-row">
-      <div class="pg-card"><h5>✨ Narrated Edition</h5><p>This version is read aloud by professional voices — George (narrator), Andrew (Jake), and River (crew &amp; aliens). Questions unlock after listening to each story segment.</p></div>
-      <div class="pg-card"><h5>🔑 Key Concept</h5><p>Q10 introduces fractions of fractions — a powerful idea. 1/4 of 1/3 means dividing a third into four equal parts. The result (1/12) is smaller than either fraction alone.</p></div>
+      <div class="pg-card"><h5>✨ Narrated Edition</h5><p>Read aloud by George (narrator), Andrew (Jake), and River (crew voices). Questions unlock only after the story segment plays.</p></div>
+      <div class="pg-card"><h5>🔑 Key Concept</h5><p>Q10 introduces fractions of fractions — 1/4 of 1/3 = 1/12. Divide a third into four equal parts and each part is one twelfth of the whole.</p></div>
     </div>
     <div class="pg-section">
       <h4>💬 Conversation Starters</h4>
       <ul>
-        <li><strong>After Q4–5:</strong> "If we had 12 biscuits and shared half with the neighbours, how many would we keep? Then if we put a third of ours aside for tomorrow — how many is that?"</li>
+        <li><strong>After Q4–5:</strong> "If we had 12 biscuits and shared half with the neighbours, how many would we keep? Then if we put a third of ours aside — how many is that?"</li>
         <li><strong>After Q6:</strong> "What's bigger — 2/3 of a pizza or 3/4? How could you check with a piece of paper?"</li>
-        <li><strong>After Q10 (boss):</strong> "Can you draw a rectangle and show me what 1/12 looks like? How did you get there?"</li>
+        <li><strong>After Q10 (boss):</strong> "Can you draw a rectangle and show me what 1/12 looks like? How did you get there from 1/4 of 1/3?"</li>
       </ul>
     </div>
     <p style="font-size:12px;color:#443366;text-align:center;margin-top:20px;">Mission: Math Blast · ACARA Australian Curriculum v9.0 · mathblast.com.au</p>
@@ -615,7 +600,6 @@ for (let i=0;i<90;i++){
 const BASE = 'sounds/issue002/';
 let muted = false;
 let currentAudio = null;
-let currentPlayerId = null;
 let correctVariant = 0;
 
 function stopAll() {
@@ -633,17 +617,6 @@ function playFile(file, onEnd) {
   a.onended=()=>{ currentAudio=null; if(onEnd) onEnd(); };
   a.onerror=()=>{ currentAudio=null; if(onEnd) onEnd(); };
   return a;
-}
-
-function playSeq(files, onStep, onDone) {
-  let idx=0;
-  function next(){
-    if(idx>=files.length){ if(onDone) onDone(); return; }
-    const f=files[idx++];
-    const a=playFile(f, next);
-    if(onStep && a) onStep(idx-1, f, a);
-  }
-  next();
 }
 
 const playerConfigs = {};
@@ -709,56 +682,67 @@ function runPlayer(id) {
   playNext();
 }
 
-// ── PLAYER DEFINITIONS ────────────────────────────────────
+// ── PLAYER DEFINITIONS ─────────────────────────────────────
+// Built directly from gen_arc_audio.py — audio gen script is the master
 function initPlayers(){
+  // Ch1: George narrates nebula entry → Q1 question
   setupPlayer('ch1',
-    ['ch1-intro.mp3','ch1-q1-question.mp3'],
-    ['🎙️ George is narrating...','🎙️ Listen to the question...'],
+    ['ch1-intro.mp3', 'ch1-q1-question.mp3'],
+    ['🎙️ George is narrating...', '🎙️ Listen to the question...'],
     'story-ch1','lock-q1', null);
 
+  // Q2 story: George narrates Meridian distress → Meridian crew (River) → Q2 question
   setupPlayer('q2s',
-    ['ch1-q2-story.mp3','ch1-meridian.mp3','ch1-q2-question.mp3'],
-    ['🎙️ George is narrating...','📡 Meridian crew...','🎙️ Listen to the question...'],
+    ['ch1-q2-story.mp3', 'ch1-meridian.mp3', 'ch1-q2-question.mp3'],
+    ['🎙️ George is narrating...', '📡 SS Meridian crew...', '🎙️ Listen to the question...'],
     'story-q2s', 'lock-q2', null);
 
+  // Ch2: George narrates Jake racing to Meridian → Meridian crew asks Q3 → Q3 question
   setupPlayer('ch2',
-    ['ch2-intro.mp3','ch2-meridian.mp3','ch2-q3-question.mp3'],
-    ['🎙️ George is narrating...','📡 Yusra speaking...','🎙️ Listen to the question...'],
+    ['ch2-intro.mp3', 'ch2-meridian.mp3', 'ch2-q3-question.mp3'],
+    ['🎙️ George is narrating...', '📡 Meridian crew...', '🎙️ Listen to the question...'],
     'story-ch2','lock-q3', null);
 
+  // Q4 story: George narrates fuel pods discovery → Jake voice (Andrew) → Q4 question
   setupPlayer('q4s',
-    ['ch2-q4-story.mp3','ch2-jake.mp3','ch2-q4-question.mp3'],
-    ['🎙️ George is narrating...','👦 Jake is thinking...','🎙️ Listen to the question...'],
+    ['ch2-q4-story.mp3', 'ch2-jake.mp3', 'ch2-q4-question.mp3'],
+    ['🎙️ George is narrating...', '👦 Jake is thinking...', '🎙️ Listen to the question...'],
     'story-q4s', 'lock-q4', null);
 
+  // Ch3: George narrates Yusra + reserve → Q5 question
   setupPlayer('ch3',
-    ['ch3-intro.mp3','ch3-q5-question.mp3'],
-    ['🎙️ George is narrating...','🎙️ Listen to the question...'],
+    ['ch3-intro.mp3', 'ch3-q5-question.mp3'],
+    ['🎙️ George is narrating...', '🎙️ Listen to the question...'],
     'story-ch3','lock-q5', null);
 
+  // Q6 story: George narrates three routes → Jake voice considers routes → Q6 question
   setupPlayer('q6s',
-    ['ch3-q6-story.mp3','ch3-jake.mp3','ch3-q6-question.mp3'],
-    ['🎙️ George is narrating...','👦 Jake is thinking...','🎙️ Listen to the question...'],
+    ['ch3-q6-story.mp3', 'ch3-jake.mp3', 'ch3-q6-question.mp3'],
+    ['🎙️ George is narrating...', '👦 Jake is thinking...', '🎙️ Listen to the question...'],
     'story-q6s', 'lock-q6', null);
 
+  // Ch4: George narrates Route B chosen, 3/4 through → Q7 question
   setupPlayer('ch4',
-    ['ch4-intro.mp3','ch4-q7-question.mp3'],
-    ['🎙️ George is narrating...','🎙️ Listen to the question...'],
+    ['ch4-intro.mp3', 'ch4-q7-question.mp3'],
+    ['🎙️ George is narrating...', '🎙️ Listen to the question...'],
     'story-ch4','lock-q7', null);
 
+  // Q8 story: George narrates 12 minutes for 3/4 → Jake voice calculates → Q8 question
   setupPlayer('q8s',
-    ['ch4-q8-story.mp3','ch4-jake.mp3','ch4-q8-question.mp3'],
-    ['🎙️ George is narrating...','👦 Jake is thinking...','🎙️ Listen to the question...'],
+    ['ch4-q8-story.mp3', 'ch4-jake.mp3', 'ch4-q8-question.mp3'],
+    ['🎙️ George is narrating...', '👦 Jake is thinking...', '🎙️ Listen to the question...'],
     'story-q8s', 'lock-q8', null);
 
+  // Ch5: George narrates nebula exit + celebration → Meridian pilot (River) spots mysterious route → Q9 question
   setupPlayer('ch5',
-    ['ch5-intro.mp3','ch5-yusra.mp3','ch5-q9-question.mp3'],
-    ['🎙️ George is narrating...','👩 Yusra speaking...','🎙️ Listen to the question...'],
+    ['ch5-intro.mp3', 'ch5-meridian-pilot.mp3', 'ch5-q9-question.mp3'],
+    ['🎙️ George is narrating...', '📡 Meridian pilot...', '🎙️ Listen to the question...'],
     'story-ch5','lock-q9', null);
 
+  // Q10 story: George narrates Yusra discovers theft pattern → Yusra voice (River) explains 1/4 of 1/3 → Q10 question
   setupPlayer('q10s',
-    ['ch5-q10-story.mp3','ch5-meridian-pilot.mp3','ch5-q10-question.mp3'],
-    ['🎙️ George is narrating...','📡 Meridian pilot...','🎙️ Listen to the question...'],
+    ['ch5-q10-story.mp3', 'ch5-yusra.mp3', 'ch5-q10-question.mp3'],
+    ['🎙️ George is narrating...', '👩 Yusra speaking...', '🎙️ Listen to the question...'],
     'story-q10s', 'lock-q10', null);
 }
 
@@ -794,28 +778,28 @@ let score=0, questionsAnswered=0;
 const totalQ=10;
 
 const correctMsg={
-  q1:  '🎉 Correct! 2 out of 6 sectors = 2/6 = <strong>1/3</strong>. Jake has crossed one third of the nebula!',
-  q2:  '🎉 Right! 2 out of 5 sections full = <strong>2/5</strong>. The Meridian is running low!',
-  q3:  '🎉 Correct! 2/5 − 1/5 = <strong>1/5</strong>. Just one section left after the burn — they\'re cutting it very close!',
-  q4:  '🎉 Nailed it! ½ of 12 = <strong>6 pods</strong>. Each ship gets half — Jake and the Meridian both grab 6.',
-  q5:  '🎉 Right! ⅓ of 6 = <strong>2 pods</strong> go into reserve. They can use the other 4 for the rendezvous burn.',
-  q6:  '🎉 Correct! <strong>Route B (3/4)</strong> goes further. 3/4 > 2/3 — think of it as 9/12 vs 8/12. Route B wins!',
-  q7:  '🎉 Yes! If 3/4 is covered, then <strong>1/4</strong> remains. 3/4 + 1/4 = 4/4 = 1 whole journey.',
-  q8:  '🎉 Spot on! If 3/4 takes 12 minutes, then 1/4 takes 12 ÷ 3 = <strong>4 minutes</strong>. Maths saves the day!',
-  q9:  '🎉 Correct! ⅓ of 9 = <strong>3 pods each</strong>. Three ships, nine pods, perfectly equal shares!',
-  q10: '🎉 BOSS CLEARED! 1/4 of 1/3 = <strong>1/12</strong>. Divide 1/3 into 4 equal parts — each part is one twelfth of the whole. The Phantom is very precise! 👻'
+  q1:  '🎉 Correct! 2 sectors out of 6 = 2/6. Simplify by dividing both by 2 → <strong>1/3</strong>. Jake has crossed one third of the nebula!',
+  q2:  '🎉 Right! 2 sections out of 5 remaining = <strong>2/5</strong>. The Meridian is running very low!',
+  q3:  '🎉 Correct! 2/5 − 1/5 = <strong>1/5</strong>. Just one section left — they\'re cutting it extremely close!',
+  q4:  '🎉 Nailed it! ½ of 12 = 12 ÷ 2 = <strong>6 pods</strong>. Jake and the Meridian each grab six!',
+  q5:  '🎉 Right! ⅓ of 6 = 6 ÷ 3 = <strong>2 pods</strong> in reserve. They can use the other 4 for the burn.',
+  q6:  '🎉 Correct! <strong>Route B (3/4)</strong> covers more distance. Think of it as 8/12 vs 9/12 — Route B wins by one twelfth!',
+  q7:  '🎉 Yes! If 3/4 is done, then <strong>1/4</strong> remains. 3/4 + 1/4 = 4/4 = 1 complete journey!',
+  q8:  '🎉 Spot on! If 3/4 of the journey takes 12 minutes, then 1/4 takes 12 ÷ 3 = <strong>4 minutes</strong>.',
+  q9:  '🎉 Correct! ⅓ of 9 = 9 ÷ 3 = <strong>3 pods each</strong>. Three ships, nine pods, perfectly equal shares!',
+  q10: '🎉 BOSS CLEARED! 1/4 of 1/3 = <strong>1/12</strong>. Split a third into 4 equal parts — each part is one twelfth of the whole. The Phantom is very precise! 👻'
 };
 const wrongMsg={
-  q1:  '❌ Not quite! Jake crossed 2 sectors out of 6 total. Write that as a fraction: 2/6. Now simplify — both numbers divide by 2, giving 1/3.',
-  q2:  '❌ Not quite! The tank has 5 sections total, and 2 are still full. The fraction is 2 out of 5 — written as 2/5.',
-  q3:  '❌ Try again! Start with 2/5. They use up 1 section (that\'s 1/5). Take 1/5 away from 2/5 — what\'s left?',
-  q4:  '❌ Not quite! ½ of 12 means dividing 12 into 2 equal groups. 12 ÷ 2 = ?',
-  q5:  '❌ Not quite! ⅓ of 6 means dividing 6 into 3 equal groups. 6 ÷ 3 = ?',
-  q6:  '❌ Not quite! Compare 2/3 and 3/4 using the same denominator: 8/12 vs 9/12. Which is bigger?',
-  q7:  '❌ Think about it! If the whole journey is 4/4 = 1, and they\'ve flown 3/4 of it, what\'s left? 4/4 − 3/4 = ?',
-  q8:  '❌ Tricky! If 3/4 of the journey takes 12 minutes, then 1/4 of the journey takes 12 ÷ 3. Try again!',
-  q9:  '❌ Not quite! 9 pods shared between 3 ships — divide 9 by 3. Each ship gets one-third of the total.',
-  q10: '❌ Really tricky! Think of it in steps: first find 1/3 of the fuel bar (divide into 3). Then take 1/4 of THAT piece. How many total pieces do you have?'
+  q1:  '❌ Jake crossed 2 sectors out of 6 total. Write that as 2/6. Can you simplify it? Both numbers divide by 2: 2÷2=1, 6÷2=3. So 2/6 = ?',
+  q2:  '❌ The tank has 5 sections total, and 2 are still full. The fraction is 2 out of 5 — written as 2/5.',
+  q3:  '❌ Start with 2/5. They use up 1 section (that\'s 1/5). Subtract: 2/5 − 1/5 = ?',
+  q4:  '❌ ½ of 12 means dividing 12 into 2 equal groups. 12 ÷ 2 = ?',
+  q5:  '❌ ⅓ of 6 means dividing 6 into 3 equal groups. 6 ÷ 3 = ?',
+  q6:  '❌ Compare using the same denominator: 2/3 = 8/12, 3/4 = 9/12. Which is bigger — 8 or 9 twelfths?',
+  q7:  '❌ If the whole journey is 4/4 = 1, and they\'ve flown 3/4 of it, what\'s left? 4/4 − 3/4 = ?',
+  q8:  '❌ If 3/4 of the journey takes 12 minutes, then 1/4 takes 12 ÷ 3. Try again!',
+  q9:  '❌ 9 pods shared between 3 ships equally — divide 9 by 3. Each ship gets one-third of the total.',
+  q10: '❌ Really tricky! Think in steps: divide 1/3 into 4 equal parts. How many total parts does the whole have?'
 };
 
 function answer(btn, correct, qId){
@@ -866,7 +850,7 @@ function showChapter(n){
   if(!ch) return;
   ch.classList.add('active'); currentChapter=n;
   window.scrollTo({top:0,behavior:'smooth'});
-  const labels=['','Chapter 1 of 5 — Unit Fractions','Chapter 2 of 5 — Fractions of a Whole','Chapter 3 of 5 — Fractions of Collections','Chapter 4 of 5 — Comparing &amp; Time ✨','Chapter 5 of 5 — Boss Round 🔥'];
+  const labels=['','Chapter 1 of 5 — Unit Fractions','Chapter 2 of 5 — Subtracting Fractions','Chapter 3 of 5 — Fractions of Collections','Chapter 4 of 5 — Comparing &amp; Time ✨','Chapter 5 of 5 — Boss Round 🔥'];
   document.getElementById('progress-label').innerHTML=labels[n]||'';
   const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};
   if(playerMap[n]) setTimeout(()=>togglePlayer(playerMap[n]),700);
@@ -892,9 +876,7 @@ function showParentGuide(){
 
 function toggleMute(){
   muted=!muted;
-  const top=document.getElementById('mute-top');
   const ctrl=document.getElementById('mute-ctrl');
-  top.textContent=muted?'🔇':'🔊';
   ctrl.textContent=muted?'🔇 Muted':'🔊 Sound On';
   ctrl.classList.toggle('muted',muted);
   if(muted) stopAll();
