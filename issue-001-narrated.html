@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission: Math Blast 🚀 — Issue #1 (Narrated)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0d0630; font-family:'Nunito',Arial,sans-serif; color:#fff;
+    background-image:radial-gradient(ellipse at 50% 0%,rgba(120,0,255,0.2) 0%,transparent 70%); min-height:100vh; }
+  .starfield { position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .star { position:absolute; background:white; border-radius:50%; opacity:0.6; animation:twinkle 3s infinite alternate; }
+  @keyframes twinkle { from{opacity:0.2} to{opacity:0.9} }
+  .wrapper { max-width:680px; margin:0 auto; position:relative; z-index:1; padding-bottom:90px; }
+
+  /* TITLE */
+  .title-screen { text-align:center; padding:48px 24px 36px; }
+  .rocket-emoji { font-size:72px; display:block; margin-bottom:16px; animation:float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  .title-screen h1 { font-size:46px; font-weight:900; line-height:1.1; text-shadow:0 0 24px rgba(180,100,255,0.8); }
+  .title-screen h1 span { color:#ffdd00; }
+  .issue-label { font-size:13px; font-weight:900; color:#aa77ff; letter-spacing:3px; text-transform:uppercase; margin:10px 0 4px; }
+  .tagline { font-size:16px; color:#b090e0; margin-bottom:4px; }
+  .meta { font-size:13px; color:#6655aa; margin-bottom:8px; }
+  .narrated-badge { display:inline-block; background:rgba(255,200,0,0.15); border:1px solid #ffcc00; color:#ffcc00;
+    font-size:11px; font-weight:900; padding:4px 14px; border-radius:20px; letter-spacing:2px; text-transform:uppercase; margin-bottom:24px; }
+  .start-btn { display:inline-block; background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white;
+    font-size:20px; font-weight:900; padding:18px 48px; border-radius:50px; border:none; cursor:pointer;
+    box-shadow:0 6px 30px rgba(123,47,255,0.5); transition:transform 0.15s; font-family:'Nunito',Arial,sans-serif; }
+  .start-btn:hover { transform:scale(1.05); }
+
+  /* PROGRESS */
+  .progress-wrap { padding:16px 24px 0; display:none; }
+  .progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .progress-label { font-size:13px; color:#8877aa; font-weight:700; }
+  .progress-score { font-size:13px; color:#ffdd00; font-weight:900; }
+  .progress-bar { background:#1a0f30; border-radius:20px; height:14px; overflow:hidden; }
+  .progress-fill { background:linear-gradient(90deg,#7b2fff,#ff2fff); height:100%; border-radius:20px; transition:width 0.5s ease; }
+
+  /* CHAPTER */
+  .chapter { display:none; padding:20px 20px 0; animation:fadeIn 0.4s ease; }
+  .chapter.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .chapter-badge { display:inline-block; background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white;
+    font-size:11px; font-weight:900; padding:5px 16px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; }
+  .chapter h2 { font-size:26px; font-weight:900; margin-bottom:16px; line-height:1.3; }
+  .chapter-img { width:100%; border-radius:16px; display:block; margin-bottom:20px;
+    border:3px solid rgba(180,100,255,0.4); box-shadow:0 8px 30px rgba(0,0,0,0.5); background:#1a0f30; min-height:180px; object-fit:cover; }
+
+  /* NARRATION PLAYER */
+  .nar-player { display:flex; align-items:center; gap:12px; background:rgba(123,47,255,0.15);
+    border:2px solid rgba(123,47,255,0.4); border-radius:14px; padding:12px 16px; margin-bottom:16px; }
+  .nar-btn { width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; flex-shrink:0;
+    background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white; font-size:18px;
+    display:flex; align-items:center; justify-content:center; transition:transform 0.15s; }
+  .nar-btn:hover { transform:scale(1.1); }
+  .nar-info { flex:1; min-width:0; }
+  .nar-status { font-size:12px; color:#aa77ff; font-weight:700; }
+  .nar-bar { height:4px; background:#1a0f30; border-radius:4px; margin-top:5px; overflow:hidden; }
+  .nar-bar-fill { height:100%; background:linear-gradient(90deg,#7b2fff,#ff2fff); border-radius:4px; width:0%; transition:width 0.3s; }
+
+  /* STORY TEXT */
+  .story-text { background:rgba(255,255,255,0.05); border-left:4px solid #7b2fff;
+    border-radius:0 12px 12px 0; padding:18px 22px; font-size:18px; line-height:1.9; color:#ddd; margin-bottom:20px;
+    transition:border-color 0.4s, background 0.4s; }
+  .story-text.playing { border-left-color:#ff2fff; background:rgba(123,47,255,0.1); }
+  .story-text.done { border-left-color:#00dc64; background:rgba(0,220,100,0.04); }
+  .story-text strong { color:#ffdd00; }
+  .story-text em { color:#ff88ff; font-style:normal; font-weight:700; }
+
+  /* QUIZ LOCK */
+  .quiz-lock { text-align:center; padding:16px 20px; background:rgba(123,47,255,0.08);
+    border:2px dashed rgba(123,47,255,0.3); border-radius:16px; margin-bottom:20px;
+    font-size:14px; color:#7755bb; font-weight:700; }
+
+  /* QUIZ */
+  .quiz-box { background:rgba(123,47,255,0.12); border:2px solid rgba(123,47,255,0.4);
+    border-radius:16px; padding:22px; margin-bottom:20px; display:none; animation:fadeIn 0.4s ease; }
+  .quiz-box.show { display:block; }
+  .quiz-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .difficulty { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; }
+  .diff-warmup { background:rgba(100,200,255,0.2); color:#66ddff; border:1px solid #66ddff; }
+  .diff-easy   { background:rgba(0,220,100,0.2); color:#00dc64; border:1px solid #00dc64; }
+  .diff-medium { background:rgba(255,200,0,0.2); color:#ffcc00; border:1px solid #ffcc00; }
+  .diff-hard   { background:rgba(255,80,80,0.2); color:#ff8888; border:1px solid #ff8888; }
+  .diff-boss   { background:rgba(255,0,200,0.2); color:#ff44ee; border:1px solid #ff44ee; }
+  .acara-tag { display:inline-block; font-size:10px; font-weight:700; padding:3px 10px; border-radius:10px;
+    background:rgba(255,255,255,0.08); color:#9988cc; border:1px solid rgba(255,255,255,0.12); text-transform:uppercase; letter-spacing:0.5px; }
+  .quiz-icon { font-size:26px; display:block; margin-bottom:6px; }
+  .quiz-label { font-size:12px; font-weight:900; color:#aa77ff; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+  .yr-badge { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; margin-right:6px; }
+  .yr3 { background:rgba(0,180,80,0.2); color:#00cc60; border:1px solid #00cc60; }
+  .yr4 { background:rgba(160,50,255,0.2); color:#bb66ff; border:1px solid #bb66ff; }
+  .question { font-size:20px; font-weight:900; color:#fff; margin-bottom:18px; line-height:1.5; }
+  .question-img { display:block; max-width:300px; width:100%; margin:14px auto 18px; border-radius:8px; border:2px solid rgba(123,47,255,0.3); }
+  .options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .opt-btn { background:rgba(255,255,255,0.07); border:2px solid rgba(255,255,255,0.15); color:#fff;
+    font-family:'Nunito',Arial,sans-serif; font-size:19px; font-weight:700; padding:16px 10px;
+    border-radius:12px; cursor:pointer; transition:all 0.15s; }
+  .opt-btn:hover:not(:disabled) { background:rgba(123,47,255,0.3); border-color:#7b2fff; transform:scale(1.03); }
+  .opt-btn.correct { background:rgba(0,220,100,0.2)!important; border-color:#00dc64!important; color:#00ff88!important; }
+  .opt-btn.wrong   { background:rgba(255,50,50,0.2)!important; border-color:#ff3232!important; color:#ff8888!important; animation:shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .feedback { margin-top:16px; padding:14px 18px; border-radius:10px; font-size:15px; font-weight:700; display:none; line-height:1.5; }
+  .feedback.show { display:block; }
+  .feedback.good { background:rgba(0,220,100,0.15); border:2px solid #00dc64; color:#00ff88; }
+  .feedback.bad  { background:rgba(255,50,50,0.15); border:2px solid #ff3232; color:#ff9999; }
+  .next-btn { display:none; width:100%; margin-top:16px; background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px; border-radius:50px;
+    border:none; cursor:pointer; box-shadow:0 4px 20px rgba(123,47,255,0.4); transition:transform 0.15s; }
+  .next-btn:hover { transform:scale(1.03); }
+  .next-btn.show { display:block; }
+
+  /* WIN */
+  #win-screen { display:none; text-align:center; padding:48px 24px 24px; animation:fadeIn 0.5s ease; }
+  .trophy { font-size:80px; display:block; margin-bottom:16px; animation:bounce 0.8s ease infinite alternate; }
+  @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.15)} }
+  #win-screen h2 { font-size:38px; font-weight:900; color:#ffdd00; margin-bottom:8px; }
+  .win-score { font-size:22px; font-weight:900; color:#ff88ff; margin-bottom:16px; }
+  .win-stars { font-size:36px; margin-bottom:20px; }
+  #win-screen > p { font-size:17px; color:#c0a0ff; line-height:1.75; margin-bottom:20px; }
+  .win-summary { background:rgba(255,255,255,0.05); border-radius:14px; padding:18px 20px; margin-bottom:24px; text-align:left; }
+  .win-summary h3 { font-size:14px; color:#ffdd00; font-weight:900; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .win-summary ul { list-style:none; }
+  .win-summary li { font-size:14px; color:#c0a0ff; padding:4px 0; }
+  .replay-btn { display:inline-block; background:linear-gradient(135deg,#ffdd00,#ff8800); color:#1a0630;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px 40px;
+    border-radius:50px; border:none; cursor:pointer; box-shadow:0 4px 20px rgba(255,220,0,0.3);
+    transition:transform 0.15s; margin-bottom:16px; }
+  .replay-btn:hover { transform:scale(1.04); }
+  .print-btn { background:rgba(255,255,255,0.08); border:2px solid rgba(255,255,255,0.2); color:#ddd;
+    font-family:'Nunito',Arial,sans-serif; font-size:14px; font-weight:700; padding:8px 18px;
+    border-radius:20px; cursor:pointer; transition:all 0.15s; }
+
+  /* PARENT GUIDE */
+  #parent-guide { display:none; margin:32px 20px 0; border-top:2px dashed rgba(255,255,255,0.15); padding-top:28px; animation:fadeIn 0.5s ease; }
+  .pg-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+  .pg-title { font-size:22px; font-weight:900; color:#ffdd00; }
+  .pg-subtitle { font-size:13px; color:#8877aa; margin-top:4px; }
+  .pg-section { background:rgba(255,255,255,0.04); border-radius:14px; padding:18px 20px; margin-bottom:16px; }
+  .pg-section h4 { font-size:14px; font-weight:900; color:#aa77ff; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .pg-section p, .pg-section li { font-size:14px; color:#c0a0ff; line-height:1.7; }
+  .pg-section ul { padding-left:16px; }
+  .pg-section li { margin-bottom:6px; }
+  .pg-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .pg-card { background:rgba(255,255,255,0.04); border-radius:12px; padding:14px 16px; }
+  .pg-card h5 { font-size:12px; font-weight:900; color:#7b2fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+  .pg-card p { font-size:13px; color:#c0a0ff; line-height:1.6; }
+  .acara-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .acara-table th { text-align:left; color:#aa77ff; font-size:11px; text-transform:uppercase; letter-spacing:1px; padding:6px 8px; border-bottom:1px solid rgba(255,255,255,0.1); }
+  .acara-table td { padding:7px 8px; color:#c0a0ff; border-bottom:1px solid rgba(255,255,255,0.05); vertical-align:top; }
+  .acara-table tr:last-child td { border-bottom:none; }
+  .strand-pill { display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:8px; background:rgba(123,47,255,0.25); color:#cc99ff; }
+
+  /* CONTROLS — moved to top-right corner, out of the way */
+  #ctrl-bar { position:fixed; top:14px; left:14px; display:flex; gap:8px; z-index:999;
+    background:rgba(0,0,0,0.6); padding:6px 10px; border-radius:24px; border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(6px); }
+  .ctrl-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:white;
+    font-family:'Nunito',sans-serif; font-weight:700; font-size:12px; padding:5px 12px; border-radius:16px; cursor:pointer; transition:background 0.15s; }
+  .ctrl-btn:hover { background:rgba(255,255,255,0.18); }
+  .ctrl-btn.muted { background:rgba(255,50,50,0.3); border-color:#ff3232; }
+
+  /* MUTE BTN TOP — hidden, controls now in ctrl-bar */
+  #mute-top { display:none; }
+
+  @media print {
+    body { background:white!important; color:#000!important; }
+    .starfield,#title-screen,.progress-wrap,.chapter,#win-screen,#ctrl-bar,#mute-top { display:none!important; }
+    #parent-guide { display:block!important; margin:0; border-top:2px solid #ccc; }
+    .print-btn { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<button id="mute-top" onclick="toggleMute()" title="Toggle sound">🔊</button>
+<div class="starfield" id="starfield"></div>
+
+<div class="wrapper">
+
+  <!-- TITLE -->
+  <div id="title-screen" class="title-screen">
+    <span class="rocket-emoji">🚀</span>
+    <p class="issue-label">Issue #1</p>
+    <h1>MISSION:<br><span>MATH BLAST</span></h1>
+    <p class="tagline">An adventure story where YOU solve the puzzles!</p>
+    <p class="meta">5 chapters · 10 challenges · ACARA-aligned · Year 2–4</p>
+    <div class="narrated-badge">🎙️ Narrated Edition</div><br>
+    <button class="start-btn" onclick="startGame()">🚀 START MISSION</button>
+    <p style="font-size:12px;color:#443366;margin-top:16px;">Narrated by George · Jake voiced by Andrew · Aliens voiced by River</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label" id="progress-label">Chapter 1 of 5</div>
+      <div class="progress-score" id="progress-score">⭐ 0 / 10</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- ===== CHAPTER 1 ===== -->
+  <div class="chapter" id="chapter-1">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">⚡ Chapter 1 — The Crashed Rocket</div>
+      <h2>Jake's Fuel Crystals Are Scattered!</h2>
+    </div>
+    <img class="chapter-img" src="https://mathblastau.github.io/math-blast/images/ch1-crashed-rocket.png" alt="Jake's rocket crashed on Planet Zog" />
+    <div class="nar-player" id="player-ch1">
+      <button class="nar-btn" id="btn-ch1" onclick="togglePlayer('ch1')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch1">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch1"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch1">
+      Jake the astronaut cadet was hurtling through the Zorblax Nebula — munching a space sandwich and humming to himself — when <em>BANG! CRASH! CLONK!</em><br><br>
+      His rocket had smashed straight into <strong>Planet Zog!</strong> Through the smoke and sparks, Jake stumbled out and inspected the damage. But first — his training kicked in. Before any mission, his computer always ran a <strong>Pre-Launch Check</strong>. Even crashed on an alien planet, the rules were the rules.
+    </div>
+    <div id="lock-q1" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
+    <div class="quiz-box" id="quiz-q1">
+      <div class="quiz-meta"><span class="difficulty diff-warmup">🔁 Blast from the Past</span><span class="acara-tag">Number · Year 2</span></div>
+      <span class="quiz-icon">🖥️</span>
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Warm-Up — Skip Counting</div>
+      <div class="question">The mission computer is counting down fuel reserves:<br><br><strong>5, 10, 15, ___, 25, ___</strong><br><br>What are the two missing numbers?</div>
+      <img src="https://mathblastau.github.io/math-blast/images/q1-issue001.png?v=2" alt="Question illustration" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q1')">18 and 26</button>
+        <button class="opt-btn" onclick="answer(this,true,'q1')">20 and 30</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">19 and 27</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">22 and 32</button>
+      </div>
+      <div class="feedback" id="feedback-q1"></div>
+      <button class="next-btn" id="next-q1" onclick="showQ2Story()">Main Mission ➜</button>
+    </div>
+
+    <!-- Q2 story block -->
+    <div id="block-q2" style="display:none">
+      <div class="nar-player" id="player-q2s">
+        <button class="nar-btn" id="btn-q2s" onclick="togglePlayer('q2s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q2s">Press ▶ to continue the story</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q2s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q2s">
+        With the computer check complete, Jake turned to the real problem. The engine room was a mess — fuel crystals scattered everywhere! He needed exactly <strong>24 crystals</strong> to launch, arranged in rows of 6. Jake grabbed his maths notebook...
+      </div>
+      <div id="lock-q2" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+      <div class="quiz-box" id="quiz-q2">
+        <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Number · Year 3</span></div>
+        <span class="quiz-icon">💎</span>
+        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 2 — Times Tables</div>
+        <div class="question">Jake needs 24 fuel crystals.<br>They come in rows of 6.<br>How many rows does he need to collect?</div>
+        <img src="https://mathblastau.github.io/math-blast/images/q2-issue001.png?v=2" alt="Question illustration" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q2')">3 rows</button>
+          <button class="opt-btn" onclick="answer(this,true,'q2')">4 rows</button>
+          <button class="opt-btn" onclick="answer(this,false,'q2')">5 rows</button>
+          <button class="opt-btn" onclick="answer(this,false,'q2')">6 rows</button>
+        </div>
+        <div class="feedback" id="feedback-q2"></div>
+        <button class="next-btn" id="next-q2" onclick="nextChapter(2)">Next Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 2 ===== -->
+  <div class="chapter" id="chapter-2">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🍕 Chapter 2 — The Alien Feast</div>
+      <h2>The Zoglings Want to Share!</h2>
+    </div>
+    <img class="chapter-img" src="images/ch2-alien-feast-fixed.png" alt="Jake and three aliens sharing a pizza" />
+    <div class="nar-player" id="player-ch2">
+      <button class="nar-btn" id="btn-ch2" onclick="togglePlayer('ch2')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch2">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch2"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch2">
+      Before Jake could fire up the engines, three small green aliens waddled over. The tallest one — wearing a tiny purple crown — bowed deeply.<br><br>
+      <em>"GREETINGS, SPACE HUMAN! I AM BLOOP. THESE ARE ZIBBLE AND MORK. WE MUST SHARE FOOD BEFORE YOU LEAVE. IT IS THE ZOG LAW."</em><br><br>
+      A giant glowing pizza appeared from nowhere. There were <strong>4 of them</strong> altogether, and Bloop insisted everyone got an <strong>equal share</strong>.
+    </div>
+    <div id="lock-q3" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
+    <div class="quiz-box" id="quiz-q3">
+      <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Number · Year 2</span></div>
+      <span class="quiz-icon">🍕</span>
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 3 — Fractions</div>
+      <div class="question">4 friends share 1 pizza equally.<br>What fraction does each person get?</div>
+      <img src="https://mathblastau.github.io/math-blast/images/q3-issue001.png?v=2" alt="Question illustration" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q3')">1/2</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">1/3</button>
+        <button class="opt-btn" onclick="answer(this,true,'q3')">1/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">1/6</button>
+      </div>
+      <div class="feedback" id="feedback-q3"></div>
+      <button class="next-btn" id="next-q3" onclick="showQ4Story()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q4" style="display:none">
+      <div class="nar-player" id="player-q4s">
+        <button class="nar-btn" id="btn-q4s" onclick="togglePlayer('q4s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q4s">Press ▶ to continue the story</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q4s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q4s">
+        Mork looked at his slice thoughtfully and pushed most of it toward Jake.<br>
+        <em>"MORK NOT HUNGRY. MORK EAT ONLY HALF OF MORK'S SLICE."</em><br><br>
+        Jake wondered: if Mork's slice was one quarter of the whole pizza, and Mork only ate half of that — what fraction of the <em>whole</em> pizza did Mork eat?
+      </div>
+      <div id="lock-q4" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+      <div class="quiz-box" id="quiz-q4">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 3–4</span></div>
+        <span class="quiz-icon">🧮</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 4 — Fractions</div>
+        <div class="question">Mork's slice = 1/4 of the pizza.<br>Mork eats half of his slice.<br>What fraction of the whole pizza did Mork eat?</div>
+        <img src="https://mathblastau.github.io/math-blast/images/q4-issue001.png?v=3" alt="Question illustration" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q4')">1/4</button>
+          <button class="opt-btn" onclick="answer(this,true,'q4')">1/8</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">1/6</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">1/3</button>
+        </div>
+        <div class="feedback" id="feedback-q4"></div>
+        <button class="next-btn" id="next-q4" onclick="nextChapter(3)">Next Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 3 ===== -->
+  <div class="chapter" id="chapter-3">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🕐 Chapter 3 — The Launch Window!</div>
+      <h2>Jake Must Leave at Exactly the Right Time!</h2>
+    </div>
+    <img class="chapter-img" src="https://mathblastau.github.io/math-blast/images/ch3-launch-window.png" alt="Jake in the cockpit looking at the clock" />
+    <div class="nar-player" id="player-ch3">
+      <button class="nar-btn" id="btn-ch3" onclick="togglePlayer('ch3')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch3">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch3"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch3">
+      Jake was climbing back to his rocket when Mork suddenly grabbed his arm.<br><br>
+      <em>"WAIT! LAUNCH WINDOW IS CRITICAL! Leave too early or too late and you will be TRAPPED in the Zog Gravitational Loop for 47 years!"</em><br><br>
+      Jake peered at the cockpit clock. He had to read it correctly — there was <strong>no room for error</strong>.
+    </div>
+    <div id="lock-q5" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
+    <div class="quiz-box" id="quiz-q5">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Measurement · Year 2 · ✨ New Concept</span></div>
+      <span class="quiz-icon">🕐</span>
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 5 — Telling the Time</div>
+      <div class="question">The short hand is just past the 3.<br>The long hand points at the 3.<br><br>What time does the clock show?</div>
+      <!-- SVG clock — programmatically accurate at 3:15 -->
+      <svg viewBox="0 0 200 200" width="200" height="200" style="display:block;margin:14px auto 18px;border-radius:50%;border:3px solid rgba(123,47,255,0.4);background:#1a0f30;">
+        <!-- Clock face -->
+        <circle cx="100" cy="100" r="95" fill="#1a0f30" stroke="#7b2fff" stroke-width="4"/>
+        <!-- Hour marks -->
+        <g stroke="#aa77ff" stroke-width="3">
+          <line x1="100" y1="10" x2="100" y2="22"/><!-- 12 -->
+          <line x1="190" y1="100" x2="178" y2="100"/><!-- 3 -->
+          <line x1="100" y1="190" x2="100" y2="178"/><!-- 6 -->
+          <line x1="10" y1="100" x2="22" y2="100"/><!-- 9 -->
+        </g>
+        <!-- Minute marks -->
+        <g stroke="#554477" stroke-width="1.5">
+          <line x1="150" y1="13.4" x2="145" y2="22.1"/><!-- 1 -->
+          <line x1="186.6" y1="50" x2="178" y2="55"/><!-- 2 -->
+          <line x1="186.6" y1="150" x2="178" y2="145"/><!-- 4 -->
+          <line x1="150" y1="186.6" x2="145" y2="178"/><!-- 5 -->
+          <line x1="50" y1="186.6" x2="55" y2="178"/><!-- 7 -->
+          <line x1="13.4" y1="150" x2="22.1" y2="145"/><!-- 8 -->
+          <line x1="13.4" y1="50" x2="22.1" y2="55"/><!-- 10 -->
+          <line x1="50" y1="13.4" x2="55" y2="22.1"/><!-- 11 -->
+        </g>
+        <!-- Hour numbers -->
+        <text x="100" y="36" text-anchor="middle" fill="#ffdd00" font-size="16" font-weight="900" font-family="Nunito,Arial">12</text>
+        <text x="164" y="105" text-anchor="middle" fill="#ffdd00" font-size="16" font-weight="900" font-family="Nunito,Arial">3</text>
+        <text x="100" y="174" text-anchor="middle" fill="#ffdd00" font-size="16" font-weight="900" font-family="Nunito,Arial">6</text>
+        <text x="36" y="105" text-anchor="middle" fill="#ffdd00" font-size="16" font-weight="900" font-family="Nunito,Arial">9</text>
+        <!-- HOUR HAND — 3:15: at 3h15m, hour hand is slightly past 3 (at 97.5°) -->
+        <line x1="100" y1="100" x2="141" y2="107" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+        <!-- MINUTE HAND — 15 min = pointing at 3 (90°) -->
+        <line x1="100" y1="100" x2="170" y2="100" stroke="#ff2fff" stroke-width="4" stroke-linecap="round"/>
+        <!-- Centre dot -->
+        <circle cx="100" cy="100" r="6" fill="#ffdd00"/>
+        <!-- No label — answer is the question! -->
+      </svg>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q5')">3:00</button>
+        <button class="opt-btn" onclick="answer(this,true,'q5')">3:15</button>
+        <button class="opt-btn" onclick="answer(this,false,'q5')">3:30</button>
+        <button class="opt-btn" onclick="answer(this,false,'q5')">3:45</button>
+      </div>
+      <div class="feedback" id="feedback-q5"></div>
+      <button class="next-btn" id="next-q5" onclick="showQ6Story()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q6" style="display:none">
+      <div class="nar-player" id="player-q6s">
+        <button class="nar-btn" id="btn-q6s" onclick="togglePlayer('q6s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q6s">Press ▶ to continue the story</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q6s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q6s">
+        <em>"The Launch Window closes in exactly 30 minutes!"</em> Mork warned. It was 3:15 now. Jake sprinted to the rocket, buckled his helmet, and punched the pre-launch sequence.<br><br>
+        "I need to be off the ground by...?"
+      </div>
+      <div id="lock-q6" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+      <div class="quiz-box" id="quiz-q6">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Measurement · Year 3</span></div>
+        <span class="quiz-icon">⏰</span>
+        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 6 — Adding Time</div>
+        <div class="question">It is 3:15 now.<br>The Launch Window closes in 30 minutes.<br>What time must Jake launch by?</div>
+        <img src="https://mathblastau.github.io/math-blast/images/q6-issue001.png?v=3" alt="Question illustration" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q6')">3:30</button>
+          <button class="opt-btn" onclick="answer(this,true,'q6')">3:45</button>
+          <button class="opt-btn" onclick="answer(this,false,'q6')">4:00</button>
+          <button class="opt-btn" onclick="answer(this,false,'q6')">4:15</button>
+        </div>
+        <div class="feedback" id="feedback-q6"></div>
+        <button class="next-btn" id="next-q6" onclick="nextChapter(4)">Next Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 4 ===== -->
+  <div class="chapter" id="chapter-4">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌌 Chapter 4 — The Asteroid Belt</div>
+      <h2>Danger! Asteroids Ahead!</h2>
+    </div>
+    <img class="chapter-img" src="https://mathblastau.github.io/math-blast/images/ch4-asteroid-belt.png" alt="Jake's rocket weaving through the asteroid belt" />
+    <div class="nar-player" id="player-ch4">
+      <button class="nar-btn" id="btn-ch4" onclick="togglePlayer('ch4')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch4">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch4"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch4">
+      <em>WHOOOOSH!</em> Jake blasted off just in time. Ahead lay the <strong>Zorblax Asteroid Belt</strong> — a stretch of spinning space rocks every pilot dreaded. To get through safely, Jake had to calculate his exact route.
+    </div>
+    <div id="lock-q7" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
+    <div class="quiz-box" id="quiz-q7">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 3</span></div>
+      <span class="quiz-icon">🌑</span>
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 7 — Multiplication</div>
+      <div class="question">There are 6 asteroids in Jake's path.<br>Each one is 7 light-seconds wide.<br>How many light-seconds does Jake need to cross in total?</div>
+      <img src="https://mathblastau.github.io/math-blast/images/q7-issue001.png?v=2" alt="Question illustration" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q7')">36</button>
+        <button class="opt-btn" onclick="answer(this,false,'q7')">40</button>
+        <button class="opt-btn" onclick="answer(this,true,'q7')">42</button>
+        <button class="opt-btn" onclick="answer(this,false,'q7')">48</button>
+      </div>
+      <div class="feedback" id="feedback-q7"></div>
+      <button class="next-btn" id="next-q7" onclick="showQ8Story()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q8" style="display:none">
+      <div class="nar-player" id="player-q8s">
+        <button class="nar-btn" id="btn-q8s" onclick="togglePlayer('q8s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q8s">Press ▶ to continue the story</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q8s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q8s">
+        Jake emerged from the asteroid belt — barely! He checked the storage bay. He'd brought <strong>36 star-coins</strong> to share equally between his <strong>4 Zogling friends</strong>. Better calculate it now before he landed back on Earth.
+      </div>
+      <div id="lock-q8" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+      <div class="quiz-box" id="quiz-q8">
+        <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Number · Year 3</span></div>
+        <span class="quiz-icon">🪙</span>
+        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 8 — Division</div>
+        <div class="question">Jake has 36 star-coins.<br>He shares them equally between 4 friends.<br>How many coins does each friend get?</div>
+        <img src="https://mathblastau.github.io/math-blast/images/q8-issue001.png?v=2" alt="Question illustration" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q8')">6</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">8</button>
+          <button class="opt-btn" onclick="answer(this,true,'q8')">9</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">12</button>
+        </div>
+        <div class="feedback" id="feedback-q8"></div>
+        <button class="next-btn" id="next-q8" onclick="nextChapter(5)">Final Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 5 ===== -->
+  <div class="chapter" id="chapter-5">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🔥 Chapter 5 — Home At Last!</div>
+      <h2>The Final Approach — Boss Challenge!</h2>
+    </div>
+    <img class="chapter-img" src="https://mathblastau.github.io/math-blast/images/ch5-earth-landing.png" alt="Jake's rocket approaching Earth" />
+    <div class="nar-player" id="player-ch5">
+      <button class="nar-btn" id="btn-ch5" onclick="togglePlayer('ch5')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch5">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch5"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch5">
+      Earth was in sight! The blue-green marble shimmered through the cockpit window. But Mission Control crackled over the radio: <em>"Cadet Jake — two final anomalies before landing. Solve them to clear your re-entry path. Over."</em><br><br>
+      Two problems. Then home. Jake reached for his notebook one last time.
+    </div>
+    <div id="lock-q9" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
+    <div class="quiz-box" id="quiz-q9">
+      <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Number · Year 3–4</span></div>
+      <span class="quiz-icon">🛸</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 9 — Mixed (Multiply then Add)</div>
+      <div class="question">Jake passes 4 space stations.<br>At each station, 7 new rockets join his convoy.<br>He started with 3 rockets already.<br><br>How many rockets are in the convoy altogether?</div>
+      <img src="https://mathblastau.github.io/math-blast/images/q9-issue001.png?v=2" alt="Question illustration" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q9')">28</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">30</button>
+        <button class="opt-btn" onclick="answer(this,true,'q9')">31</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">35</button>
+      </div>
+      <div class="feedback" id="feedback-q9"></div>
+      <button class="next-btn" id="next-q9" onclick="showQ10Story()">Final Question ➜</button>
+    </div>
+
+    <div id="block-q10" style="display:none">
+      <div class="nar-player" id="player-q10s">
+        <button class="nar-btn" id="btn-q10s" onclick="togglePlayer('q10s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q10s">Press ▶ to continue the story</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q10s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q10s">
+        Mission Control again: <em>"Re-entry window opens at 4:10. Your heat shield takes exactly 35 minutes to warm up. What time do you need to START warming it up?"</em><br><br>
+        Jake stared at the clock. The final maths problem of the whole mission. Get it right and he'd be home for dinner.
+      </div>
+      <div id="lock-q10" class="quiz-lock">🔒 Listen to the story to unlock the Boss Challenge!</div>
+      <div class="quiz-box" id="quiz-q10">
+        <div class="quiz-meta"><span class="difficulty diff-boss">👑 Boss Challenge</span><span class="acara-tag">Measurement · Year 3–4</span></div>
+        <span class="quiz-icon">🔥</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 10 — BOSS: Subtracting Time</div>
+        <div class="question">Re-entry window opens at 4:10.<br>Heat shield warm-up takes 35 minutes.<br><br>What time must Jake START the warm-up?</div>
+        <img src="https://mathblastau.github.io/math-blast/images/q10-issue001.png?v=3" alt="Question illustration" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q10')">3:25</button>
+          <button class="opt-btn" onclick="answer(this,true,'q10')">3:35</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">3:45</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">4:45</button>
+        </div>
+        <div class="feedback" id="feedback-q10"></div>
+        <button class="next-btn" id="next-q10" onclick="showWin()">🌍 LAND THE ROCKET!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIN SCREEN -->
+  <div id="win-screen">
+    <span class="trophy">🏆</span>
+    <h2>MISSION COMPLETE!</h2>
+    <div class="win-score" id="win-score">You scored 10 / 10!</div>
+    <div class="win-stars" id="win-stars">⭐⭐⭐</div>
+    <p>Jake's rocket touched down on Earth with a perfect landing — and it was all thanks to <strong>YOU</strong>! 🌍</p>
+    <div class="win-summary">
+      <h3>What You Mastered Today 🧠</h3>
+      <ul>
+        <li>✅ <strong>Skip Counting</strong> — counting in 5s (Number, Year 2)</li>
+        <li>✅ <strong>Times Tables</strong> — 6×4=24 (Number, Year 3)</li>
+        <li>✅ <strong>Fractions</strong> — quarters + half of a quarter (Number, Year 2–3)</li>
+        <li>✅ <strong>Telling the Time</strong> — quarter past, adding 30 mins (Measurement, Year 2–3)</li>
+        <li>✅ <strong>Multiplication</strong> — 6×7=42 (Number, Year 3)</li>
+        <li>✅ <strong>Division</strong> — 36÷4=9 (Number, Year 3)</li>
+        <li>✅ <strong>Boss</strong> — multi-step problem + subtracting time</li>
+      </ul>
+    </div>
+    <p style="font-size:14px;color:#6655aa;margin-bottom:8px;">Issue #2 coming next — Jake discovers a <strong>robot factory</strong> hidden in the rings of Saturn! 🤖</p>
+    <button class="replay-btn" onclick="location.reload()">🔄 Play Again</button><br>
+    <button class="print-btn" onclick="showParentGuide()">📋 Parent Guide</button>
+  </div>
+
+  <!-- PARENT GUIDE -->
+  <div id="parent-guide">
+    <div class="pg-header">
+      <div><div class="pg-title">📋 Parent Guide — Issue #1</div><div class="pg-subtitle">Mission: Math Blast · For parents of kids aged 7–10</div></div>
+      <button class="print-btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div class="pg-section">
+      <h4>What We Covered</h4>
+      <table class="acara-table">
+        <tr><th>Topic</th><th>Strand</th><th>Year</th><th>Question</th></tr>
+        <tr><td>Skip counting in 5s</td><td><span class="strand-pill">Number</span></td><td>Year 2</td><td>Q1</td></tr>
+        <tr><td>Multiplication — 6× tables</td><td><span class="strand-pill">Number</span></td><td>Year 3</td><td>Q2</td></tr>
+        <tr><td>Unit fractions (quarters)</td><td><span class="strand-pill">Number</span></td><td>Year 2</td><td>Q3</td></tr>
+        <tr><td>Fractions of fractions</td><td><span class="strand-pill">Number</span></td><td>Year 3–4</td><td>Q4</td></tr>
+        <tr><td>Telling the time (quarter past)</td><td><span class="strand-pill">Measurement</span></td><td>Year 2</td><td>Q5</td></tr>
+        <tr><td>Adding time intervals</td><td><span class="strand-pill">Measurement</span></td><td>Year 3</td><td>Q6</td></tr>
+        <tr><td>Multiplication — 7× tables</td><td><span class="strand-pill">Number</span></td><td>Year 3</td><td>Q7</td></tr>
+        <tr><td>Division — sharing equally</td><td><span class="strand-pill">Number</span></td><td>Year 3</td><td>Q8</td></tr>
+        <tr><td>Multi-step (×, then +)</td><td><span class="strand-pill">Number</span></td><td>Year 3–4</td><td>Q9</td></tr>
+        <tr><td>Subtracting time intervals</td><td><span class="strand-pill">Measurement</span></td><td>Year 3–4</td><td>Q10 👑</td></tr>
+      </table>
+    </div>
+    <div class="pg-row">
+      <div class="pg-card"><h5>✨ Narrated Edition</h5><p>This version is read aloud by professional voices — George (narrator), Andrew (Jake), and River (aliens). Questions unlock after listening to each story segment.</p></div>
+      <div class="pg-card"><h5>🔁 Spaced Review</h5><p>Q1 warmed up skip counting in 5s. Future issues will revisit topics from previous weeks to keep them fresh in memory.</p></div>
+    </div>
+    <div class="pg-section">
+      <h4>💬 Conversation Starters</h4>
+      <ul>
+        <li><strong>After Q4:</strong> "If you cut a quarter of a cake in half, how many pieces would the whole cake need?"</li>
+        <li><strong>After Q5–6:</strong> "If dinner is at 6:00 and it takes 20 minutes to cook, what time should we start?"</li>
+        <li><strong>After Q10 (boss):</strong> "How did you work backwards from 4:10? Can you show me on paper?"</li>
+      </ul>
+    </div>
+    <p style="font-size:12px;color:#443366;text-align:center;margin-top:20px;">Mission: Math Blast · ACARA Australian Curriculum v9.0 · mathblast.com.au</p>
+  </div>
+
+</div><!-- /wrapper -->
+
+<div id="ctrl-bar">
+  <button class="ctrl-btn" id="mute-ctrl" onclick="toggleMute()">🔊 Sound On</button>
+  <button class="ctrl-btn" onclick="replayCurrent()">🔁 Re-play</button>
+</div>
+
+<script>
+// ── STARFIELD ──────────────────────────────────────────────
+const sf = document.getElementById('starfield');
+for (let i=0;i<90;i++){
+  const s=document.createElement('div'); s.className='star';
+  s.style.left=Math.random()*100+'%'; s.style.top=Math.random()*100+'%';
+  s.style.width=s.style.height=(1+Math.random()*2)+'px';
+  s.style.animationDelay=Math.random()*3+'s'; s.style.animationDuration=(2+Math.random()*3)+'s';
+  sf.appendChild(s);
+}
+
+// ── AUDIO ENGINE ───────────────────────────────────────────
+const BASE = 'sounds/issue001/';
+let muted = false;
+let currentAudio = null;
+let currentPlayerId = null;
+let correctVariant = 0;
+
+function stopAll() {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  document.querySelectorAll('.nar-btn').forEach(b => b.textContent='▶');
+}
+
+function playFile(file, onEnd) {
+  if (muted) { if(onEnd) setTimeout(onEnd,100); return null; }
+  if (currentAudio) { currentAudio.pause(); currentAudio=null; }
+  const a = new Audio(BASE+file);
+  a.volume=1.0;
+  currentAudio=a;
+  a.play().catch(()=>{ currentAudio=null; if(onEnd) onEnd(); });
+  a.onended=()=>{ currentAudio=null; if(onEnd) onEnd(); };
+  a.onerror=()=>{ currentAudio=null; if(onEnd) onEnd(); };
+  return a;
+}
+
+// Play sequence of files, call onDone when all finish, call onStep(idx,file,audio) each step
+function playSeq(files, onStep, onDone) {
+  let idx=0;
+  function next(){
+    if(idx>=files.length){ if(onDone) onDone(); return; }
+    const f=files[idx++];
+    const a=playFile(f, next);
+    if(onStep && a) onStep(idx-1, f, a);
+  }
+  next();
+}
+
+// Animate progress bar while audio plays
+function animateBar(barId, audio) {
+  const bar = document.getElementById(barId);
+  if(!bar||!audio) return;
+  const tick = setInterval(()=>{
+    if(!audio || audio.paused || audio.ended){ clearInterval(tick); return; }
+    const pct = audio.duration ? (audio.currentTime/audio.duration)*100 : 0;
+    bar.style.width=pct+'%';
+  },200);
+}
+
+// Generic player: plays a sequence, updates UI for a given player ID
+// config: { id, files, labels, storyId, lockId, onDone }
+const playerConfigs = {};
+let activePlayerId = null;
+
+function setupPlayer(id, files, labels, storyId, lockId, onDone) {
+  playerConfigs[id] = { files, labels, storyId, lockId, onDone, active:false };
+}
+
+function togglePlayer(id) {
+  if(activePlayerId===id && currentAudio && !currentAudio.paused){
+    currentAudio.pause(); currentAudio=null;
+    document.getElementById('btn-'+id).textContent='▶';
+    document.getElementById('status-'+id).textContent='Paused — press ▶ to resume';
+    activePlayerId=null; return;
+  }
+  stopAll();
+  activePlayerId=id;
+  runPlayer(id);
+}
+
+function runPlayer(id) {
+  const cfg = playerConfigs[id];
+  if(!cfg) return;
+  cfg.active=true;
+  const btn = document.getElementById('btn-'+id);
+  const statusEl = document.getElementById('status-'+id);
+  const barFill = document.getElementById('bar-'+id);
+  const story = cfg.storyId ? document.getElementById(cfg.storyId) : null;
+  const totalFiles = cfg.files.length;
+  if(btn) btn.textContent='⏸';
+  if(story) story.classList.add('playing');
+
+  let fileIdx=0;
+  function playNext(){
+    if(fileIdx>=totalFiles){
+      // All done
+      if(btn) btn.textContent='✓';
+      if(statusEl) statusEl.textContent='✅ Done!';
+      if(barFill) barFill.style.width='100%';
+      if(story){ story.classList.remove('playing'); story.classList.add('done'); }
+      if(cfg.lockId){ const lock=document.getElementById(cfg.lockId); if(lock) lock.style.display='none'; }
+      const quizId = cfg.lockId ? cfg.lockId.replace('lock-','quiz-') : null;
+      if(quizId){ const quiz=document.getElementById(quizId); if(quiz){ quiz.classList.add('show'); setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200); } }
+      if(cfg.onDone) cfg.onDone();
+      cfg.active=false; activePlayerId=null;
+      return;
+    }
+    const file=cfg.files[fileIdx];
+    const label=cfg.labels && cfg.labels[fileIdx] ? cfg.labels[fileIdx] : '🎙️ Narrating...';
+    if(statusEl) statusEl.textContent=label;
+    const segStart=(fileIdx/totalFiles)*100;
+    const segEnd=((fileIdx+1)/totalFiles)*100;
+    fileIdx++;
+    const audio=playFile(file, playNext);
+    if(audio && barFill){
+      const tick=setInterval(()=>{
+        if(!audio||audio.paused||audio.ended){clearInterval(tick);return;}
+        const pct=audio.duration?(segStart+(audio.currentTime/audio.duration)*(segEnd-segStart)):segStart;
+        barFill.style.width=pct+'%';
+      },200);
+    }
+  }
+  playNext();
+}
+
+// ── PLAYER DEFINITIONS ────────────────────────────────────
+function initPlayers(){
+  setupPlayer('ch1',
+    ['ch1-intro.mp3','ch1-q1-question.mp3'],
+    ['🎙️ George is narrating...','🎙️ Listen to the question...'],
+    'story-ch1','lock-q1', null);
+
+  setupPlayer('q2s',
+    ['ch1-q2-story.mp3','ch1-q2-jake.mp3','ch1-q2-question.mp3'],
+    ['🎙️ George is narrating...','👦 Jake is thinking...','🎙️ Listen to the question...'],
+    'story-q2s', 'lock-q2', null);
+
+  setupPlayer('ch2',
+    ['ch2-intro-nar.mp3','ch2-bloop.mp3','ch2-intro-end.mp3','ch2-q3-question.mp3'],
+    ['🎙️ George is narrating...','👽 Alien speaking...','🎙️ George is narrating...','🎙️ Listen to the question...'],
+    'story-ch2','lock-q3', null);
+
+  setupPlayer('q4s',
+    ['ch2-q4-story-nar.mp3','ch2-q4-mork.mp3','ch2-q4-story-end.mp3','ch2-q4-question.mp3'],
+    ['🎙️ George is narrating...','👽 Mork is speaking...','🎙️ George is narrating...','🎙️ Listen to the question...'],
+    'story-q4s', 'lock-q4', null);
+
+  setupPlayer('ch3',
+    ['ch3-intro-nar.mp3','ch3-mork.mp3','ch3-intro-end.mp3','ch3-q5-question.mp3'],
+    ['🎙️ George is narrating...','👽 Mork is speaking...','🎙️ George is narrating...','🎙️ Listen to the question...'],
+    'story-ch3','lock-q5', null);
+
+  setupPlayer('q6s',
+    ['ch3-q6-story.mp3','ch3-q6-jake.mp3','ch3-q6-question.mp3'],
+    ['🎙️ George is narrating...','👦 Jake is thinking...','🎙️ Listen to the question...'],
+    'story-q6s', 'lock-q6', null);
+
+  setupPlayer('ch4',
+    ['ch4-intro.mp3','ch4-q7-question.mp3'],
+    ['🎙️ George is narrating...','🎙️ Listen to the question...'],
+    'story-ch4','lock-q7', null);
+
+  setupPlayer('q8s',
+    ['ch4-q8-story.mp3','ch4-q8-jake.mp3','ch4-q8-question.mp3'],
+    ['🎙️ George is narrating...','👦 Jake is thinking...','🎙️ Listen to the question...'],
+    'story-q8s', 'lock-q8', null);
+
+  setupPlayer('ch5',
+    ['ch5-intro.mp3','ch5-mission-control.mp3','ch5-nar-end.mp3','ch5-q9-question.mp3'],
+    ['🎙️ George is narrating...','👽 Mission Control...','🎙️ George is narrating...','🎙️ Listen to the question...'],
+    'story-ch5','lock-q9', null);
+
+  setupPlayer('q10s',
+    ['ch5-q10-story.mp3','ch5-mission-control-2.mp3','ch5-q10-nar.mp3','ch5-q10-question.mp3'],
+    ['🎙️ George is narrating...','👽 Mission Control...','🎙️ George is narrating...','🎙️ Listen to the question...'],
+    'story-q10s', 'lock-q10', null);
+}
+
+// ── SHOW STORY BLOCKS ──────────────────────────────────────
+function showQ2Story(){
+  const b=document.getElementById('block-q2'); b.style.display='block';
+  setTimeout(()=>{ b.scrollIntoView({behavior:'smooth',block:'start'}); },100);
+  setTimeout(()=>togglePlayer('q2s'),600);
+}
+function showQ4Story(){
+  const b=document.getElementById('block-q4'); b.style.display='block';
+  setTimeout(()=>{ b.scrollIntoView({behavior:'smooth',block:'start'}); },100);
+  setTimeout(()=>togglePlayer('q4s'),600);
+}
+function showQ6Story(){
+  const b=document.getElementById('block-q6'); b.style.display='block';
+  setTimeout(()=>{ b.scrollIntoView({behavior:'smooth',block:'start'}); },100);
+  setTimeout(()=>togglePlayer('q6s'),600);
+}
+function showQ8Story(){
+  const b=document.getElementById('block-q8'); b.style.display='block';
+  setTimeout(()=>{ b.scrollIntoView({behavior:'smooth',block:'start'}); },100);
+  setTimeout(()=>togglePlayer('q8s'),600);
+}
+function showQ10Story(){
+  const b=document.getElementById('block-q10'); b.style.display='block';
+  setTimeout(()=>{ b.scrollIntoView({behavior:'smooth',block:'start'}); },100);
+  setTimeout(()=>togglePlayer('q10s'),600);
+}
+
+// ── GAME LOGIC ─────────────────────────────────────────────
+let score=0, questionsAnswered=0;
+const totalQ=10;
+
+const correctMsg={
+  q1:  '🎉 Yes! The pattern counts up in 5s: 5, 10, 15, <strong>20</strong>, 25, <strong>30</strong>. Pre-launch check: passed!',
+  q2:  '🎉 Right! 6 × 4 = 24. Jake swept up all four rows and stuffed them into the engine. The rocket hummed back to life!',
+  q3:  '🎉 Correct! 1 ÷ 4 = ¼. Each friend got a quarter of the pizza. Bloop did a little happy dance.',
+  q4:  '🎉 Nailed it! Half of ¼ = ⅛. Mork only nibbled an eighth of the whole pizza — that\'s tiny!',
+  q5:  '🎉 Correct! Long hand on the 3 = 15 minutes past. It\'s <strong>3:15</strong> — quarter past three!',
+  q6:  '🎉 Right! 3:15 + 30 minutes = <strong>3:45</strong>. Jake hit the launch button with 2 minutes to spare!',
+  q7:  '🎉 Yes! 6 × 7 = <strong>42</strong>. Jake had 42 light-seconds of asteroid — and he nailed every one!',
+  q8:  '🎉 Spot on! 36 ÷ 4 = <strong>9</strong>. Each Zogling gets 9 star-coins. Bloop looked very pleased.',
+  q9:  '🎉 Correct! 4 × 7 = 28, then 28 + 3 = <strong>31</strong>. Jake led a convoy of 31 rockets home!',
+  q10: '🎉 BOSS CLEARED! Count back 35 minutes from 4:10 → <strong>3:35</strong>. Jake\'s going HOME! 🌍'
+};
+const wrongMsg={
+  q1:  '❌ Not quite! The pattern goes up by 5 each time: 5, 10, 15... what comes after 15? And after 25?',
+  q2:  '❌ Not quite! Think: 6 × ? = 24. Try counting your 6 times table: 6, 12, 18, 24... how many jumps?',
+  q3:  '❌ Not quite! If 4 friends share 1 pizza equally, we divide 1 by 4. That fraction is written 1/4.',
+  q4:  '❌ Tricky! Mork\'s slice was 1/4 of the pizza. He ate HALF of that slice. Half of 1/4 = 1/8.',
+  q5:  '❌ Not quite! When the long hand points at the 3, that means 15 minutes past the hour.',
+  q6:  '❌ Almost! Start at 3:15 and add 30 minutes. 3:15 → 3:45.',
+  q7:  '❌ Not quite! 6 × 7: count in 7s six times: 7, 14, 21, 28, 35, 42.',
+  q8:  '❌ Not quite! 36 ÷ 4: think 4 × ? = 36.',
+  q9:  '❌ Two steps! Step 1: 4 × 7 = ? Step 2: add the 3 he started with.',
+  q10: '❌ Not quite! Go BACKWARDS from 4:10. Subtract 10 → 4:00. Subtract 25 more → 3:35.'
+};
+
+function answer(btn, correct, qId){
+  const box=btn.closest('.quiz-box');
+  box.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedback-'+qId);
+  const next=document.getElementById('next-'+qId);
+  if(correct){
+    btn.classList.add('correct'); score++; questionsAnswered++;
+    fb.className='feedback show good'; fb.innerHTML=correctMsg[qId];
+    updateProgress();
+    next.classList.add('show');
+    // Play q1-specific or cycling generic feedback
+    const qNum = parseInt(qId.replace('q',''));
+    if(qNum===1){
+      playFile('feedback-correct-1.mp3', null); // "Pre-launch check passed!"
+    } else {
+      const v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];
+      playFile(v[correctVariant%v.length], null); correctVariant++;
+    }
+  } else {
+    btn.classList.add('wrong');
+    fb.className='feedback show bad'; fb.innerHTML=wrongMsg[qId];
+    playFile(['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)], null);
+    setTimeout(()=>{
+      box.querySelectorAll('.opt-btn').forEach(b=>{ if(!b.classList.contains('correct')){ b.disabled=false; b.classList.remove('wrong'); } });
+      fb.className='feedback';
+    },2400);
+  }
+}
+
+function updateProgress(){
+  document.getElementById('progress-fill').style.width=((questionsAnswered/totalQ)*100)+'%';
+  document.getElementById('progress-score').textContent='⭐ '+score+' / '+totalQ;
+}
+
+function startGame(){
+  document.getElementById('title-screen').style.display='none';
+  document.getElementById('progress-wrap').style.display='block';
+  initPlayers();
+  showChapter(1);
+}
+
+let currentChapter=0;
+function showChapter(n){
+  stopAll();
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
+  const ch=document.getElementById('chapter-'+n);
+  if(!ch) return;
+  ch.classList.add('active'); currentChapter=n;
+  window.scrollTo({top:0,behavior:'smooth'});
+  const labels=['','Chapter 1 of 5 — Times Tables','Chapter 2 of 5 — Fractions','Chapter 3 of 5 — Telling the Time ✨','Chapter 4 of 5 — Multiplication & Division','Chapter 5 of 5 — Boss Round 🔥'];
+  document.getElementById('progress-label').textContent=labels[n]||'';
+  // Auto-play chapter narration
+  const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};
+  if(playerMap[n]) setTimeout(()=>togglePlayer(playerMap[n]),700);
+}
+
+function nextChapter(n){ showChapter(n); }
+
+function showWin(){
+  stopAll();
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
+  document.getElementById('progress-wrap').style.display='none';
+  const win=document.getElementById('win-screen'); win.style.display='block';
+  document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+'!';
+  document.getElementById('win-stars').textContent=score>=9?'⭐⭐⭐':score>=6?'⭐⭐':'⭐';
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>playFile('win.mp3',null),500);
+}
+
+function showParentGuide(){
+  document.getElementById('parent-guide').style.display='block';
+  document.getElementById('parent-guide').scrollIntoView({behavior:'smooth'});
+}
+
+function toggleMute(){
+  muted=!muted;
+  const top=document.getElementById('mute-top');
+  const ctrl=document.getElementById('mute-ctrl');
+  top.textContent=muted?'🔇':'🔊';
+  ctrl.textContent=muted?'🔇 Muted':'🔊 Sound On';
+  ctrl.classList.toggle('muted',muted);
+  if(muted) stopAll();
+}
+
+function replayCurrent(){
+  const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};
+  const pid=playerMap[currentChapter];
+  if(!pid) return;
+  stopAll();
+  // Reset player state
+  const cfg=playerConfigs[pid];
+  if(cfg){ cfg.active=false; }
+  const story=cfg&&cfg.storyId?document.getElementById(cfg.storyId):null;
+  if(story){ story.classList.remove('playing','done'); }
+  const barFill=document.getElementById('bar-'+pid);
+  if(barFill) barFill.style.width='0%';
+  const statusEl=document.getElementById('status-'+pid);
+  if(statusEl) statusEl.textContent='Press ▶ to hear the story';
+  const btn=document.getElementById('btn-'+pid);
+  if(btn) btn.textContent='▶';
+  setTimeout(()=>togglePlayer(pid),300);
+}
+</script>
+</body>
+</html>
