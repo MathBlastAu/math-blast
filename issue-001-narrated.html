@@ -447,7 +447,7 @@
       <div class="chapter-badge">👾 Chapter 5 — The First Clue</div>
       <h2>The Missing Fuel Went Somewhere — and Something Left a Message!</h2>
     </div>
-    <img class="chapter-img" src="images/ch5-phantom-appears.png" alt="The Fraction Phantom appears" />
+    <img class="chapter-img" src="images/ch5-printout.png" alt="Priya hands Jake the transfer log printout" />
     <div class="nar-player" id="player-ch5">
       <button class="nar-btn" id="btn-ch5" onclick="togglePlayer('ch5')">▶</button>
       <div class="nar-info">
@@ -543,7 +543,7 @@
         <li>✅ <strong>Boss: Dividing fractions</strong> — 3/4 ÷ 3 = 1/4 (Year 4)</li>
       </ul>
     </div>
-    <p style="font-size:14px;color:#aa77ff;margin-bottom:16px;">Issue #2 next — Jake tracks the stolen fuel into <strong>the Fog Nebula</strong>! 🌌</p>
+    <p style="font-size:14px;color:#aa77ff;margin-bottom:16px;">Join us for Issue #2 — when Jake tracks the stolen fuel into <strong>the Fog Nebula</strong>! 🌌</p>
     <a href="landing.html" class="next-issue-btn">🚀 Back to Math Blast</a>
     <button class="replay-btn" onclick="location.reload()">🔄 Play Again</button>
   </div>
@@ -649,8 +649,8 @@ function initPlayers(){
     'story-ch1','lock-q1');
 
   setupPlayer('ch2',
-    ['ch2-intro.mp3','ch2-priya-tanks.mp3','ch2-q2-question.mp3'],
-    ['📖 George narrating...','⚙️ Priya speaking...','🚀 Jake — puzzle time!'],
+    ['ch2-intro.mp3','ch2-priya-tanks.mp3','ch2-jake-calculates.mp3','ch2-q2-question.mp3'],
+    ['📖 George narrating...','⚙️ Priya speaking...','🚀 Jake speaking...','🚀 Jake — puzzle time!'],
     'story-ch2','lock-q2');
 
   setupPlayer('q3s',
@@ -667,6 +667,11 @@ function initPlayers(){
     ['ch3-q5-setup.mp3','ch3-q5-question.mp3'],
     ['📖 George narrating...','🚀 Jake — puzzle time!'],
     'story-q5s','lock-q5');
+
+  setupPlayer('ch2-calc',
+    ['ch2-jake-calculates.mp3'],
+    ['🚀 Jake speaking...'],
+    null, null);
 
   setupPlayer('ch4',
     ['ch4-intro.mp3','ch4-jake-calculates.mp3','ch4-q6-question.mp3'],
