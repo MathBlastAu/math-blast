@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Blast — Review Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0d0630; font-family:'Nunito',sans-serif; color:#fff; min-height:100vh; }
+
+  /* LAYOUT */
+  .layout { display:flex; min-height:100vh; }
+  .sidebar { width:220px; flex-shrink:0; background:rgba(0,0,0,0.4); border-right:1px solid rgba(255,255,255,0.08); padding:20px 0; position:sticky; top:0; height:100vh; overflow-y:auto; }
+  .main { flex:1; padding:28px 24px; max-width:900px; }
+
+  /* SIDEBAR */
+  .sidebar-title { font-size:11px; font-weight:900; color:#6655aa; text-transform:uppercase; letter-spacing:2px; padding:0 20px 16px; }
+  .issue-tab { display:flex; align-items:center; gap:10px; padding:12px 20px; cursor:pointer; border-left:3px solid transparent; transition:all 0.15s; font-size:14px; font-weight:700; color:#9988cc; }
+  .issue-tab:hover { background:rgba(123,47,255,0.1); color:#fff; }
+  .issue-tab.active { border-left-color:#7b2fff; background:rgba(123,47,255,0.15); color:#fff; }
+  .issue-tab .tab-num { font-size:11px; font-weight:900; background:rgba(123,47,255,0.3); border-radius:8px; padding:2px 8px; }
+  .issue-tab .tab-progress { font-size:10px; color:#6655aa; margin-left:auto; }
+  .issue-tab.active .tab-progress { color:#aa77ff; }
+
+  /* EXPORT */
+  .export-btn { margin:20px 16px 0; display:block; background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white;
+    font-family:'Nunito',sans-serif; font-size:13px; font-weight:900; padding:10px 16px; border-radius:12px;
+    border:none; cursor:pointer; width:calc(100% - 32px); text-align:center; }
+
+  /* HEADER */
+  .page-header { margin-bottom:28px; }
+  .page-header h1 { font-size:28px; font-weight:900; color:#ffdd00; }
+  .page-header p { font-size:14px; color:#8877aa; margin-top:4px; }
+  .overall-progress { display:flex; gap:16px; margin-top:16px; flex-wrap:wrap; }
+  .stat-pill { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:8px 16px; font-size:13px; font-weight:700; }
+  .stat-pill span { color:#ffdd00; }
+
+  /* ISSUE PANEL */
+  .issue-panel { display:none; }
+  .issue-panel.active { display:block; }
+  .issue-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.08); }
+  .issue-header h2 { font-size:22px; font-weight:900; }
+  .issue-emoji { font-size:32px; }
+  .issue-link { font-size:12px; color:#aa77ff; text-decoration:none; background:rgba(123,47,255,0.15); padding:4px 12px; border-radius:10px; margin-left:auto; }
+  .issue-link:hover { background:rgba(123,47,255,0.3); }
+
+  /* SECTION */
+  .section-title { font-size:13px; font-weight:900; color:#aa77ff; text-transform:uppercase; letter-spacing:2px; margin:24px 0 12px; }
+
+  /* ITEM ROW */
+  .item-row { display:flex; align-items:flex-start; gap:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:12px; margin-bottom:8px; transition:border-color 0.2s; }
+  .item-row.pass { border-color:rgba(0,220,100,0.3); background:rgba(0,220,100,0.04); }
+  .item-row.fail { border-color:rgba(255,50,50,0.3); background:rgba(255,50,50,0.04); }
+
+  /* THUMBNAIL */
+  .thumb-wrap { flex-shrink:0; width:80px; height:60px; border-radius:8px; overflow:hidden; background:#1a0f30; border:1px solid rgba(255,255,255,0.1); cursor:pointer; position:relative; }
+  .thumb-wrap img { width:100%; height:100%; object-fit:cover; }
+  .thumb-wrap .no-img { display:flex; align-items:center; justify-content:center; height:100%; font-size:20px; color:#443366; }
+  .thumb-wrap:hover img { opacity:0.8; }
+
+  /* AUDIO PLAYER */
+  .audio-wrap { flex-shrink:0; }
+  .play-btn { width:40px; height:40px; border-radius:50%; border:none; cursor:pointer;
+    background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white; font-size:14px;
+    display:flex; align-items:center; justify-content:center; transition:transform 0.15s; }
+  .play-btn:hover { transform:scale(1.1); }
+  .play-btn.playing { background:linear-gradient(135deg,#ff2fff,#ff8800); }
+
+  /* ITEM META */
+  .item-meta { flex:1; min-width:0; }
+  .item-label { font-size:13px; font-weight:900; color:#ddd; margin-bottom:4px; }
+  .item-sub { font-size:11px; color:#6655aa; }
+
+  /* CONTROLS */
+  .item-controls { display:flex; flex-direction:column; gap:6px; flex-shrink:0; align-items:flex-end; min-width:200px; }
+  .vote-btns { display:flex; gap:6px; }
+  .vote-btn { padding:5px 14px; border-radius:8px; border:none; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:900; font-size:12px; transition:all 0.15s; }
+  .vote-btn.pass-btn { background:rgba(0,220,100,0.15); color:#00dc64; border:1px solid rgba(0,220,100,0.3); }
+  .vote-btn.pass-btn:hover, .vote-btn.pass-btn.active { background:rgba(0,220,100,0.3); border-color:#00dc64; }
+  .vote-btn.fail-btn { background:rgba(255,50,50,0.15); color:#ff8888; border:1px solid rgba(255,50,50,0.3); }
+  .vote-btn.fail-btn:hover, .vote-btn.fail-btn.active { background:rgba(255,50,50,0.3); border-color:#ff3232; }
+  .comment-input { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:#fff; font-family:'Nunito',sans-serif; font-size:12px; padding:5px 10px; resize:none; height:36px; }
+  .comment-input:focus { outline:none; border-color:#7b2fff; }
+  .comment-input::placeholder { color:#443366; }
+
+  /* LIGHTBOX */
+  #lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:1000; align-items:center; justify-content:center; cursor:pointer; }
+  #lightbox.open { display:flex; }
+  #lightbox img { max-width:90vw; max-height:90vh; border-radius:12px; object-fit:contain; }
+
+  /* EXPORT MODAL */
+  #export-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center; }
+  #export-modal.open { display:flex; }
+  .export-box { background:#1a0f30; border:1px solid rgba(123,47,255,0.4); border-radius:16px; padding:24px; max-width:640px; width:90%; max-height:80vh; display:flex; flex-direction:column; }
+  .export-box h3 { font-size:18px; font-weight:900; color:#ffdd00; margin-bottom:12px; }
+  .export-text { flex:1; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:12px; font-size:12px; color:#ddd; font-family:monospace; overflow-y:auto; white-space:pre-wrap; min-height:200px; max-height:50vh; }
+  .export-actions { display:flex; gap:8px; margin-top:12px; }
+  .copy-btn { background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white; border:none; padding:8px 20px; border-radius:10px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:900; font-size:13px; }
+  .close-btn { background:rgba(255,255,255,0.08); color:#ddd; border:1px solid rgba(255,255,255,0.15); padding:8px 20px; border-radius:10px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; font-size:13px; }
+</style>
+</head>
+<body>
+
+<div id="lightbox"><img id="lightbox-img" src="" /></div>
+<div id="export-modal">
+  <div class="export-box">
+    <h3>📋 Review Export</h3>
+    <div class="export-text" id="export-text"></div>
+    <div class="export-actions">
+      <button class="copy-btn" onclick="copyExport()">📋 Copy to Clipboard</button>
+      <button class="close-btn" onclick="closeExport()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-title">Math Blast Issues</div>
+    <div id="sidebar-tabs"></div>
+    <button class="export-btn" onclick="openExport()">📋 Export Review</button>
+  </div>
+
+  <div class="main">
+    <div class="page-header">
+      <h1>🔍 Review Dashboard</h1>
+      <p>Check images and audio for each issue — mark pass/fail and add comments.</p>
+      <div class="overall-progress" id="overall-stats"></div>
+    </div>
+    <div id="panels"></div>
+  </div>
+</div>
+
+<script>
+const BASE = 'https://mathblastau.github.io/math-blast/';
+
+const ISSUES = [
+  { num: 1, emoji: '🚀', title: 'The Missing Quarter', color: '#7b2fff' },
+  { num: 2, emoji: '🌫️', title: 'Fractions in the Fog Nebula', color: '#2f7bff' },
+  { num: 3, emoji: '💎', title: 'The Equivalent Exchange', color: '#ff2fff' },
+  { num: 4, emoji: '🔢', title: 'Race to Number Line Station', color: '#ff8800' },
+  { num: 5, emoji: '🎡', title: 'Showdown at the Fraction Fair', color: '#00cc88' },
+  { num: 6, emoji: '🌌', title: 'The Fraction Core', color: '#aa44ff' },
+  { num: 7, emoji: '🌍', title: 'Teaching the Phantom', color: '#ffdd00' },
+];
+
+// Audio files per issue (story + question audio, skip generic feedback)
+const AUDIO_FILES = {
+  1: ['ch1-intro.mp3','ch1-q1-question.mp3','ch1-q2-story.mp3','ch1-q2-question.mp3',
+      'ch2-intro-nar.mp3','ch2-bloop.mp3','ch2-q3-question.mp3','ch2-q4-story-nar.mp3','ch2-q4-mork.mp3','ch2-q4-question.mp3',
+      'ch3-intro-nar.mp3','ch3-mork.mp3','ch3-q5-question.mp3','ch3-q6-story.mp3','ch3-q6-question.mp3',
+      'ch4-intro.mp3','ch4-q7-question.mp3','ch4-q8-story.mp3','ch4-q8-question.mp3',
+      'ch5-intro.mp3','ch5-mission-control.mp3','ch5-q9-question.mp3','ch5-q10-story.mp3','ch5-q10-question.mp3','win.mp3'],
+  2: ['ch1-intro.mp3','ch1-q1-question.mp3','ch1-q2-story.mp3','ch1-meridian.mp3','ch1-q2-question.mp3',
+      'ch2-intro.mp3','ch2-meridian.mp3','ch2-q3-question.mp3','ch2-q4-story.mp3','ch2-jake.mp3','ch2-q4-question.mp3',
+      'ch3-intro.mp3','ch3-jake.mp3','ch3-q5-question.mp3','ch3-q6-story.mp3','ch3-q6-question.mp3',
+      'ch4-intro.mp3','ch4-jake.mp3','ch4-q7-question.mp3','ch4-q8-story.mp3','ch4-q8-question.mp3',
+      'ch5-intro.mp3','ch5-yusra.mp3','ch5-meridian-pilot.mp3','ch5-q9-question.mp3','ch5-q10-story.mp3','ch5-q10-question.mp3','win.mp3'],
+  3: ['ch1-intro.mp3','ch1-kenji.mp3','ch1-q1-question.mp3','ch1-q2-story.mp3','ch1-jake.mp3','ch1-q2-question.mp3',
+      'ch2-intro.mp3','ch2-jake.mp3','ch2-q3-question.mp3','ch2-q4-story.mp3','ch2-q4-question.mp3',
+      'ch3-intro.mp3','ch3-jake.mp3','ch3-q5-question.mp3','ch3-q6-story.mp3','ch3-q6-question.mp3',
+      'ch4-intro.mp3','ch4-q7-question.mp3','ch4-q8-story.mp3','ch4-q8-question.mp3',
+      'ch5-intro.mp3','ch5-jake.mp3','ch5-phantom.mp3','ch5-phantom-end.mp3','ch5-q9-question.mp3','ch5-q10-story.mp3','ch5-q10-question.mp3','win.mp3'],
+  4: ['ch1-intro.mp3','ch1-jake.mp3','ch1-q1-question.mp3','ch1-q2-story.mp3','ch1-q2-question.mp3',
+      'ch2-intro.mp3','ch2-jake.mp3','ch2-q3-question.mp3','ch2-q4-story.mp3','ch2-q4-question.mp3',
+      'ch3-intro.mp3','ch3-jake.mp3','ch3-phantom.mp3','ch3-q5-question.mp3','ch3-q6-story.mp3','ch3-q6-question.mp3',
+      'ch4-intro.mp3','ch4-q7-question.mp3','ch4-q8-story.mp3','ch4-q8-question.mp3',
+      'ch5-intro.mp3','ch5-phantom.mp3','ch5-phantom-end.mp3','ch5-q9-question.mp3','ch5-q10-story.mp3','ch5-q10-question.mp3','win.mp3'],
+  5: ['ch1-intro.mp3','ch1-jake.mp3','ch1-q1-question.mp3','ch1-q2-story.mp3','ch1-q2-question.mp3',
+      'ch2-intro.mp3','ch2-jake.mp3','ch2-phantom.mp3','ch2-q3-question.mp3','ch2-q4-story.mp3','ch2-q4-question.mp3',
+      'ch3-intro.mp3','ch3-q5-question.mp3','ch3-q6-story.mp3','ch3-q6-question.mp3',
+      'ch4-intro.mp3','ch4-jake.mp3','ch4-q7-question.mp3','ch4-q8-story.mp3','ch4-q8-question.mp3',
+      'ch5-intro.mp3','ch5-phantom.mp3','ch5-phantom-end.mp3','ch5-q9-question.mp3','ch5-q10-story.mp3','ch5-q10-question.mp3','win.mp3'],
+  6: ['ch1-intro.mp3','ch1-phantom.mp3','ch1-q1-question.mp3','ch1-q2-story.mp3','ch1-q2-question.mp3',
+      'ch2-intro.mp3','ch2-jake.mp3','ch2-phantom.mp3','ch2-q3-question.mp3','ch2-q4-story.mp3','ch2-q4-question.mp3',
+      'ch3-intro.mp3','ch3-q5-question.mp3','ch3-q6-story.mp3','ch3-q6-question.mp3',
+      'ch4-intro.mp3','ch4-jake.mp3','ch4-q7-question.mp3','ch4-q8-story.mp3','ch4-q8-question.mp3',
+      'ch5-intro.mp3','ch5-phantom.mp3','ch5-phantom-end.mp3','ch5-q9-question.mp3','ch5-q10-story.mp3','ch5-q10-question.mp3','win.mp3'],
+  7: ['ch1-intro.mp3','ch1-jake.mp3','ch1-phantom.mp3','ch1-q1-question.mp3','ch1-q2-story.mp3','ch1-q2-question.mp3',
+      'ch2-intro.mp3','ch2-q3-question.mp3','ch2-q4-story.mp3','ch2-q4-question.mp3',
+      'ch3-intro.mp3','ch3-phantom.mp3','ch3-q5-question.mp3','ch3-q6-story.mp3','ch3-q6-question.mp3',
+      'ch4-intro.mp3','ch4-jake.mp3','ch4-q7-question.mp3','ch4-q8-story.mp3','ch4-q8-question.mp3',
+      'ch5-intro.mp3','ch5-phantom.mp3','ch5-phantom-resolution.mp3','ch5-resolution.mp3','ch5-q9-question.mp3','ch5-q10-story.mp3','ch5-q10-question.mp3','win-priya.mp3','win.mp3'],
+};
+
+// State
+let state = {};
+let currentAudio = null;
+let currentIssue = 1;
+
+function pad(n){ return String(n).padStart(3,'0'); }
+function issueDir(n){ return `issue00${n}`; }
+
+function loadState(){
+  const saved = localStorage.getItem('mb_review_state');
+  if(saved) state = JSON.parse(saved);
+}
+function saveState(){
+  localStorage.setItem('mb_review_state', JSON.stringify(state));
+  updateStats();
+}
+function getKey(issue, type, id){ return `i${issue}_${type}_${id}`; }
+function getItem(key){ return state[key] || {vote: null, comment: ''}; }
+function setVote(key, vote){
+  if(!state[key]) state[key] = {vote: null, comment: ''};
+  state[key].vote = state[key].vote === vote ? null : vote;
+  saveState();
+}
+function setComment(key, comment){
+  if(!state[key]) state[key] = {vote: null, comment: ''};
+  state[key].comment = comment;
+  saveState();
+}
+
+function countReviewed(issue){
+  let total = 0, done = 0;
+  // images: 5 ch + 10 q = 15
+  for(let i=1;i<=5;i++){
+    const k = getKey(issue,'img','ch'+i);
+    total++; if(state[k]?.vote) done++;
+  }
+  for(let i=1;i<=10;i++){
+    const k = getKey(issue,'img','q'+i);
+    total++; if(state[k]?.vote) done++;
+  }
+  // audio
+  (AUDIO_FILES[issue]||[]).forEach(f => {
+    const k = getKey(issue,'aud',f);
+    total++; if(state[k]?.vote) done++;
+  });
+  return {total, done};
+}
+
+function updateStats(){
+  let totalAll=0, doneAll=0, passes=0, fails=0;
+  ISSUES.forEach(({num}) => {
+    const {total, done} = countReviewed(num);
+    totalAll += total; doneAll += done;
+  });
+  // count votes
+  Object.values(state).forEach(v => {
+    if(v.vote === 'pass') passes++;
+    if(v.vote === 'fail') fails++;
+  });
+  document.getElementById('overall-stats').innerHTML = `
+    <div class="stat-pill">Reviewed: <span>${doneAll} / ${totalAll}</span></div>
+    <div class="stat-pill">✅ Pass: <span>${passes}</span></div>
+    <div class="stat-pill">❌ Fail: <span>${fails}</span></div>
+  `;
+  // update sidebar tabs
+  document.querySelectorAll('.issue-tab').forEach(tab => {
+    const num = parseInt(tab.dataset.num);
+    const {total, done} = countReviewed(num);
+    tab.querySelector('.tab-progress').textContent = `${done}/${total}`;
+  });
+}
+
+function showIssue(num){
+  currentIssue = num;
+  document.querySelectorAll('.issue-tab').forEach(t => t.classList.toggle('active', parseInt(t.dataset.num)===num));
+  document.querySelectorAll('.issue-panel').forEach(p => p.classList.toggle('active', parseInt(p.dataset.num)===num));
+}
+
+function makeRow(issue, type, id, label, sub, imgUrl, audioFile){
+  const key = getKey(issue, type, id);
+  const item = getItem(key);
+  const isImg = type === 'img';
+  const isAud = type === 'aud';
+
+  const row = document.createElement('div');
+  row.className = 'item-row' + (item.vote ? ' '+item.vote : '');
+  row.id = 'row_'+key;
+
+  let leftHtml = '';
+  if(isImg && imgUrl){
+    leftHtml = `<div class="thumb-wrap" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}" loading="lazy" /></div>`;
+  } else if(isImg){
+    leftHtml = `<div class="thumb-wrap"><div class="no-img">🖼️</div></div>`;
+  } else if(isAud){
+    leftHtml = `<div class="audio-wrap"><button class="play-btn" id="playbtn_${key}" onclick="toggleAudio('${key}','${audioFile}')">▶</button></div>`;
+  }
+
+  row.innerHTML = `
+    ${leftHtml}
+    <div class="item-meta">
+      <div class="item-label">${label}</div>
+      <div class="item-sub">${sub}</div>
+    </div>
+    <div class="item-controls">
+      <div class="vote-btns">
+        <button class="vote-btn pass-btn${item.vote==='pass'?' active':''}" onclick="vote('${key}','pass')">✅ Pass</button>
+        <button class="vote-btn fail-btn${item.vote==='fail'?' active':''}" onclick="vote('${key}','fail')">❌ Fail</button>
+      </div>
+      <textarea class="comment-input" placeholder="Comment..." onchange="comment('${key}',this.value)" onblur="comment('${key}',this.value)">${item.comment||''}</textarea>
+    </div>
+  `;
+  return row;
+}
+
+function vote(key, v){
+  setVote(key, v);
+  const row = document.getElementById('row_'+key);
+  const item = getItem(key);
+  row.className = 'item-row' + (item.vote ? ' '+item.vote : '');
+  row.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('active'));
+  if(item.vote === 'pass') row.querySelector('.pass-btn').classList.add('active');
+  if(item.vote === 'fail') row.querySelector('.fail-btn').classList.add('active');
+}
+
+function comment(key, val){
+  setComment(key, val);
+}
+
+function toggleAudio(key, file){
+  const btn = document.getElementById('playbtn_'+key);
+  if(currentAudio && !currentAudio.paused){
+    currentAudio.pause(); currentAudio=null;
+    document.querySelectorAll('.play-btn').forEach(b=>{ b.textContent='▶'; b.classList.remove('playing'); });
+    if(btn.dataset.file === file && btn.dataset.key === key) return;
+  }
+  const issueNum = key.split('_')[0].replace('i','');
+  const url = BASE + 'sounds/issue00' + issueNum + '/' + file;
+  const a = new Audio(url);
+  btn.textContent='⏸'; btn.classList.add('playing');
+  btn.dataset.file = file; btn.dataset.key = key;
+  currentAudio = a;
+  a.play().catch(()=>{ btn.textContent='▶'; btn.classList.remove('playing'); });
+  a.onended = () => { btn.textContent='▶'; btn.classList.remove('playing'); currentAudio=null; };
+}
+
+function openLightbox(url){
+  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox').classList.add('open');
+}
+document.getElementById('lightbox').onclick = () => document.getElementById('lightbox').classList.remove('open');
+
+function openExport(){
+  const lines = ['# Math Blast Review Export', `Generated: ${new Date().toLocaleString()}`, ''];
+  ISSUES.forEach(({num, emoji, title}) => {
+    lines.push(`## Issue ${num}: ${emoji} ${title}`);
+    // images
+    lines.push('### Images');
+    for(let i=1;i<=5;i++){
+      const k = getKey(num,'img','ch'+i);
+      const it = getItem(k);
+      if(it.vote || it.comment) lines.push(`  ch${i}: ${it.vote||'—'}${it.comment?' — '+it.comment:''}`);
+    }
+    for(let i=1;i<=10;i++){
+      const k = getKey(num,'img','q'+i);
+      const it = getItem(k);
+      if(it.vote || it.comment) lines.push(`  q${i}: ${it.vote||'—'}${it.comment?' — '+it.comment:''}`);
+    }
+    // audio
+    lines.push('### Audio');
+    (AUDIO_FILES[num]||[]).forEach(f => {
+      const k = getKey(num,'aud',f);
+      const it = getItem(k);
+      if(it.vote || it.comment) lines.push(`  ${f}: ${it.vote||'—'}${it.comment?' — '+it.comment:''}`);
+    });
+    lines.push('');
+  });
+  document.getElementById('export-text').textContent = lines.join('\n');
+  document.getElementById('export-modal').classList.add('open');
+}
+function closeExport(){ document.getElementById('export-modal').classList.remove('open'); }
+function copyExport(){
+  navigator.clipboard.writeText(document.getElementById('export-text').textContent);
+  document.querySelector('.copy-btn').textContent = '✅ Copied!';
+  setTimeout(()=>{ document.querySelector('.copy-btn').textContent = '📋 Copy to Clipboard'; }, 2000);
+}
+
+function buildUI(){
+  const sidebar = document.getElementById('sidebar-tabs');
+  const panels = document.getElementById('panels');
+
+  ISSUES.forEach(({num, emoji, title}) => {
+    // Sidebar tab
+    const tab = document.createElement('div');
+    tab.className = 'issue-tab' + (num===1?' active':'');
+    tab.dataset.num = num;
+    tab.innerHTML = `<span class="tab-num">#${num}</span>${emoji} Issue ${num}<span class="tab-progress">0/0</span>`;
+    tab.onclick = () => showIssue(num);
+    sidebar.appendChild(tab);
+
+    // Panel
+    const panel = document.createElement('div');
+    panel.className = 'issue-panel' + (num===1?' active':'');
+    panel.dataset.num = num;
+    const issNum = String(num).padStart(3,'0');
+    const liveUrl = `${BASE}issue-${issNum}-narrated.html`;
+
+    panel.innerHTML = `
+      <div class="issue-header">
+        <span class="issue-emoji">${emoji}</span>
+        <h2>Issue ${num}: ${title}</h2>
+        <a class="issue-link" href="${liveUrl}" target="_blank">▶ Open Issue</a>
+      </div>
+    `;
+
+    // Chapter images
+    const imgTitle = document.createElement('div');
+    imgTitle.className = 'section-title';
+    imgTitle.textContent = '🖼️ Chapter Images (5)';
+    panel.appendChild(imgTitle);
+
+    for(let i=1;i<=5;i++){
+      const imgUrl = `${BASE}images/ch${i}-issue${issNum}.png`;
+      const row = makeRow(num, 'img', 'ch'+i, `Chapter ${i} Image`, `ch${i}-issue${issNum}.png`, imgUrl, null);
+      panel.appendChild(row);
+    }
+
+    // Question images
+    const qimgTitle = document.createElement('div');
+    qimgTitle.className = 'section-title';
+    qimgTitle.textContent = '🎯 Question Images (10)';
+    panel.appendChild(qimgTitle);
+
+    for(let i=1;i<=10;i++){
+      const imgUrl = `${BASE}images/q${i}-issue${issNum}.png`;
+      const row = makeRow(num, 'img', 'q'+i, `Question ${i} Image`, `q${i}-issue${issNum}.png`, imgUrl, null);
+      panel.appendChild(row);
+    }
+
+    // Audio files
+    const audTitle = document.createElement('div');
+    audTitle.className = 'section-title';
+    audTitle.textContent = `🎙️ Audio Files (${(AUDIO_FILES[num]||[]).length})`;
+    panel.appendChild(audTitle);
+
+    (AUDIO_FILES[num]||[]).forEach(file => {
+      const row = makeRow(num, 'aud', file, file, `sounds/issue${issNum}/${file}`, null, file);
+      panel.appendChild(row);
+    });
+
+    panels.appendChild(panel);
+  });
+}
+
+// Init
+loadState();
+buildUI();
+updateStats();
+</script>
+</body>
+</html>
