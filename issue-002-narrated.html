@@ -812,13 +812,8 @@ function answer(btn, correct, qId){
     fb.className='feedback show good'; fb.innerHTML=correctMsg[qId];
     updateProgress();
     next.classList.add('show');
-    const qNum = parseInt(qId.replace('q',''));
-    if(qNum===1){
-      playFile('feedback-correct-1.mp3', null);
-    } else {
-      const v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];
-      playFile(v[correctVariant%v.length], null); correctVariant++;
-    }
+    const v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];
+    playFile(v[correctVariant%v.length], null); correctVariant++;
   } else {
     btn.classList.add('wrong');
     fb.className='feedback show bad'; fb.innerHTML=wrongMsg[qId];
