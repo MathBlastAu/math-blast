@@ -97,6 +97,11 @@
     border:none; cursor:pointer; box-shadow:0 4px 20px rgba(123,47,255,0.4); transition:transform 0.15s; }
   .next-btn:hover { transform:scale(1.03); }
   .next-btn.show { display:block; }
+  #cliffhanger-screen { display:none; text-align:center; padding:32px 24px 24px; animation:fadeIn 0.6s ease; }
+  #cliffhanger-screen img { width:100%; border-radius:20px; margin-bottom:24px; border:3px solid rgba(180,100,255,0.5); box-shadow:0 12px 40px rgba(0,0,0,0.7); }
+  .cliff-text { background:rgba(0,0,0,0.5); border:2px solid rgba(123,47,255,0.5); border-radius:16px; padding:20px 24px; margin-bottom:20px; font-size:19px; line-height:1.9; color:#ddd; text-align:left; }
+  .cliff-text .phantom-line { color:#aa77ff; font-style:italic; font-weight:700; }
+  .cliff-text strong { color:#ffdd00; }
   #win-screen { display:none; text-align:center; padding:48px 24px 24px; animation:fadeIn 0.5s ease; }
   .trophy { font-size:80px; display:block; margin-bottom:16px; animation:bounce 0.8s ease infinite alternate; }
   @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.15)} }
@@ -186,9 +191,8 @@
       <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch1"></div></div></div>
     </div>
     <div class="story-text" id="story-ch1">
-      Jake blasted toward <strong>Number Line Station</strong> — a research facility built as a giant corridor with a number line running from 0 to 1 along the entire length. Ships across the galaxy used its fraction markers to navigate precise distances.<br><br>
-      But the Fraction Phantom had struck. Every marker was in the wrong place. Three ships were navigating by the station's signals <em>right now</em> — and they had <strong>45 minutes</strong> before the first one went off-course.<br><br>
-      Jake raced through the airlock. The first marker he spotted: <strong>½ sitting at the ¾ position</strong>.
+      Number Line Station was unlike anything Jake had ever seen — a space station shaped like a ruler, a kilometre long, with <strong>fraction markers glowing on the walls from zero to one</strong>. And right now, every single marker was in the wrong place.<br><br>
+      <em>"The Phantom has moved 1/2 to where 3/4 should be! If ships navigate by these signals, they'll miscalculate their distances. I have to fix this — fast."</em>
     </div>
     <div id="lock-q1" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
     <div class="quiz-box" id="quiz-q1">
@@ -214,7 +218,7 @@
         <div class="nar-bar"><div class="nar-bar-fill" id="bar-q2s"></div></div></div>
       </div>
       <div class="story-text" id="story-q2s">
-        Jake snapped the ½ marker back into place. The next wrong marker: <strong>¼ had been moved way too far along</strong> the line — nearly to the ¾ position. Where did ¼ actually belong?
+        Jake sprinted down the corridor, checking markers one by one. The <strong>1/4 marker was misplaced</strong>. The 3/4 marker was completely missing. Three ships were relying on these signals right now.
       </div>
       <div id="lock-q2" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
       <div class="quiz-box" id="quiz-q2">
@@ -248,20 +252,21 @@
       <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch2"></div></div></div>
     </div>
     <div class="story-text" id="story-ch2">
-      Jake worked fast, moving through the station corridor. Each marker he fixed sent a corrected signal to the ships outside. Next up: the <strong>¾ marker</strong> — moved way down near the start of the line.
+      Jake replaced the markers, one by one. But then he reached a tricky section — <strong>2/3 and 3/4</strong>, placed almost identically by the Phantom.<br><br>
+      <em>"2 thirds versus 3 quarters. They look close — but which one is actually larger? I need to be precise here. One wrong signal and a ship crashes."</em>
     </div>
     <div id="lock-q3" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
     <div class="quiz-box" id="quiz-q3">
       <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Number · Year 4</span></div>
       <span class="quiz-icon">🔧</span>
-      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 3 — Placing 3/4</div>
-      <div class="question">Where should <strong>3/4</strong> go on a number line from 0 to 1?</div>
-      <img src="images/q3-issue004.png" alt="Number line" class="question-img" />
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 3 — Comparing Fractions</div>
+      <div class="question">Which is larger — <strong>2/3</strong> or <strong>3/4</strong>?<br>Place them correctly on the number line.</div>
+      <img src="images/q3-issue004.png" alt="Number line comparison" class="question-img" />
       <div class="options">
-        <button class="opt-btn" onclick="answer(this,true,'q3')">Three quarters of the way from 0 to 1</button>
-        <button class="opt-btn" onclick="answer(this,false,'q3')">One quarter of the way along</button>
-        <button class="opt-btn" onclick="answer(this,false,'q3')">Halfway</button>
-        <button class="opt-btn" onclick="answer(this,false,'q3')">Very close to 1</button>
+        <button class="opt-btn" onclick="answer(this,true,'q3')">3/4 is larger — it sits further along the number line</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">2/3 is larger</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">They're equal</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">Can't tell without a calculator</button>
       </div>
       <div class="feedback" id="feedback-q3"></div>
       <button class="next-btn" id="next-q3" onclick="showQ4Story()">Next Question ➜</button>
@@ -274,20 +279,20 @@
         <div class="nar-bar"><div class="nar-bar-fill" id="bar-q4s"></div></div></div>
       </div>
       <div class="story-text" id="story-q4s">
-        The Phantom had placed <strong>2/3</strong> and <strong>3/4</strong> almost in the same spot — just millimetres apart. Jake needed to figure out which was actually larger, so he could put each one in the right place.
+        The thirds section of the number line had been completely scrambled. Jake needed to restore it — and notice something important about how <strong>thirds divide a line</strong>.
       </div>
       <div id="lock-q4" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
       <div class="quiz-box" id="quiz-q4">
         <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
         <span class="quiz-icon">⚖️</span>
-        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 4 — Comparing Fractions</div>
-        <div class="question">Which is larger — <strong>2/3</strong> or <strong>3/4</strong>?<br>Which one sits further along the number line?</div>
-        <img src="images/q4-issue004.png" alt="Comparison diagram" class="question-img" />
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 4 — Placing Thirds</div>
+        <div class="question">Place <strong>1/3</strong> and <strong>2/3</strong> on the number line.<br><br>What do you notice about the gaps between 0, 1/3, 2/3, and 1?</div>
+        <img src="images/q4-issue004.png" alt="Thirds on number line" class="question-img" />
         <div class="options">
-          <button class="opt-btn" onclick="answer(this,true,'q4')">3/4 is larger — sits further along</button>
-          <button class="opt-btn" onclick="answer(this,false,'q4')">2/3 is larger</button>
-          <button class="opt-btn" onclick="answer(this,false,'q4')">They're equal</button>
-          <button class="opt-btn" onclick="answer(this,false,'q4')">Can't tell</button>
+          <button class="opt-btn" onclick="answer(this,true,'q4')">The gaps are all equal — thirds divide the line into 3 equal jumps</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">1/3 is closer to 0 and 2/3 is closer to 1 — the gaps are different</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">They overlap in the middle</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">1/3 and 2/3 are the same distance from 1/2</button>
         </div>
         <div class="feedback" id="feedback-q4"></div>
         <button class="next-btn" id="next-q4" onclick="nextChapter(3)">Next Chapter ➜</button>
@@ -308,16 +313,15 @@
       <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch3"></div></div></div>
     </div>
     <div class="story-text" id="story-ch3">
-      The station intercom crackled. The Phantom's calm voice came through:<br><br>
-      <em>"I placed the thirds evenly. You will find they are correct."</em><br><br>
-      Jake looked at the <strong>1/3</strong> and <strong>2/3</strong> markers. They were evenly spaced — but was the Phantom actually right about this?
+      The Phantom's voice crackled through the station intercom. It had been watching.<br><br>
+      <em>"You fix my corrections. But you have not considered: what lies beyond 1? I have added my own markers there. Markers for fractions that are MORE than one whole."</em>
     </div>
     <div id="lock-q5" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
     <div class="quiz-box" id="quiz-q5">
       <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
       <span class="quiz-icon">👻</span>
-      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 5 — Improper Fractions on a Number Line</div>
-      <div class="question">The Phantom has placed <strong>5/4</strong> on the number line.<br><br>Where does <strong>5/4</strong> sit?</div>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 5 — Beyond 1!</div>
+      <div class="question">The Phantom has placed <strong>5/4</strong> on the number line.<br><br>Where does <strong>5/4</strong> sit — is it between 0 and 1, or between 1 and 2?</div>
       <img src="images/q5-issue004.png" alt="Number line with thirds" class="question-img" />
       <div class="options">
         <button class="opt-btn" onclick="answer(this,true,'q5')">Between 1 and 2 — one quarter past the number 1</button>
@@ -336,7 +340,8 @@
         <div class="nar-bar"><div class="nar-bar-fill" id="bar-q6s"></div></div></div>
       </div>
       <div class="story-text" id="story-q6s">
-        The Phantom had added <strong>improper fractions</strong> to the station's correction list. Jake found a marker labelled <strong>5/4</strong>... but where did it go? It was MORE than 1 whole — it had to sit <em>beyond</em> the number 1!
+        The Phantom's new markers introduced something Jake hadn't seen before — fractions greater than one, written as <strong>improper fractions</strong> and as <strong>mixed numbers</strong>.<br><br>
+        <em>"5 quarters equals 1 and 1 quarter. So it sits just past the 1 mark. That actually makes sense..."</em>
       </div>
       <div id="lock-q6" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
       <div class="quiz-box" id="quiz-q6">
@@ -370,7 +375,7 @@
       <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch4"></div></div></div>
     </div>
     <div class="story-text" id="story-ch4">
-      More improper fraction markers. Jake extended the number line beyond 1 and started placing them. But first — he needed to convert them into mixed numbers so he knew exactly where each one lived.
+      Jake had to order four fractions and place them correctly on the <strong>extended number line</strong> — from 0 all the way to 2.
     </div>
     <div id="lock-q7" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
     <div class="quiz-box" id="quiz-q7">
@@ -396,7 +401,7 @@
         <div class="nar-bar"><div class="nar-bar-fill" id="bar-q8s"></div></div></div>
       </div>
       <div class="story-text" id="story-q8s">
-        Time was running out. Jake had four markers left to place: <strong>3/4, 5/4, 1/2, and 7/4</strong>. He had to order them from smallest to largest before he could place them correctly.
+        With all markers fixed, Jake ran the final check — <strong>counting from 0 to 2 in steps of 1/4</strong>.
       </div>
       <div id="lock-q8" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
       <div class="quiz-box" id="quiz-q8">
@@ -430,9 +435,8 @@
       <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch5"></div></div></div>
     </div>
     <div class="story-text" id="story-ch5">
-      One marker was missing entirely — the spot between <strong>3/4</strong> and <strong>5/4</strong> was blank. The Phantom's note read:<br><br>
-      <em>"I removed 4/4. The number 1 is a whole number, not a fraction. It does not belong on a fraction line."</em><br><br>
-      Jake shook his head. The Phantom was wrong — and he needed to prove it.
+      Jake fixed the last marker — and the three ships' navigation signals corrected instantly. Crisis averted. But the Phantom had left one final puzzle on the station wall, written in glowing blue light.<br><br>
+      <em>"I removed the marker between 3 quarters and 5 quarters because it is NOT a fraction. It is a whole number. Tell me: what marker did I remove — and am I correct?"</em>
     </div>
     <div id="lock-q9" class="quiz-lock">🔒 Listen to the story first to unlock your mission!</div>
     <div class="quiz-box" id="quiz-q9">
@@ -458,7 +462,8 @@
         <div class="nar-bar"><div class="nar-bar-fill" id="bar-q10s"></div></div></div>
       </div>
       <div class="story-text" id="story-q10s">
-        Jake grabbed a new marker and a marker pen. He had to prove the Phantom wrong — <strong>4/4 IS a fraction</strong>. It equals 1, yes. But it belongs on the number line because it's also a fraction. There's no rule that says fractions can't equal whole numbers!
+        The Phantom had left a final message before vanishing.<br><br>
+        <em>"You understand the number line. Then come find me at the Fraction Fair. If you reach me, I will listen."</em>
       </div>
       <div id="lock-q10" class="quiz-lock">🔒 Listen to the story to unlock the Boss Challenge!</div>
       <div class="quiz-box" id="quiz-q10">
@@ -474,12 +479,28 @@
           <button class="opt-btn" onclick="answer(this,false,'q10')">4/4 = 0</button>
         </div>
         <div class="feedback" id="feedback-q10"></div>
-        <button class="next-btn" id="next-q10" onclick="showWin()">🚀 SAVE THE SHIPS!</button>
+        <button class="next-btn" id="next-q10" onclick="showCliffhanger()">🚀 SAVE THE SHIPS!</button>
       </div>
     </div>
   </div>
 
   <!-- WIN SCREEN -->
+  <!-- CLIFFHANGER SCREEN -->
+  <div id="cliffhanger-screen">
+    <div class="issue-label">📖 Issue #4 — Cliffhanger</div>
+    <h2 style="font-size:30px;font-weight:900;color:#aa77ff;margin-bottom:20px;line-height:1.3;">The Fraction Phantom<br>Leaves a Message</h2>
+    <img src="images/cliffhanger-issue004.png" alt="The Fraction Phantom's holographic message" />
+    <div class="cliff-text">
+      Jake stared at the empty intercom panel. The Phantom had vanished — but it had left something behind.<br><br>
+      Written in glowing fraction light on the station wall:<br><br>
+      <span class="phantom-line">"I removed 4/4 because 1 is not a fraction. It is a whole. Come find me at the Fraction Fair."</span><br><br>
+      Jake read it twice. The Phantom's logic was wrong — he knew that now. But it wasn't being careless. It was being <strong>precise</strong>. It genuinely believed it was right.<br><br>
+      Somewhere out in the galaxy, a travelling space carnival was running on fractions — and the Phantom was there, waiting.
+    </div>
+    <p style="font-size:15px;color:#6655aa;margin-bottom:24px;">Issue #5 — <strong>Showdown at the Fraction Fair!</strong> 🎡</p>
+    <button class="start-btn" style="font-size:17px;padding:14px 36px;" onclick="showWin()">🏆 See Your Score!</button>
+  </div>
+
   <div id="win-screen">
     <span class="trophy">🏆</span>
     <h2>MISSION COMPLETE!</h2>
@@ -555,21 +576,24 @@ function stopAll(){if(currentAudio){currentAudio.pause();currentAudio=null;}docu
 function playFile(file,onEnd){if(muted){if(onEnd)setTimeout(onEnd,100);return null;}if(currentAudio){currentAudio.pause();currentAudio=null;}const a=new Audio(BASE+file);a.volume=1.0;currentAudio=a;a.play().catch(()=>{currentAudio=null;if(onEnd)onEnd();});a.onended=()=>{currentAudio=null;if(onEnd)onEnd();};a.onerror=()=>{currentAudio=null;if(onEnd)onEnd();};return a;}
 
 const playerConfigs={};let activePlayerId=null;
-function setupPlayer(id,files,labels,storyId,lockId,onDone){playerConfigs[id]={files,labels,storyId,lockId,onDone,active:false};}
+function setupPlayer(id,files,labels,storyId,lockId,onDone,unlockAtIndex){playerConfigs[id]={files,labels,storyId,lockId,onDone,unlockAtIndex:unlockAtIndex??files.length,active:false};}
 function togglePlayer(id){if(activePlayerId===id&&currentAudio&&!currentAudio.paused){currentAudio.pause();currentAudio=null;document.getElementById('btn-'+id).textContent='▶';document.getElementById('status-'+id).textContent='Paused — press ▶ to resume';activePlayerId=null;return;}stopAll();activePlayerId=id;runPlayer(id);}
-function runPlayer(id){const cfg=playerConfigs[id];if(!cfg)return;cfg.active=true;const btn=document.getElementById('btn-'+id);const statusEl=document.getElementById('status-'+id);const barFill=document.getElementById('bar-'+id);const story=cfg.storyId?document.getElementById(cfg.storyId):null;const totalFiles=cfg.files.length;if(btn)btn.textContent='⏸';if(story)story.classList.add('playing');let fileIdx=0;function playNext(){if(fileIdx>=totalFiles){if(btn)btn.textContent='✓';if(statusEl)statusEl.textContent='✅ Done!';if(barFill)barFill.style.width='100%';if(story){story.classList.remove('playing');story.classList.add('done');}if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(quizId){const quiz=document.getElementById(quizId);if(quiz){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}if(cfg.onDone)cfg.onDone();cfg.active=false;activePlayerId=null;return;}const file=cfg.files[fileIdx];const label=cfg.labels&&cfg.labels[fileIdx]?cfg.labels[fileIdx]:'🎙️ Narrating...';if(statusEl)statusEl.textContent=label;const segStart=(fileIdx/totalFiles)*100;const segEnd=((fileIdx+1)/totalFiles)*100;fileIdx++;const audio=playFile(file,playNext);if(audio&&barFill){const tick=setInterval(()=>{if(!audio||audio.paused||audio.ended){clearInterval(tick);return;}const pct=audio.duration?(segStart+(audio.currentTime/audio.duration)*(segEnd-segStart)):segStart;barFill.style.width=pct+'%';},200);}}playNext();}
+function unlockQuiz(cfg){if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(quizId){const quiz=document.getElementById(quizId);if(quiz&&!quiz.classList.contains('show')){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}}
+function runPlayer(id){const cfg=playerConfigs[id];if(!cfg)return;cfg.active=true;const btn=document.getElementById('btn-'+id);const statusEl=document.getElementById('status-'+id);const barFill=document.getElementById('bar-'+id);const story=cfg.storyId?document.getElementById(cfg.storyId):null;const totalFiles=cfg.files.length;if(btn)btn.textContent='⏸';if(story)story.classList.add('playing');let fileIdx=0;function playNext(){if(fileIdx>=totalFiles){if(btn)btn.textContent='✓';if(statusEl)statusEl.textContent='✅ Done!';if(barFill)barFill.style.width='100%';if(story){story.classList.remove('playing');story.classList.add('done');}if(cfg.onDone)cfg.onDone();cfg.active=false;activePlayerId=null;return;}// Unlock quiz when we reach unlockAtIndex (question audio starts playing)
+if(fileIdx===cfg.unlockAtIndex)unlockQuiz(cfg);const file=cfg.files[fileIdx];const label=cfg.labels&&cfg.labels[fileIdx]?cfg.labels[fileIdx]:'🎙️ Narrating...';if(statusEl)statusEl.textContent=label;const segStart=(fileIdx/totalFiles)*100;const segEnd=((fileIdx+1)/totalFiles)*100;fileIdx++;const audio=playFile(file,playNext);if(audio&&barFill){const tick=setInterval(()=>{if(!audio||audio.paused||audio.ended){clearInterval(tick);return;}const pct=audio.duration?(segStart+(audio.currentTime/audio.duration)*(segEnd-segStart)):segStart;barFill.style.width=pct+'%';},200);}}playNext();}
 
 function initPlayers(){
-  setupPlayer('ch1',['ch1-intro.mp3','ch1-jake.mp3','ch1-q1-question.mp3'],['🎙️ George is narrating...','👦 Jake thinking...','🎙️ Listen to the question...'],'story-ch1','lock-q1',null);
-  setupPlayer('q2s',['ch1-q2-story.mp3','ch1-q2-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q2s','lock-q2',null);
-  setupPlayer('ch2',['ch2-intro.mp3','ch2-jake.mp3','ch2-q3-question.mp3'],['🎙️ George is narrating...','👦 Jake speaking...','🎙️ Listen to the question...'],'story-ch2','lock-q3',null);
-  setupPlayer('q4s',['ch2-q4-story.mp3','ch2-q4-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q4s','lock-q4',null);
-  setupPlayer('ch3',['ch3-intro.mp3','ch3-jake.mp3','ch3-phantom.mp3','ch3-q5-question.mp3'],['🎙️ George is narrating...','👦 Jake speaking...','👻 The Phantom speaks...','🎙️ Listen to the question...'],'story-ch3','lock-q5',null);
-  setupPlayer('q6s',['ch3-q6-story.mp3','ch3-q6-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q6s','lock-q6',null);
-  setupPlayer('ch4',['ch4-intro.mp3','ch4-q7-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-ch4','lock-q7',null);
-  setupPlayer('q8s',['ch4-q8-story.mp3','ch4-q8-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q8s','lock-q8',null);
-  setupPlayer('ch5',['ch5-intro.mp3','ch5-phantom.mp3','ch5-phantom-end.mp3','ch5-q9-question.mp3'],['🎙️ George is narrating...','👻 The Phantom speaks...','👻 The Phantom continues...','🎙️ Listen to the question...'],'story-ch5','lock-q9',null);
-  setupPlayer('q10s',['ch5-q10-story.mp3','ch5-q10-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q10s','lock-q10',null);
+  // Last file index = question audio. Quiz unlocks BEFORE question plays so kid can read along.
+  setupPlayer('ch1',['ch1-intro.mp3','ch1-jake.mp3','ch1-q1-question.mp3'],['🎙️ George is narrating...','👦 Jake thinking...','🎙️ Listen to the question...'],'story-ch1','lock-q1',null,2);
+  setupPlayer('q2s',['ch1-q2-story.mp3','ch1-q2-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q2s','lock-q2',null,1);
+  setupPlayer('ch2',['ch2-intro.mp3','ch2-jake.mp3','ch2-q3-question.mp3'],['🎙️ George is narrating...','👦 Jake speaking...','🎙️ Listen to the question...'],'story-ch2','lock-q3',null,2);
+  setupPlayer('q4s',['ch2-q4-story.mp3','ch2-q4-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q4s','lock-q4',null,1);
+  setupPlayer('ch3',['ch3-intro.mp3','ch3-phantom.mp3','ch3-q5-question.mp3'],['🎙️ George is narrating...','👻 The Phantom speaks...','🎙️ Listen to the question...'],'story-ch3','lock-q5',null,2);
+  setupPlayer('q6s',['ch3-q6-story.mp3','ch3-jake.mp3','ch3-q6-question.mp3'],['🎙️ George is narrating...','👦 Jake speaking...','🎙️ Listen to the question...'],'story-q6s','lock-q6',null,2);
+  setupPlayer('ch4',['ch4-intro.mp3','ch4-q7-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-ch4','lock-q7',null,1);
+  setupPlayer('q8s',['ch4-q8-story.mp3','ch4-q8-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q8s','lock-q8',null,1);
+  setupPlayer('ch5',['ch5-intro.mp3','ch5-phantom.mp3','ch5-q9-question.mp3'],['🎙️ George is narrating...','👻 The Phantom speaks...','🎙️ Listen to the question...'],'story-ch5','lock-q9',null,2);
+  setupPlayer('q10s',['ch5-q10-story.mp3','ch5-phantom-end.mp3','ch5-q10-question.mp3'],['🎙️ George is narrating...','👻 The Phantom speaks...','🎙️ Listen to the question...'],'story-q10s','lock-q10',null,2);
 }
 
 function showQ2Story(){const b=document.getElementById('block-q2');b.style.display='block';setTimeout(()=>{b.scrollIntoView({behavior:'smooth',block:'start'});},100);setTimeout(()=>togglePlayer('q2s'),600);}
@@ -582,8 +606,8 @@ let score=0,questionsAnswered=0;const triedWrong=new Set();const totalQ=10;
 const correctMsg={
   q1:'🎉 Correct! 1/2 sits exactly in the MIDDLE between 0 and 1. It splits the line into two equal parts — that\'s what "half" means!',
   q2:'🎉 Right! 1/4 is one quarter of the way from 0 to 1. Imagine the line cut into 4 equal jumps — 1/4 is at the first jump!',
-  q3:'🎉 Correct! 3/4 is three quarters of the way from 0 to 1. Divide the line into 4 equal jumps — count 3 from 0. Done!',
-  q4:'🎉 Right! 3/4 > 2/3. Convert to twelfths: 8/12 vs 9/12. 9/12 wins — so 3/4 sits further along the line!',
+  q3:'🎉 Correct! 3/4 > 2/3. Convert to twelfths: 9/12 vs 8/12 — 3/4 wins! It sits further along the number line.',
+  q4:'🎉 Right! Thirds divide the line into 3 equal jumps. 0 → 1/3 → 2/3 → 1. The gaps are all the same size!',
   q5:'🎉 Correct! 5/4 = 4/4 + 1/4 = 1 + 1/4. It lives between 1 and 2 on the number line. The first improper fraction marker is placed!',
   q6:'🎉 Right! 5 ÷ 4 = 1 remainder 1. So 5/4 = 1 whole and 1/4 left over = 1 and 1/4. Mixed number unlocked!',
   q7:'🎉 Yes! 1/2 (less than 1), then 3/4 (still less than 1), then 5/4 (just past 1), then 7/4 (nearly 2). Markers placed — ships updated!',
@@ -594,8 +618,8 @@ const correctMsg={
 const wrongMsg={
   q1:'❌ Think about it: the number line goes from 0 to 1. Halfway between 0 and 1 is exactly the middle. That\'s where 1/2 belongs!',
   q2:'❌ Divide the number line into 4 equal parts. Count 1 part from 0. That\'s where 1/4 belongs — one quarter of the way along.',
-  q3:'❌ Divide the line into 4 equal parts. 3/4 means 3 of those parts from 0 — three-quarters of the way along.',
-  q4:'❌ Compare using twelfths: 2/3 = 8/12, 3/4 = 9/12. Which is bigger — 8 or 9 twelfths?',
+  q3:'❌ Try converting to twelfths: 2/3 = 8/12, 3/4 = 9/12. Which fraction is bigger?',
+  q4:'❌ Look at the gaps between 0, 1/3, 2/3, and 1. If thirds divide a line into 3 equal parts, what should each gap look like?',
   q5:'❌ Think: 4/4 = 1. So 5/4 is one more quarter past 1. That puts it between 1 and 2.',
   q6:'❌ Divide: 5 ÷ 4 = 1 whole (with 1 left over). The leftover 1 becomes 1/4. So 5/4 = 1 and 1/4.',
   q7:'❌ First sort: which are less than 1? (1/2 and 3/4). Which are greater than 1? (5/4 and 7/4). Then order within each group.',
@@ -607,12 +631,21 @@ const wrongMsg={
 function answer(btn,correct,qId){const box=btn.closest('.quiz-box');box.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);const fb=document.getElementById('feedback-'+qId);const next=document.getElementById('next-'+qId);if(correct){btn.classList.add('correct');if(!triedWrong.has(qId))score++;questionsAnswered++;fb.className='feedback show good';fb.innerHTML=correctMsg[qId];updateProgress();next.classList.add('show');const qNum=parseInt(qId.replace('q',''));if(qNum===1){playFile('feedback-correct-1.mp3',null);}else{const v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];playFile(v[correctVariant%v.length],null);correctVariant++;}}else{triedWrong.add(qId);btn.classList.add('wrong');fb.className='feedback show bad';fb.innerHTML=wrongMsg[qId];stopAll();const wrongFile=['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)];const wrongAudio=playFile(wrongFile,null);const resetDelay=wrongAudio?2800:1200;setTimeout(()=>{box.querySelectorAll('.opt-btn').forEach(b=>{if(!b.classList.contains('correct')){b.disabled=false;b.classList.remove('wrong');}});fb.className='feedback';},resetDelay);}}
 
 function updateProgress(){document.getElementById('progress-fill').style.width=((questionsAnswered/totalQ)*100)+'%';document.getElementById('progress-score').textContent='⭐ '+score+' / '+totalQ;}
-function startGame(){document.getElementById('title-screen').style.display='none';document.getElementById('progress-wrap').style.display='block';initPlayers();showChapter(1);}
+function startGame(){document.getElementById('title-screen').style.display='none';document.getElementById('progress-wrap').style.display='block';initPlayers();shuffleOptions();showChapter(1);}
 
 let currentChapter=0;
 function showChapter(n){stopAll();document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));const ch=document.getElementById('chapter-'+n);if(!ch)return;ch.classList.add('active');currentChapter=n;window.scrollTo({top:0,behavior:'smooth'});const labels=['','Chapter 1 of 5 — Fractions on a Number Line','Chapter 2 of 5 — Placing More Fractions','Chapter 3 of 5 — Thirds and Improper Fractions ✨','Chapter 4 of 5 — Mixed Numbers','Chapter 5 of 5 — Boss Round 🔥'];document.getElementById('progress-label').textContent=labels[n]||'';const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};if(playerMap[n])setTimeout(()=>togglePlayer(playerMap[n]),700);}
 function nextChapter(n){showChapter(n);}
-function showWin(){stopAll();document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));document.getElementById('progress-wrap').style.display='none';const win=document.getElementById('win-screen');win.style.display='block';document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+' on the first try!';document.getElementById('win-stars').textContent=score>=9?'⭐⭐⭐':score>=6?'⭐⭐':'⭐';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>playFile('win.mp3',null),500);}
+function showCliffhanger(){stopAll();document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));document.getElementById('progress-wrap').style.display='none';const cf=document.getElementById('cliffhanger-screen');cf.style.display='block';window.scrollTo({top:0,behavior:'smooth'});// Narrate the cliffhanger sequence
+setTimeout(()=>{
+  playFile('cliff-george.mp3',()=>{
+    setTimeout(()=>playFile('cliff-phantom.mp3',()=>{
+      setTimeout(()=>playFile('cliff-george-end.mp3',null),400);
+    }),400);
+  });
+},700);}
+function showWin(){document.getElementById('cliffhanger-screen').style.display='none';const win=document.getElementById('win-screen');win.style.display='block';document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+' on the first try!';document.getElementById('win-stars').textContent=score>=9?'⭐⭐⭐':score>=6?'⭐⭐':'⭐';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>playFile('win.mp3',null),500);}
+function shuffleOptions(){document.querySelectorAll('.quiz-box').forEach(box=>{const opts=box.querySelector('.options');if(!opts)return;const btns=[...opts.children];for(let i=btns.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));opts.appendChild(btns[j]);btns.splice(j,1);}});}
 function showParentGuide(){document.getElementById('parent-guide').style.display='block';document.getElementById('parent-guide').scrollIntoView({behavior:'smooth'});}
 function toggleMute(){muted=!muted;const ctrl=document.getElementById('mute-ctrl');ctrl.textContent=muted?'🔇 Muted':'🔊 Sound On';ctrl.classList.toggle('muted',muted);if(muted)stopAll();}
 function replayCurrent(){const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};const pid=playerMap[currentChapter];if(!pid)return;stopAll();const cfg=playerConfigs[pid];if(cfg)cfg.active=false;const story=cfg&&cfg.storyId?document.getElementById(cfg.storyId):null;if(story){story.classList.remove('playing','done');}const barFill=document.getElementById('bar-'+pid);if(barFill)barFill.style.width='0%';const statusEl=document.getElementById('status-'+pid);if(statusEl)statusEl.textContent='Press ▶ to hear the story';const btn=document.getElementById('btn-'+pid);if(btn)btn.textContent='▶';setTimeout(()=>togglePlayer(pid),300);}
