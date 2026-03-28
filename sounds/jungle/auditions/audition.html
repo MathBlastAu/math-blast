@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jungle Arc — Voice Auditions</title>
+<style>
+  body { background: #0a1a0a; color: #e2e8f0; font-family: -apple-system, sans-serif; padding: 40px; max-width: 740px; margin: 0 auto; }
+  h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+  .page-sub { color: #64748b; font-size: 14px; margin-bottom: 40px; }
+
+  .character-section { margin-bottom: 48px; }
+  .char-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+  .char-emoji { font-size: 36px; line-height: 1; }
+  .char-name { font-size: 19px; font-weight: 800; margin-bottom: 3px; }
+  .char-desc { font-size: 13px; color: #64748b; line-height: 1.5; max-width: 500px; }
+
+  .line-box { border-radius: 8px; padding: 13px 16px; font-size: 14px; color: #cbd5e1; font-style: italic; margin-bottom: 16px; line-height: 1.6; border-left: 3px solid; }
+  .narrator-line { background: #0d1520; border-color: #a78bfa; }
+  .blaze-line    { background: #0f2010; border-color: #22c55e; }
+  .pip-line      { background: #1a1008; border-color: #fbbf24; }
+  .doz-line      { background: #1a080f; border-color: #f472b6; }
+
+  .voice-card { border-radius: 10px; padding: 14px 18px; margin-bottom: 8px; transition: border-color 0.2s; border: 1px solid; }
+
+  .narrator-card { background: #0d1020; border-color: #1e1a40; }
+  .narrator-card:hover { border-color: #a78bfa; }
+  .blaze-card    { background: #0d1f0d; border-color: #1e3a1e; }
+  .blaze-card:hover { border-color: #22c55e; }
+  .pip-card      { background: #1a1208; border-color: #2d2008; }
+  .pip-card:hover { border-color: #fbbf24; }
+  .doz-card      { background: #1a080f; border-color: #2d0820; }
+  .doz-card:hover { border-color: #f472b6; }
+
+  .voice-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .voice-name { font-size: 15px; font-weight: 700; }
+  .voice-meta { font-size: 12px; color: #64748b; }
+  .voice-tag { font-size: 11px; padding: 2px 8px; border-radius: 99px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; margin-left: auto; flex-shrink: 0; }
+
+  audio { width: 100%; height: 36px; }
+
+  .divider { height: 1px; background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); margin: 40px 0; }
+
+  .locked { display: inline-flex; align-items: center; gap: 6px; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: #22c55e; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 99px; margin-left: 10px; vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<h1>🌿 Jungle Arc — Voice Auditions</h1>
+<p class="page-sub">Full cast for Issue 1: "Welcome to the Canopy"</p>
+
+<!-- ── NARRATOR ── -->
+<div class="character-section">
+  <div class="char-header">
+    <div class="char-emoji">📖</div>
+    <div>
+      <div class="char-name">Narrator</div>
+      <div class="char-desc">Separate from Blaze — sets the scene, introduces the world. Warm, engaging, slightly magical. This is the voice that draws kids into the story before Blaze takes over.</div>
+    </div>
+  </div>
+  <div class="line-box narrator-line">"Deep in the Verdant Canopy, where ancient trees grew so tall their tops scraped the clouds, there lived a tribe of small, clever creatures called the Sprockets. And on one perfectly ordinary morning — a girl named Blaze came crashing through the canopy."</div>
+
+  <div class="voice-card narrator-card">
+    <div class="voice-header">
+      <div><div class="voice-name">George</div><div class="voice-meta">Warm, Captivating Storyteller · British</div></div>
+      <span class="voice-tag">🇬🇧 British</span>
+    </div>
+    <audio controls src="narrator-george.mp3"></audio>
+  </div>
+  <div class="voice-card narrator-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Daniel</div><div class="voice-meta">Steady Broadcaster · British</div></div>
+      <span class="voice-tag">🇬🇧 British</span>
+    </div>
+    <audio controls src="narrator-daniel.mp3"></audio>
+  </div>
+  <div class="voice-card narrator-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Brian</div><div class="voice-meta">Deep, Resonant, Comforting · American</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="narrator-brian.mp3"></audio>
+  </div>
+  <div class="voice-card narrator-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Eric</div><div class="voice-meta">Smooth, Trustworthy · American</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="narrator-eric.mp3"></audio>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── BLAZE ── -->
+<div class="character-section">
+  <div class="char-header">
+    <div class="char-emoji">⚡</div>
+    <div>
+      <div class="char-name">Blaze Chen-Okoro — Hero <span class="locked">✓ Jessica</span></div>
+      <div class="char-desc">10 years old. Sharp, precise, warm. Thinks fast, speaks at speed. Confident without arrogance. Dry humour.</div>
+    </div>
+  </div>
+  <div class="line-box blaze-line">"I've already calculated that. The jungle has a pattern — everything here does. We just need to find it."</div>
+
+  <div class="voice-card blaze-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Jessica ✓</div><div class="voice-meta">Playful, Bright, Warm · American · Young</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="blaze-jessica.mp3"></audio>
+  </div>
+  <div class="voice-card blaze-card" style="opacity:0.45">
+    <div class="voice-header">
+      <div><div class="voice-name">Sarah</div><div class="voice-meta">Mature, Reassuring · American · Young</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="blaze-sarah.mp3"></audio>
+  </div>
+  <div class="voice-card blaze-card" style="opacity:0.45">
+    <div class="voice-header">
+      <div><div class="voice-name">Laura</div><div class="voice-meta">Enthusiast, Quirky · American · Young</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="blaze-laura.mp3"></audio>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── CHIEF PIP ── -->
+<div class="character-section">
+  <div class="char-header">
+    <div class="char-emoji">🫐</div>
+    <div>
+      <div class="char-name">Chief Pip — Elder of Branchwick</div>
+      <div class="char-desc">Tiny, bright blue Sprocket. Warm, ceremonial, dignified elder. Takes tradition seriously. Range of accents on offer.</div>
+    </div>
+  </div>
+  <div class="line-box pip-line">"Welcome, explorer! I am Chief Pip of Branchwick. Tonight we share the harvest — as we have for ten thousand years. But first... we must divide it correctly."</div>
+
+  <div class="voice-card pip-card">
+    <div class="voice-header">
+      <div><div class="voice-name">George</div><div class="voice-meta">Warm Storyteller · British</div></div>
+      <span class="voice-tag">🇬🇧 British</span>
+    </div>
+    <audio controls src="pip-george.mp3"></audio>
+  </div>
+  <div class="voice-card pip-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Daniel</div><div class="voice-meta">Steady Broadcaster · British</div></div>
+      <span class="voice-tag">🇬🇧 British</span>
+    </div>
+    <audio controls src="pip-daniel.mp3"></audio>
+  </div>
+  <div class="voice-card pip-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Bill</div><div class="voice-meta">Wise, Mature, Balanced · American · Older</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="pip-bill.mp3"></audio>
+  </div>
+  <div class="voice-card pip-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Brian</div><div class="voice-meta">Deep, Resonant, Comforting · American</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="pip-brian.mp3"></audio>
+  </div>
+  <div class="voice-card pip-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Roger</div><div class="voice-meta">Laid-Back, Casual · American</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="pip-roger.mp3"></audio>
+  </div>
+  <div class="voice-card pip-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Chris</div><div class="voice-meta">Charming, Down-to-Earth · American</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="pip-chris.mp3"></audio>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── DOZ ── -->
+<div class="character-section">
+  <div class="char-header">
+    <div class="char-emoji">🍇</div>
+    <div>
+      <div class="char-name">Doz — The Berry Counter</div>
+      <div class="char-desc">Jittery, excitable, scatterbrained Sprocket. Young energy. Comic relief but loveable. Range of accents including Australian and British.</div>
+    </div>
+  </div>
+  <div class="line-box doz-line">"Oh! Oh oh oh — the vines! Did you see the vines?! They're all tangled up and I couldn't count the berries because I kept losing my place and — wait, how many did you say there were?"</div>
+
+  <div class="voice-card doz-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Charlie</div><div class="voice-meta">Deep, Confident, Energetic · Australian · Young</div></div>
+      <span class="voice-tag">🇦🇺 Australian</span>
+    </div>
+    <audio controls src="doz-charlie.mp3"></audio>
+  </div>
+  <div class="voice-card doz-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Johnny Kid</div><div class="voice-meta">Young, Serious · British</div></div>
+      <span class="voice-tag">🇬🇧 British</span>
+    </div>
+    <audio controls src="doz-johnny.mp3"></audio>
+  </div>
+  <div class="voice-card doz-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Liam</div><div class="voice-meta">Energetic, Social Media Creator · American · Young</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="doz-liam.mp3"></audio>
+  </div>
+  <div class="voice-card doz-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Andrew</div><div class="voice-meta">Young Male, Outgoing · American</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="doz-andrew.mp3"></audio>
+  </div>
+  <div class="voice-card doz-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Harry</div><div class="voice-meta">Fierce, Energetic · American · Young</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="doz-harry.mp3"></audio>
+  </div>
+  <div class="voice-card doz-card">
+    <div class="voice-header">
+      <div><div class="voice-name">Will</div><div class="voice-meta">Relaxed Optimist · American · Young</div></div>
+      <span class="voice-tag">🇺🇸 American</span>
+    </div>
+    <audio controls src="doz-will.mp3"></audio>
+  </div>
+</div>
+
+</body>
+</html>

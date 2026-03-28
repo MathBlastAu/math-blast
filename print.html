@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mission: Math Blast — Issue #1</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #fff;
+    font-family: 'Nunito', Arial, sans-serif;
+    color: #1a0a2e;
+  }
+
+  .wrapper { max-width: 680px; margin: 0 auto; }
+
+  /* === COVER === */
+  .cover {
+    background: linear-gradient(160deg, #0d0630 0%, #2a0a5e 100%);
+    padding: 48px 32px 40px;
+    text-align: center;
+    color: white;
+  }
+  .cover .rocket { font-size: 72px; display: block; margin-bottom: 16px; }
+  .cover h1 { font-size: 48px; font-weight: 900; line-height: 1.1; color: #fff; }
+  .cover h1 span { color: #ffdd00; }
+  .cover .subtitle { font-size: 17px; color: #b090e0; margin-top: 10px; }
+  .cover img { width: 100%; border-radius: 16px; margin-top: 28px; border: 3px solid rgba(255,255,255,0.15); }
+
+  .cover .intro-box {
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-top: 24px;
+    font-size: 16px;
+    line-height: 1.75;
+    color: #d0b8ff;
+    text-align: left;
+  }
+  .cover .intro-box strong { color: #ffdd00; }
+
+  /* === CHAPTER === */
+  .chapter {
+    padding: 32px 28px;
+    border-bottom: 3px dashed #e0d0ff;
+  }
+  .chapter-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #7b2fff, #ff2fff);
+    color: white;
+    font-size: 12px;
+    font-weight: 900;
+    padding: 5px 16px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .chapter h2 { font-size: 26px; font-weight: 900; color: #1a0a2e; margin-bottom: 16px; line-height: 1.3; }
+  .chapter img {
+    width: 100%;
+    border-radius: 14px;
+    display: block;
+    margin-bottom: 20px;
+    border: 3px solid #e0d0ff;
+  }
+  .story-text {
+    background: #faf5ff;
+    border-left: 5px solid #7b2fff;
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #2a1a3e;
+    margin-bottom: 24px;
+  }
+  .story-text strong { color: #5500cc; }
+  .story-text em { color: #cc00cc; font-style: normal; font-weight: 700; }
+
+  /* === QUIZ === */
+  .quiz-box {
+    background: #f5f0ff;
+    border: 2px solid #c090ff;
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .quiz-icon { font-size: 28px; margin-bottom: 6px; display: block; }
+  .quiz-label { font-size: 11px; font-weight: 900; color: #7b2fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+  .question { font-size: 18px; font-weight: 900; color: #1a0a2e; margin-bottom: 18px; line-height: 1.4; }
+
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  .opt {
+    background: white;
+    border: 2px solid #d0b0ff;
+    border-radius: 10px;
+    padding: 13px 10px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #2a1a3e;
+    text-align: center;
+  }
+  .opt.correct {
+    background: #e8fff2;
+    border-color: #00bb55;
+    color: #007733;
+  }
+
+  .answer-reveal {
+    background: #e8fff2;
+    border: 2px solid #00bb55;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #005522;
+    line-height: 1.6;
+  }
+  .answer-reveal strong { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px; color: #007733; }
+
+  /* === WIN PAGE === */
+  .win-page {
+    background: linear-gradient(160deg, #0d0630, #2a0a5e);
+    padding: 48px 32px;
+    text-align: center;
+    color: white;
+  }
+  .win-page .trophy { font-size: 80px; display: block; margin-bottom: 16px; }
+  .win-page h2 { font-size: 36px; font-weight: 900; color: #ffdd00; margin-bottom: 12px; }
+  .win-page p { font-size: 16px; color: #c0a0ff; line-height: 1.75; margin-bottom: 16px; }
+  .win-page .summary {
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-top: 16px;
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #e0d0ff;
+  }
+  .win-page .summary strong { color: #ffdd00; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- COVER -->
+  <div class="cover">
+    <span class="rocket">🚀</span>
+    <h1>MISSION:<br><span>MATH BLAST</span></h1>
+    <p class="subtitle">An adventure story where YOU solve the puzzles!</p>
+    <img src="images/mission-cover.png" alt="Jake the astronaut on Planet Zog" />
+    <div class="intro-box">
+      <strong>How to use this booklet:</strong><br>
+      Read the story together, then answer the maths puzzle at the end of each chapter. The correct answer is shown at the bottom of each quiz — try to solve it first before peeking! ⭐
+    </div>
+  </div>
+
+  <!-- CHAPTER 1 -->
+  <div class="chapter">
+    <div class="chapter-badge">⚡ Chapter 1 — The Fuel Crystals</div>
+    <h2>Jake's Fuel Crystals Are Scattered!</h2>
+    <img src="images/mission-engine.png" alt="Jake in the engine room" />
+    <div class="story-text">
+      Jake the astronaut cadet was flying his rocket through the Zorblax Nebula when — <em>CRASH!</em> — he made an emergency landing on Planet Zog!<br><br>
+      He clambered out, dusted himself off, and checked the engine room. <strong>Oh no.</strong> The fuel crystals had scattered everywhere! He needed exactly <strong>24 crystals</strong> to launch — and they came in rows of 6.<br><br>
+      "How many rows do I need to collect?" Jake muttered, pulling out his maths notebook...
+    </div>
+    <div class="quiz-box">
+      <span class="quiz-icon">💎</span>
+      <div class="quiz-label">Times Tables Challenge</div>
+      <div class="question">Jake needs 24 fuel crystals. They come in rows of 6.<br>How many rows does he need?</div>
+      <div class="options">
+        <div class="opt">3 rows</div>
+        <div class="opt correct">✅ 4 rows</div>
+        <div class="opt">5 rows</div>
+        <div class="opt">6 rows</div>
+      </div>
+      <div class="answer-reveal">
+        <strong>✅ Answer: 4 rows</strong>
+        Because 6 × 4 = 24! Jake scooped up all four rows of crystals and loaded them into the engine. The rocket hummed back to life!
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 2 -->
+  <div class="chapter">
+    <div class="chapter-badge">🍕 Chapter 2 — The Alien Feast</div>
+    <h2>The Zoglings Want to Share Their Pizza!</h2>
+    <img src="images/mission-food.png" alt="Jake and aliens sharing a pizza" />
+    <div class="story-text">
+      Jake had just finished loading the crystals when three friendly green aliens waddled over. Their names were <em>Bloop</em>, <em>Zibble</em>, and <em>Mork</em>.<br><br>
+      "WELCOME TO ZOG! WE SHARE FOOD NOW!" announced Bloop, plonking a giant pizza on the ground.<br><br>
+      There were <strong>4 of them</strong> altogether — Jake, Bloop, Zibble, and Mork. They wanted to split the pizza into <strong>equal pieces</strong> so everyone got a fair share.<br><br>
+      "If the whole pizza is 1," Jake said, "what fraction does each of us get?"
+    </div>
+    <div class="quiz-box">
+      <span class="quiz-icon">🍕</span>
+      <div class="quiz-label">Fractions Challenge</div>
+      <div class="question">4 friends share 1 pizza equally.<br>What fraction does each person get?</div>
+      <div class="options">
+        <div class="opt">1/2</div>
+        <div class="opt">1/3</div>
+        <div class="opt correct">✅ 1/4</div>
+        <div class="opt">1/6</div>
+      </div>
+      <div class="answer-reveal">
+        <strong>✅ Answer: 1/4 (one quarter)</strong>
+        1 pizza ÷ 4 friends = ¼ each. Everyone got a quarter of the pizza. Bloop did a little happy dance. 💃
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTER 3 -->
+  <div class="chapter">
+    <div class="chapter-badge">🕐 Chapter 3 — The Launch Window!</div>
+    <h2>The Rocket Must Launch at Exactly the Right Time!</h2>
+    <img src="images/mission-clock.png" alt="Jake pointing at the clock" />
+    <div class="story-text">
+      Jake raced back to his rocket, tummy full of alien pizza, crystals loaded.<br><br>
+      <em>"WAIT!"</em> called Mork. <em>"You must leave during the Launch Window or you'll get stuck in the Zog Gravitational Loop FOREVER!"</em><br><br>
+      Jake looked at the cockpit clock. The <strong>short hand</strong> was pointing just past the <strong>3</strong>, and the <strong>long hand</strong> was pointing at the <strong>3</strong>.<br><br>
+      "Okay," Jake said. "I know exactly what time it is. Time to go home!"
+    </div>
+    <div class="quiz-box">
+      <span class="quiz-icon">🕐</span>
+      <div class="quiz-label">Telling the Time Challenge</div>
+      <div class="question">The short hand is just past the 3.<br>The long hand is pointing at the 3.<br><br>What time is it?</div>
+      <div class="options">
+        <div class="opt">3:00</div>
+        <div class="opt correct">✅ 3:15</div>
+        <div class="opt">3:30</div>
+        <div class="opt">3:45</div>
+      </div>
+      <div class="answer-reveal">
+        <strong>✅ Answer: 3:15 (quarter past three)</strong>
+        When the long hand points to the 3, it means 15 minutes past the hour — quarter past! Jake hit the launch button and blasted off into space! 🚀
+      </div>
+    </div>
+  </div>
+
+  <!-- WIN PAGE -->
+  <div class="win-page">
+    <span class="trophy">🏆</span>
+    <div style="font-size:32px; margin-bottom:16px;">⭐⭐⭐</div>
+    <h2>MISSION COMPLETE!</h2>
+    <p>
+      Jake made it home! His rocket blasted through the stars, past the Zorblax Nebula, all the way back to Earth.<br><br>
+      You solved all 3 maths challenges and saved the day! Jake and the Zoglings will never forget you. 🌍
+    </p>
+    <div class="summary">
+      <strong>What you mastered today:</strong><br>
+      ✅ <strong>Times tables:</strong> 6 × 4 = 24<br>
+      ✅ <strong>Fractions:</strong> 1 ÷ 4 = ¼ (one quarter)<br>
+      ✅ <strong>Telling the time:</strong> Long hand on 3 = quarter past = :15<br><br>
+      <em>Great work, maths hero! 🌟</em>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

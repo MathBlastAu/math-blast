@@ -840,6 +840,7 @@ function showQ10Story(){
 // ── GAME LOGIC ─────────────────────────────────────────────
 let score=0, questionsAnswered=0;
 const totalQ=10;
+const triedWrong = new Set();
 
 const correctMsg={
   q1:  '🎉 Yes! The pattern counts up in 5s: 5, 10, 15, <strong>20</strong>, 25, <strong>30</strong>. Pre-launch check: passed!',
@@ -872,7 +873,9 @@ function answer(btn, correct, qId){
   const fb=document.getElementById('feedback-'+qId);
   const next=document.getElementById('next-'+qId);
   if(correct){
-    btn.classList.add('correct'); score++; questionsAnswered++;
+    btn.classList.add('correct');
+    if(!triedWrong.has(qId)) score++;
+    questionsAnswered++;
     fb.className='feedback show good'; fb.innerHTML=correctMsg[qId];
     updateProgress();
     next.classList.add('show');
@@ -885,13 +888,17 @@ function answer(btn, correct, qId){
       playFile(v[correctVariant%v.length], null); correctVariant++;
     }
   } else {
+    triedWrong.add(qId);
     btn.classList.add('wrong');
     fb.className='feedback show bad'; fb.innerHTML=wrongMsg[qId];
-    playFile(['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)], null);
+    stopAll();
+    const wrongFile = ['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)];
+    const wrongAudio = playFile(wrongFile, null);
+    const resetDelay = wrongAudio ? 2800 : 1200;
     setTimeout(()=>{
       box.querySelectorAll('.opt-btn').forEach(b=>{ if(!b.classList.contains('correct')){ b.disabled=false; b.classList.remove('wrong'); } });
       fb.className='feedback';
-    },2400);
+    }, resetDelay);
   }
 }
 
@@ -929,7 +936,7 @@ function showWin(){
   document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
   document.getElementById('progress-wrap').style.display='none';
   const win=document.getElementById('win-screen'); win.style.display='block';
-  document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+'!';
+  document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+' on the first try!';
   document.getElementById('win-stars').textContent=score>=9?'⭐⭐⭐':score>=6?'⭐⭐':'⭐';
   window.scrollTo({top:0,behavior:'smooth'});
   setTimeout(()=>playFile('win.mp3',null),500);

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Blast — Jungle Sound Picker</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #0d2a0d;
+    font-family: 'Nunito', sans-serif;
+    color: #e8f5e8;
+    min-height: 100vh;
+    padding: 32px 16px 60px;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(34,197,94,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(101,163,13,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(16,85,16,0.3) 0%, transparent 70%);
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Firefly animation */
+  .fireflies { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+  .firefly {
+    position:absolute; width:3px; height:3px; border-radius:50%;
+    background: #c8ff50; box-shadow: 0 0 6px 2px #c8ff50;
+    animation: fly linear infinite;
+    opacity: 0;
+  }
+  @keyframes fly {
+    0%   { transform: translate(0, 0) scale(1);   opacity: 0; }
+    10%  { opacity: 0.9; }
+    45%  { opacity: 0.4; }
+    55%  { opacity: 0.9; }
+    90%  { opacity: 0.4; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(0.6); opacity: 0; }
+  }
+
+  .content { position: relative; z-index: 1; }
+
+  h1 {
+    text-align:center; font-size:34px; font-weight:900; margin-bottom:8px;
+    background: linear-gradient(135deg, #a3e635, #facc15, #fb923c);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    filter: drop-shadow(0 0 12px rgba(163,230,53,0.5));
+  }
+  .subtitle { text-align:center; color:#86b886; margin-bottom:8px; font-size:15px; }
+  .tagline { text-align:center; color:#52875e; margin-bottom:40px; font-size:13px; font-style:italic; }
+
+  .section {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(163,230,53,0.2);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    backdrop-filter: blur(4px);
+  }
+  .section h2 {
+    font-size: 20px; font-weight: 900; margin-bottom: 16px;
+    color: #a3e635;
+    text-shadow: 0 0 8px rgba(163,230,53,0.4);
+  }
+  .section-desc {
+    font-size: 13px; color: #6da86d; margin-bottom: 14px; font-style: italic;
+  }
+
+  .options { display:flex; flex-wrap:wrap; gap:12px; }
+  .option-card {
+    background: rgba(0,40,0,0.4);
+    border: 2px solid rgba(163,230,53,0.15);
+    border-radius: 12px;
+    padding: 16px;
+    flex: 1;
+    min-width: 155px;
+    text-align: center;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .option-card:hover { border-color: rgba(163,230,53,0.35); }
+  .option-card.selected {
+    border-color: #a3e635;
+    background: rgba(163,230,53,0.12);
+  }
+
+  .option-label {
+    font-weight: 900; font-size: 18px; margin-bottom: 6px;
+    color: #facc15;
+  }
+  .option-desc {
+    font-size: 11px; color: #5a8a5a; margin-bottom: 10px; line-height: 1.4;
+    min-height: 30px;
+  }
+
+  .play-btn {
+    background: rgba(34,197,94,0.12);
+    border: 1px solid #22c55e;
+    color: #4ade80;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 8px;
+    transition: all 0.15s;
+  }
+  .play-btn:hover { background: rgba(34,197,94,0.25); }
+  .play-btn.playing {
+    background: rgba(34,197,94,0.4);
+    border-color: #a3e635;
+    color: #fff;
+  }
+
+  .select-btn {
+    background: rgba(250,204,21,0.1);
+    border: 1px solid #d97706;
+    color: #fbbf24;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.15s;
+  }
+  .select-btn:hover { background: rgba(250,204,21,0.22); }
+  .option-card.selected .select-btn {
+    background: #a3e635;
+    color: #0d2a0d;
+    border-color: #a3e635;
+    font-weight: 900;
+  }
+
+  /* Summary */
+  .selection-summary {
+    max-width: 800px;
+    margin: 32px auto 0;
+    background: rgba(0,0,0,0.35);
+    border: 2px solid rgba(163,230,53,0.35);
+    border-radius: 16px;
+    padding: 28px;
+    backdrop-filter: blur(4px);
+  }
+  .selection-summary h2 {
+    font-size: 20px; font-weight: 900; margin-bottom: 16px;
+    color: #a3e635;
+  }
+
+  .status-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+  .status-pill {
+    background: rgba(0,40,0,0.5);
+    border: 1px solid rgba(163,230,53,0.2);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #86b886;
+  }
+  .status-pill span { color: #facc15; }
+  .status-pill.done { border-color: #a3e635; }
+  .status-pill.done span { color: #a3e635; }
+
+  .code-output {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(163,230,53,0.2);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: #4ade80;
+    margin-bottom: 16px;
+    min-height: 60px;
+    word-break: break-all;
+    white-space: pre;
+  }
+
+  .copy-btn {
+    background: linear-gradient(135deg, #a3e635, #65a30d);
+    border: none;
+    color: #0d2a0d;
+    border-radius: 10px;
+    padding: 12px 32px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.15s, filter 0.15s;
+    filter: drop-shadow(0 0 8px rgba(163,230,53,0.4));
+  }
+  .copy-btn:hover { transform: scale(1.04); filter: drop-shadow(0 0 14px rgba(163,230,53,0.7)); }
+  .copy-btn:active { transform: scale(0.97); }
+
+  .progress-bar-wrap {
+    max-width: 800px; margin: 0 auto 28px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px; height: 8px; overflow: hidden;
+    border: 1px solid rgba(163,230,53,0.15);
+  }
+  .progress-bar {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #22c55e, #a3e635);
+    border-radius: 8px;
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 0 8px rgba(163,230,53,0.5);
+  }
+  .progress-label {
+    max-width: 800px; margin: 0 auto 6px;
+    text-align: right; font-size: 12px; color: #5a8a5a;
+  }
+</style>
+</head>
+<body>
+
+<!-- Fireflies -->
+<div class="fireflies" id="fireflies"></div>
+
+<div class="content">
+  <h1>🌿 Jungle Sound Picker</h1>
+  <p class="subtitle">Math Blast — Jungle Issue (Blaze)</p>
+  <p class="tagline">Tap ▶ Play to preview each option · then Select to lock it in</p>
+
+  <div class="progress-label"><span id="prog-label">0 / 6 selected</span></div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="prog-bar"></div></div>
+
+  <!-- LAUNCH -->
+  <div class="section">
+    <h2>🌅 Launch — Game Start</h2>
+    <p class="section-desc">~2-3s · Plays when the game begins</p>
+    <div class="options" id="options-launch"></div>
+  </div>
+
+  <!-- CORRECT -->
+  <div class="section">
+    <h2>✅ Correct Answer</h2>
+    <p class="section-desc">~0.7-1s · Right answer feedback</p>
+    <div class="options" id="options-correct"></div>
+  </div>
+
+  <!-- WRONG -->
+  <div class="section">
+    <h2>❌ Wrong Answer</h2>
+    <p class="section-desc">~0.5-0.7s · Wrong answer feedback</p>
+    <div class="options" id="options-wrong"></div>
+  </div>
+
+  <!-- NEXT QUESTION -->
+  <div class="section">
+    <h2>➡️ Next Question</h2>
+    <p class="section-desc">~0.3-0.5s · Question advance pip</p>
+    <div class="options" id="options-next"></div>
+  </div>
+
+  <!-- TRANSITION -->
+  <div class="section">
+    <h2>🌟 Chapter Transition</h2>
+    <p class="section-desc">~1.5-2s · Between chapters</p>
+    <div class="options" id="options-transition"></div>
+  </div>
+
+  <!-- WIN -->
+  <div class="section">
+    <h2>🏆 Win / Celebration</h2>
+    <p class="section-desc">~3-4s · End of game celebration</p>
+    <div class="options" id="options-win"></div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="selection-summary">
+    <h2>📋 Your Selections</h2>
+    <div class="status-row" id="status-row">
+      <div class="status-pill" id="pill-launch">Launch: <span id="s-launch">—</span></div>
+      <div class="status-pill" id="pill-correct">Correct: <span id="s-correct">—</span></div>
+      <div class="status-pill" id="pill-wrong">Wrong: <span id="s-wrong">—</span></div>
+      <div class="status-pill" id="pill-next">Next: <span id="s-next">—</span></div>
+      <div class="status-pill" id="pill-transition">Transition: <span id="s-transition">—</span></div>
+      <div class="status-pill" id="pill-win">Win: <span id="s-win">—</span></div>
+    </div>
+    <div class="code-output" id="code-output">Make your selections above to generate the JSON output...</div>
+    <button class="copy-btn" onclick="copyCode()">🌿 Copy Selection JSON</button>
+  </div>
+</div>
+
+<script>
+// ── Fireflies ──
+const ff = document.getElementById('fireflies');
+for (let i = 0; i < 28; i++) {
+  const f = document.createElement('div');
+  f.className = 'firefly';
+  const startX = Math.random() * 100;
+  const startY = Math.random() * 100;
+  const dx = (Math.random() - 0.5) * 220;
+  const dy = (Math.random() - 0.5) * 220;
+  f.style.cssText = `
+    left: ${startX}vw; top: ${startY}vh;
+    --dx: ${dx}px; --dy: ${dy}px;
+    animation-duration: ${5 + Math.random() * 9}s;
+    animation-delay: ${-Math.random() * 12}s;
+    opacity: ${0.4 + Math.random() * 0.6};
+  `;
+  // vary colour: lime/yellow-green
+  const hue = 70 + Math.floor(Math.random() * 50);
+  f.style.background = `hsl(${hue}, 90%, 65%)`;
+  f.style.boxShadow = `0 0 6px 2px hsl(${hue}, 90%, 65%)`;
+  ff.appendChild(f);
+}
+
+// ── Sound data ──
+const soundData = {
+  launch: [
+    { label:'A', file:'sounds/jungle/jungle-launch-a.wav',
+      desc:'3 drum beats building → marimba ascending run → vine whoosh' },
+    { label:'B', file:'sounds/jungle/jungle-launch-b.wav',
+      desc:'3 exotic bird chirps → jungle drums → big marimba chord' },
+    { label:'C', file:'sounds/jungle/jungle-launch-c.wav',
+      desc:'Jungle ambience build → bird burst → triumphant marimba hit' },
+    { label:'D', file:'sounds/jungle/jungle-launch-d.wav',
+      desc:'Quick 2-beat drum → fast pentatonic run → single bird finish' },
+  ],
+  correct: [
+    { label:'A', file:'sounds/jungle/jungle-correct-a.wav',
+      desc:'C5-E5-G5 ascending + bird chirp — bright & happy' },
+    { label:'B', file:'sounds/jungle/jungle-correct-b.wav',
+      desc:'4-note bouncy arpeggio C5-D5-E5-G5 — quick & playful' },
+    { label:'C', file:'sounds/jungle/jungle-correct-c.wav',
+      desc:'2-note ta-da (E5→C6) + double bird chirp' },
+    { label:'D', file:'sounds/jungle/jungle-correct-d.wav',
+      desc:'Pentatonic G4-A4-C5 + wooden percussion tap — earthy' },
+  ],
+  wrong: [
+    { label:'A', file:'sounds/jungle/jungle-wrong-a.wav',
+      desc:'Descending frog boop-boop (350Hz→200Hz wobble)' },
+    { label:'B', file:'sounds/jungle/jungle-wrong-b.wav',
+      desc:'Low wooden bonk (120Hz) + descending slide' },
+    { label:'C', file:'sounds/jungle/jungle-wrong-c.wav',
+      desc:'Two descending marimba notes (E4→C4) — gentle, not harsh' },
+    { label:'D', file:'sounds/jungle/jungle-wrong-d.wav',
+      desc:'Frog ribbit wobble (180Hz fast LFO) — funny & warm' },
+  ],
+  next: [
+    { label:'A', file:'sounds/jungle/jungle-next-a.wav',
+      desc:'Single marimba tap (G4) + quick bird chirp' },
+    { label:'B', file:'sounds/jungle/jungle-next-b.wav',
+      desc:'Two soft marimba notes (C5-E5) — light forward pip' },
+    { label:'C', file:'sounds/jungle/jungle-next-c.wav',
+      desc:'Wooden tap + rustling noise — organic feel' },
+    { label:'D', file:'sounds/jungle/jungle-next-d.wav',
+      desc:'Quick ascending two-note marimba (E4-G4) — bright' },
+  ],
+  transition: [
+    { label:'A', file:'sounds/jungle/jungle-transition-a.wav',
+      desc:'6-note pentatonic arpeggio (C4→C5) + bird finish' },
+    { label:'B', file:'sounds/jungle/jungle-transition-b.wav',
+      desc:'Marimba ascending run + 3 drum beats + bird call' },
+    { label:'C', file:'sounds/jungle/jungle-transition-c.wav',
+      desc:'Slow marimba chord → rising arpeggio build' },
+    { label:'D', file:'sounds/jungle/jungle-transition-d.wav',
+      desc:'Drums building louder (×3) → marimba fanfare 4 notes' },
+  ],
+  win: [
+    { label:'A', file:'sounds/jungle/jungle-win-a.wav',
+      desc:'Full jungle party — melody + drums + bird calls + big chord 🎉' },
+    { label:'B', file:'sounds/jungle/jungle-win-b.wav',
+      desc:'Triumphant fanfare — rising intro + chord + run + bird chorus' },
+    { label:'C', file:'sounds/jungle/jungle-win-c.wav',
+      desc:'Rhythm builds 1s → melody kicks in → layered big finish' },
+    { label:'D', file:'sounds/jungle/jungle-win-d.wav',
+      desc:'Gentle pentatonic melody + soft drums + birds — peaceful joy' },
+  ],
+};
+
+const selections = {};
+let currentAudio = null;
+
+function playSound(file, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  document.querySelectorAll('.play-btn.playing').forEach(b => {
+    b.classList.remove('playing'); b.textContent = '▶ Play';
+  });
+  const audio = new Audio(file);
+  audio.volume = 0.9;
+  currentAudio = audio;
+  btn.classList.add('playing');
+  btn.textContent = '🔊 Playing…';
+  audio.play().catch(() => { btn.textContent = '⚠️ Error'; btn.classList.remove('playing'); });
+  audio.onended = () => { btn.classList.remove('playing'); btn.textContent = '▶ Play'; };
+  audio.onerror = () => { btn.classList.remove('playing'); btn.textContent = '⚠️ Error'; };
+}
+
+function selectOption(category, label, card) {
+  const container = document.getElementById(`options-${category}`);
+  container.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  container.querySelectorAll('.select-btn').forEach(b => b.textContent = '☐ Select this one');
+  card.classList.add('selected');
+  card.querySelector('.select-btn').textContent = '⭐ Selected!';
+  selections[category] = label;
+  const pill = document.getElementById(`pill-${category}`);
+  document.getElementById(`s-${category}`).textContent = label;
+  if (pill) pill.classList.add('done');
+  updateCode();
+  updateProgress();
+}
+
+function updateProgress() {
+  const keys = ['launch','correct','wrong','next','transition','win'];
+  const done = keys.filter(k => selections[k]).length;
+  document.getElementById('prog-bar').style.width = `${(done/6)*100}%`;
+  document.getElementById('prog-label').textContent = `${done} / 6 selected`;
+}
+
+function updateCode() {
+  const keys = ['launch','correct','wrong','next','transition','win'];
+  const done = keys.filter(k => selections[k]).length;
+  if (done === 6) {
+    const output = {};
+    keys.forEach(k => {
+      const data = soundData[k].find(o => o.label === selections[k]);
+      output[k] = { variant: selections[k], file: data.file };
+    });
+    document.getElementById('code-output').textContent = JSON.stringify(output, null, 2);
+  } else {
+    document.getElementById('code-output').textContent = `${done}/6 selected — pick all 6 to generate JSON...`;
+  }
+}
+
+function copyCode() {
+  const code = document.getElementById('code-output').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✅ Copied to clipboard!';
+    setTimeout(() => btn.textContent = '🌿 Copy Selection JSON', 2000);
+  });
+}
+
+// ── Build UI ──
+const sectionEmoji = { launch:'🌅', correct:'✅', wrong:'❌', next:'➡️', transition:'🌟', win:'🏆' };
+
+Object.entries(soundData).forEach(([category, options]) => {
+  const container = document.getElementById(`options-${category}`);
+  options.forEach(opt => {
+    const card = document.createElement('div');
+    card.className = 'option-card';
+    card.innerHTML = `
+      <div class="option-label">Option ${opt.label}</div>
+      <div class="option-desc">${opt.desc}</div>
+      <button class="play-btn" onclick="playSound('${opt.file}', this)">▶ Play</button>
+      <button class="select-btn" onclick="selectOption('${category}', '${opt.label}', this.closest('.option-card'))">☐ Select this one</button>
+    `;
+    container.appendChild(card);
+  });
+});
+</script>
+</body>
+</html>

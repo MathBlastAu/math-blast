@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎙️ Math Blast — Voice Audition</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0d0630; font-family:'Nunito',sans-serif; color:#fff; min-height:100vh; padding:24px 16px 60px; }
+  h1 { text-align:center; font-size:28px; font-weight:900; margin-bottom:4px; }
+  h1 span { color:#ffdd00; }
+  .subtitle { text-align:center; color:#8877aa; font-size:14px; margin-bottom:32px; }
+
+  .section { margin-bottom:36px; }
+  .section-title { font-size:12px; font-weight:900; color:#aa77ff; text-transform:uppercase; letter-spacing:3px; margin-bottom:8px; padding: 0 4px; }
+  .section-line { font-size:13px; color:#554477; font-style:italic; margin-bottom:16px; padding:10px 14px; background:rgba(255,255,255,0.04); border-radius:8px; border-left:3px solid #7b2fff; line-height:1.6; }
+
+  .voice-card {
+    background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.08);
+    border-radius:14px; padding:14px 16px; margin-bottom:10px;
+    display:flex; align-items:center; gap:14px; cursor:pointer;
+    transition:all 0.15s;
+  }
+  .voice-card:hover { border-color:rgba(123,47,255,0.5); background:rgba(123,47,255,0.1); }
+  .voice-card.playing { border-color:#ff2fff; background:rgba(255,47,255,0.1); }
+  .voice-card.selected { border-color:#00dc64; background:rgba(0,220,100,0.08); }
+
+  .play-btn {
+    width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; flex-shrink:0;
+    background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white; font-size:18px;
+    display:flex; align-items:center; justify-content:center; transition:transform 0.15s;
+  }
+  .play-btn:hover { transform:scale(1.1); }
+  .playing .play-btn { background:linear-gradient(135deg,#ff2fff,#ff8800); }
+  .selected .play-btn { background:linear-gradient(135deg,#00aa44,#00dc64); }
+
+  .voice-info { flex:1; }
+  .voice-name { font-size:15px; font-weight:900; }
+  .voice-desc { font-size:12px; color:#7766aa; margin-top:2px; }
+
+  .pick-btn {
+    padding:7px 16px; border-radius:20px; border:2px solid rgba(255,255,255,0.15);
+    background:transparent; color:#aaa; font-family:'Nunito',sans-serif; font-weight:700;
+    font-size:12px; cursor:pointer; transition:all 0.15s; flex-shrink:0;
+  }
+  .pick-btn:hover { border-color:#7b2fff; color:#fff; background:rgba(123,47,255,0.2); }
+  .selected .pick-btn { border-color:#00dc64; color:#00dc64; background:rgba(0,220,100,0.1); }
+  .selected .pick-btn::before { content:'✓ '; }
+
+  /* Summary */
+  .summary { position:fixed; bottom:0; left:0; right:0; background:rgba(13,6,48,0.95);
+    border-top:1px solid rgba(255,255,255,0.1); padding:12px 20px;
+    display:flex; align-items:center; gap:16px; backdrop-filter:blur(8px); flex-wrap:wrap; }
+  .summary-label { font-size:11px; color:#7766aa; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+  .summary-pick { font-size:14px; font-weight:900; color:#ffdd00; min-width:120px; }
+  .confirm-btn { margin-left:auto; background:linear-gradient(135deg,#7b2fff,#ff2fff); border:none;
+    color:white; font-family:'Nunito',sans-serif; font-weight:900; font-size:14px;
+    padding:10px 24px; border-radius:30px; cursor:pointer; transition:transform 0.15s; }
+  .confirm-btn:hover { transform:scale(1.04); }
+</style>
+</head>
+<body>
+
+<h1>🎙️ <span>Voice Audition</span></h1>
+<p class="subtitle">Tap a voice to hear it · Tap "Pick" to select · Lock in your cast at the bottom</p>
+
+<!-- NARRATOR -->
+<div class="section">
+  <div class="section-title">🎙️ Narrator — tells the story</div>
+  <div class="section-line">"Jake the astronaut cadet was hurtling through the Zorblax Nebula — munching a space sandwich and humming to himself — when BANG! CRASH! CLONK! His rocket had smashed straight into Planet Zog!"</div>
+
+  <div class="voice-card" id="card-narrator-george" onclick="play('narrator','george','George — Warm Storyteller')">
+    <button class="play-btn" id="btn-narrator-george">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">George</div>
+      <div class="voice-desc">Warm, Captivating Storyteller — classic audiobook feel</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('narrator','george','George')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-narrator-brian" onclick="play('narrator','brian','Brian — Deep & Comforting')">
+    <button class="play-btn" id="btn-narrator-brian">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Brian</div>
+      <div class="voice-desc">Deep, Resonant & Comforting — like a bedtime story</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('narrator','brian','Brian')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-narrator-daniel" onclick="play('narrator','daniel','Daniel — Steady Broadcaster')">
+    <button class="play-btn" id="btn-narrator-daniel">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Daniel</div>
+      <div class="voice-desc">Steady Broadcaster — clear, trustworthy, engaging</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('narrator','daniel','Daniel')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-narrator-matilda" onclick="play('narrator','matilda','Matilda — Professional')">
+    <button class="play-btn" id="btn-narrator-matilda">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Matilda</div>
+      <div class="voice-desc">Knowledgeable, Professional — crisp and confident</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('narrator','matilda','Matilda')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-narrator-jessica" onclick="play('narrator','jessica','Jessica — Playful & Warm')">
+    <button class="play-btn" id="btn-narrator-jessica">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Jessica</div>
+      <div class="voice-desc">Playful, Bright & Warm — fun energy, great for kids</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('narrator','jessica','Jessica')">Pick</button>
+  </div>
+</div>
+
+<!-- JAKE -->
+<div class="section">
+  <div class="section-title">👦 Jake — the hero (age 10)</div>
+  <div class="section-line">"Let me calculate this carefully... if each row has 6 crystals, and I need 24 total, then I need 4 rows! Pre-launch check: passed!"</div>
+  <p style="font-size:11px;color:#554477;margin-bottom:12px;padding:0 4px;">🌟 Real kid voices from community library (now unlocked) + pitch-shifted options</p>
+
+  <div class="voice-card" id="card-jake-alex-kid" onclick="play('jake','alex-kid','Alex — Energetic Kid')">
+    <button class="play-btn" id="btn-jake-alex-kid">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Alex <span style="font-size:11px;color:#00dc64;font-weight:700;">⭐ Kid Voice</span></div>
+      <div class="voice-desc">Playful & Energetic — built for game characters and kids content</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('jake','alex-kid','Alex (Kid)')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-jake-johnny-kid" onclick="play('jake','johnny-kid','Johnny Kid')">
+    <button class="play-btn" id="btn-jake-johnny-kid">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Johnny Kid <span style="font-size:11px;color:#00dc64;font-weight:700;">⭐ Kid Voice</span></div>
+      <div class="voice-desc">Young British Male — serious and calm, great for a methodical Jake</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('jake','johnny-kid','Johnny Kid')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-jake-andrew" onclick="play('jake','andrew','Andrew — Young Outgoing')">
+    <button class="play-btn" id="btn-jake-andrew">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Andrew <span style="font-size:11px;color:#00dc64;font-weight:700;">⭐ Kid Voice</span></div>
+      <div class="voice-desc">Young Male, Outgoing — friendly and bright</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('jake','andrew','Andrew')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-jake-oceano" onclick="play('jake','oceano','Oceano — Very Young')">
+    <button class="play-btn" id="btn-jake-oceano">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Oceano <span style="font-size:11px;color:#00dc64;font-weight:700;">⭐ Kid Voice</span></div>
+      <div class="voice-desc">Very young narrator — genuinely sounds around 10-14 years old</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('jake','oceano','Oceano')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-jake-charlie-young" onclick="play('jake','charlie-young','Charlie — Young')">
+    <button class="play-btn" id="btn-jake-charlie-young">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Charlie <span style="font-size:11px;color:#ffcc00;font-weight:700;">↑ Younger</span></div>
+      <div class="voice-desc">Energetic — pitch-shifted up, sounds around 10 years old</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('jake','charlie-young','Charlie (Young)')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-jake-liam-young" onclick="play('jake','liam-young','Liam — Young')">
+    <button class="play-btn" id="btn-jake-liam-young">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Liam <span style="font-size:11px;color:#ffcc00;font-weight:700;">↑ Younger</span></div>
+      <div class="voice-desc">Social & Fun — pitch-shifted, bright kid energy</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('jake','liam-young','Liam (Young)')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-jake-will-young" onclick="play('jake','will-young','Will — Young')">
+    <button class="play-btn" id="btn-jake-will-young">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Will <span style="font-size:11px;color:#ffcc00;font-weight:700;">↑ Younger</span></div>
+      <div class="voice-desc">Relaxed & Warm — pitch-shifted, likeable and calm</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('jake','will-young','Will (Young)')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-jake-charlie" onclick="play('jake','charlie','Charlie — Original')">
+    <button class="play-btn" id="btn-jake-charlie">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Charlie <span style="font-size:11px;color:#7766aa;">Original</span></div>
+      <div class="voice-desc">Deep, Confident — original pitch for comparison</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('jake','charlie','Charlie (Original)')">Pick</button>
+  </div>
+</div>
+
+<!-- ALIEN -->
+<div class="section">
+  <div class="section-title">👽 Aliens — Bloop & Mork</div>
+  <div class="section-line">"Greetings, Space Human! I am Bloop. These are Zibble and Mork. We must share food before you leave. It is the Zog Law!"</div>
+  <p style="font-size:11px;color:#554477;margin-bottom:12px;padding:0 4px;">🔬 "Pushed" versions use unstable voice settings for a glitchy alien effect</p>
+
+  <div class="voice-card" id="card-alien-callum-weird" onclick="play('alien','callum-weird','Callum — Very Alien')">
+    <button class="play-btn" id="btn-alien-callum-weird">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Callum <span style="font-size:11px;color:#ff88ff;font-weight:700;">👽 Alien Mode</span></div>
+      <div class="voice-desc">Unstable settings — glitchy, unpredictable, very otherworldly</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('alien','callum-weird','Callum (Alien)')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-alien-harry-weird" onclick="play('alien','harry-weird','Harry — Fierce Alien')">
+    <button class="play-btn" id="btn-alien-harry-weird">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Harry <span style="font-size:11px;color:#ff88ff;font-weight:700;">👽 Alien Mode</span></div>
+      <div class="voice-desc">Fierce + pushed settings — bold, strange, dramatic</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('alien','harry-weird','Harry (Alien)')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-alien-river" onclick="play('alien','river','River — Neutral/Robotic')">
+    <button class="play-btn" id="btn-alien-river">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">River <span style="font-size:11px;color:#ff88ff;font-weight:700;">👽 Alien Mode</span></div>
+      <div class="voice-desc">Neutral/genderless + pushed settings — robotic, eerie</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('alien','river','River (Alien)')">Pick</button>
+  </div>
+
+  <div class="voice-card" id="card-alien-callum" onclick="play('alien','callum','Callum — Original')">
+    <button class="play-btn" id="btn-alien-callum">▶</button>
+    <div class="voice-info">
+      <div class="voice-name">Callum <span style="font-size:11px;color:#7766aa;">Original</span></div>
+      <div class="voice-desc">Husky Trickster — original settings for comparison</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();pick('alien','callum','Callum (Original)')">Pick</button>
+  </div>
+</div>
+
+<!-- SUMMARY BAR -->
+<div class="summary">
+  <div>
+    <div class="summary-label">Narrator</div>
+    <div class="summary-pick" id="pick-narrator">— not chosen —</div>
+  </div>
+  <div>
+    <div class="summary-label">Jake</div>
+    <div class="summary-pick" id="pick-jake">— not chosen —</div>
+  </div>
+  <div>
+    <div class="summary-label">Aliens</div>
+    <div class="summary-pick" id="pick-alien">— not chosen —</div>
+  </div>
+  <button class="confirm-btn" onclick="confirm()">✅ Lock In Cast</button>
+</div>
+
+<script>
+const BASE = 'sounds/audition/';
+let current = null;
+const picks = { narrator: null, jake: null, alien: null };
+
+function play(role, key, label) {
+  if (current) {
+    current.audio.pause();
+    current.audio.currentTime = 0;
+    const oldCard = document.getElementById('card-' + current.role + '-' + current.key);
+    const oldBtn  = document.getElementById('btn-'  + current.role + '-' + current.key);
+    if (oldCard) oldCard.classList.remove('playing');
+    if (oldBtn)  oldBtn.textContent = '▶';
+    if (current.role === role && current.key === key) { current = null; return; }
+  }
+  const audio = new Audio(BASE + role + '-' + key + '.mp3');
+  const card = document.getElementById('card-' + role + '-' + key);
+  const btn  = document.getElementById('btn-'  + role + '-' + key);
+  card.classList.add('playing');
+  btn.textContent = '⏸';
+  audio.play();
+  current = { audio, role, key };
+  audio.onended = () => {
+    card.classList.remove('playing');
+    btn.textContent = '▶';
+    current = null;
+  };
+}
+
+function pick(role, key, name) {
+  // Clear previous selection for this role
+  document.querySelectorAll('[id^="card-' + role + '-"]').forEach(c => {
+    c.classList.remove('selected');
+    c.querySelector('.pick-btn').textContent = 'Pick';
+  });
+  // Set new
+  const card = document.getElementById('card-' + role + '-' + key);
+  card.classList.add('selected');
+  card.querySelector('.pick-btn').textContent = name;
+  picks[role] = { key, name };
+  document.getElementById('pick-' + role).textContent = name;
+}
+
+function confirm() {
+  const n = picks.narrator ? picks.narrator.name : null;
+  const j = picks.jake     ? picks.jake.name     : null;
+  const a = picks.alien    ? picks.alien.name    : null;
+  if (!n || !j || !a) {
+    alert('Please pick a voice for each role first!');
+    return;
+  }
+  const msg = `🎙️ Cast locked!\n\nNarrator: ${n}\nJake: ${j}\nAliens: ${a}\n\nSend these choices to Leo to generate the full audio!`;
+  alert(msg);
+}
+</script>
+</body>
+</html>

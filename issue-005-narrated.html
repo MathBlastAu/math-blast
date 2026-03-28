@@ -287,14 +287,14 @@
     <div class="quiz-box" id="quiz-q3">
       <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
       <span class="quiz-icon">🚢</span>
-      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 3 — Fractions of Quantities</div>
-      <div class="question">A big ship has a <strong>40-unit tank</strong>. The Phantom gives it <strong>1/4</strong>.<br><br>How many units is that?</div>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 3 — Adding Fractions</div>
+      <div class="question">Jake has fuel left over. Ship Beta needs <strong>7/8</strong> of a tank.<br><br>Jake tops up from the reserve: <strong>1/4 + 1/2</strong>.<br><br>What does 1/4 + 1/2 equal? Is it enough for Ship Beta?</div>
       <img src="images/q3-issue005.png" alt="Big ship with 40-unit tank" class="question-img" />
       <div class="options">
-        <button class="opt-btn" onclick="answer(this,true,'q3')">10 units</button>
-        <button class="opt-btn" onclick="answer(this,false,'q3')">4 units</button>
-        <button class="opt-btn" onclick="answer(this,false,'q3')">8 units</button>
-        <button class="opt-btn" onclick="answer(this,false,'q3')">40 units</button>
+        <button class="opt-btn" onclick="answer(this,true,'q3')">3/4 — not enough for 7/8</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">3/4 — enough for 7/8</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">1/2 — not enough</button>
+        <button class="opt-btn" onclick="answer(this,false,'q3')">1 whole — more than enough</button>
       </div>
       <div class="feedback" id="feedback-q3"></div>
       <button class="next-btn" id="next-q3" onclick="showQ4Story()">Next Question ➜</button>
@@ -317,13 +317,13 @@
         <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
         <span class="quiz-icon">🚀</span>
         <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 4 — Fractions of Quantities</div>
-        <div class="question">A small ship has an <strong>8-unit tank</strong>. The Phantom gives it <strong>1/4</strong>.<br><br>How many units does it receive?</div>
+        <div class="question">The Phantom puts on its stage show.<br><br>A <strong>big ship</strong> has a <strong>40-unit tank</strong>. The Phantom gives it <strong>1/4</strong> of a full tank.<br><br>How many units does it receive?</div>
         <img src="images/q4-issue005.png" alt="Small ship with 8-unit tank" class="question-img" />
         <div class="options">
-          <button class="opt-btn" onclick="answer(this,true,'q4')">2 units</button>
+          <button class="opt-btn" onclick="answer(this,true,'q4')">10 units</button>
           <button class="opt-btn" onclick="answer(this,false,'q4')">4 units</button>
-          <button class="opt-btn" onclick="answer(this,false,'q4')">1 unit</button>
           <button class="opt-btn" onclick="answer(this,false,'q4')">8 units</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">40 units</button>
         </div>
         <div class="feedback" id="feedback-q4"></div>
         <button class="next-btn" id="next-q4" onclick="nextChapter(3)">Next Chapter ➜</button>
@@ -353,14 +353,14 @@
     <div class="quiz-box" id="quiz-q5">
       <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
       <span class="quiz-icon">🏁</span>
-      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 5 — Ordering Fractions</div>
-      <div class="question">Order from <strong>SMALLEST to LARGEST</strong>:<br>3/8, 5/8, 1/8, 7/8</div>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 5 — Fractions of Quantities</div>
+      <div class="question">Now a <strong>small ship</strong> with an <strong>8-unit tank</strong>. The Phantom also gives it <strong>1/4</strong>.<br><br>How many units does the small ship receive?</div>
       <img src="images/q5-issue005.png" alt="Four fractions on a number line" class="question-img" />
       <div class="options">
-        <button class="opt-btn" onclick="answer(this,true,'q5')">1/8, 3/8, 5/8, 7/8</button>
-        <button class="opt-btn" onclick="answer(this,false,'q5')">3/8, 1/8, 5/8, 7/8</button>
-        <button class="opt-btn" onclick="answer(this,false,'q5')">7/8, 5/8, 3/8, 1/8</button>
-        <button class="opt-btn" onclick="answer(this,false,'q5')">1/8, 5/8, 3/8, 7/8</button>
+        <button class="opt-btn" onclick="answer(this,true,'q5')">2 units</button>
+        <button class="opt-btn" onclick="answer(this,false,'q5')">4 units</button>
+        <button class="opt-btn" onclick="answer(this,false,'q5')">1 unit</button>
+        <button class="opt-btn" onclick="answer(this,false,'q5')">8 units</button>
       </div>
       <div class="feedback" id="feedback-q5"></div>
       <button class="next-btn" id="next-q5" onclick="showQ6Story()">Next Question ➜</button>
@@ -786,6 +786,7 @@ function showQ10Story(){
 // ── GAME LOGIC ─────────────────────────────────────────────
 let score=0, questionsAnswered=0;
 const totalQ=10;
+const triedWrong = new Set();
 
 const correctMsg={
   q1:  '🎉 Correct! Jake won 3/8. Is it more than 1/2? Half of 8 is 4, so 1/2 = 4/8. Jake\'s 3/8 &lt; 4/8 — just under half. Entry ticket: earned!',
@@ -818,7 +819,9 @@ function answer(btn, correct, qId){
   const fb=document.getElementById('feedback-'+qId);
   const next=document.getElementById('next-'+qId);
   if(correct){
-    btn.classList.add('correct'); score++; questionsAnswered++;
+    btn.classList.add('correct');
+    if(!triedWrong.has(qId)) score++;
+    questionsAnswered++;
     fb.className='feedback show good'; fb.innerHTML=correctMsg[qId];
     updateProgress();
     next.classList.add('show');
@@ -830,13 +833,17 @@ function answer(btn, correct, qId){
       playFile(v[correctVariant%v.length], null); correctVariant++;
     }
   } else {
+    triedWrong.add(qId);
     btn.classList.add('wrong');
     fb.className='feedback show bad'; fb.innerHTML=wrongMsg[qId];
-    playFile(['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)], null);
+    stopAll();
+    const wrongFile = ['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)];
+    const wrongAudio = playFile(wrongFile, null);
+    const resetDelay = wrongAudio ? 2800 : 1200;
     setTimeout(()=>{
       box.querySelectorAll('.opt-btn').forEach(b=>{ if(!b.classList.contains('correct')){ b.disabled=false; b.classList.remove('wrong'); } });
       fb.className='feedback';
-    },2400);
+    }, resetDelay);
   }
 }
 
@@ -873,7 +880,7 @@ function showWin(){
   document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
   document.getElementById('progress-wrap').style.display='none';
   const win=document.getElementById('win-screen'); win.style.display='block';
-  document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+'!';
+  document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+' on the first try!';
   document.getElementById('win-stars').textContent=score>=9?'⭐⭐⭐':score>=6?'⭐⭐':'⭐';
   window.scrollTo({top:0,behavior:'smooth'});
   setTimeout(()=>playFile('win.mp3',null),500);
