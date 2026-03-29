@@ -583,7 +583,7 @@ function initPlayers(){
   setupPlayer('ch4',['ch4-intro.mp3','ch4-jake.mp3','ch4-q7-question.mp3'],['🎙️ George is narrating...','👦 Jake calculating...','🎙️ Listen to the question...'],'story-ch4','lock-q7', null, 2);
   setupPlayer('q8s',['ch4-q8-story.mp3','ch4-q8-question.mp3'],['🎙️ George is narrating...','🎙️ Listen to the question...'],'story-q8s','lock-q8', null, 1);
   setupPlayer('ch5',['ch5-intro.mp3','ch5-phantom.mp3','ch5-q9-question.mp3'],['🎙️ George is narrating...','👻 The Phantom speaks...','🎙️ Listen to the question...'],'story-ch5','lock-q9',null,2);
-  setupPlayer('q10s',['ch5-q10-story.mp3','ch5-phantom-end.mp3','ch5-q10-question.mp3'],['🎙️ George is narrating...','👻 The Phantom continues...','🎙️ Listen to the question...'],'story-q10s','lock-q10',null,2);
+  setupPlayer('q10s',['ch5-q10-story.mp3','ch5-phantom-q10.mp3','ch5-q10-question.mp3'],['🎙️ George is narrating...','👻 The Phantom speaks...','🎙️ Listen to the question...'],'story-q10s','lock-q10',null,2);
 }
 
 function showQ2Story(){const b=document.getElementById('block-q2');b.style.display='block';setTimeout(()=>{b.scrollIntoView({behavior:'smooth',block:'start'});},100);setTimeout(()=>togglePlayer('q2s'),600);}
