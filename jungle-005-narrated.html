@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Blast 🌿 — Jungle Issue 5 (Narrated)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#061a06; font-family:'Nunito',Arial,sans-serif; color:#fff;
+    background-image:radial-gradient(ellipse at 50% 0%,rgba(0,100,30,0.3) 0%,transparent 70%); min-height:100vh; }
+  .leaffield { position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .leaf { position:absolute; font-size:12px; opacity:0.25; animation:fall 8s linear infinite; }
+  @keyframes fall { from{transform:translateY(-20px) rotate(0deg); opacity:0.25} to{transform:translateY(100vh) rotate(360deg); opacity:0} }
+  .wrapper { max-width:680px; margin:0 auto; position:relative; z-index:1; padding-bottom:90px; }
+  .title-screen { text-align:center; padding:48px 24px 36px; }
+  .hero-emoji { font-size:72px; display:block; margin-bottom:16px; animation:float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  .title-screen h1 { font-size:46px; font-weight:900; line-height:1.1; text-shadow:0 0 24px rgba(0,180,60,0.8); }
+  .title-screen h1 span { color:#86efac; }
+  .issue-label { font-size:13px; font-weight:900; color:#4ade80; letter-spacing:3px; text-transform:uppercase; margin:10px 0 4px; }
+  .tagline { font-size:16px; color:#6ee7b7; margin-bottom:4px; }
+  .meta { font-size:13px; color:#166534; margin-bottom:8px; }
+  .narrated-badge { display:inline-block; background:rgba(134,239,172,0.15); border:1px solid #86efac; color:#86efac;
+    font-size:11px; font-weight:900; padding:4px 14px; border-radius:20px; letter-spacing:2px; text-transform:uppercase; margin-bottom:24px; }
+  .start-btn { display:inline-block; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-size:20px; font-weight:900; padding:18px 48px; border-radius:50px; border:none; cursor:pointer;
+    box-shadow:0 6px 30px rgba(22,163,74,0.5); transition:transform 0.15s; font-family:'Nunito',Arial,sans-serif; }
+  .start-btn:hover { transform:scale(1.05); }
+  .progress-wrap { padding:16px 24px 0; display:none; }
+  .progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .progress-label { font-size:13px; color:#4ade80; font-weight:700; }
+  .progress-score { font-size:13px; color:#fbbf24; font-weight:900; }
+  .progress-bar { background:#0a2a0a; border-radius:20px; height:14px; overflow:hidden; }
+  .progress-fill { background:linear-gradient(90deg,#16a34a,#86efac); height:100%; border-radius:20px; transition:width 0.5s ease; }
+  .chapter { display:none; padding:20px 20px 0; animation:fadeIn 0.4s ease; }
+  .chapter.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .chapter-badge { display:inline-block; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-size:11px; font-weight:900; padding:5px 16px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; }
+  .chapter h2 { font-size:26px; font-weight:900; margin-bottom:16px; line-height:1.3; }
+  .chapter-img { width:100%; border-radius:16px; display:block; margin-bottom:20px;
+    border:3px solid rgba(0,180,60,0.4); box-shadow:0 8px 30px rgba(0,0,0,0.5); background:#0a2a0a; min-height:180px; object-fit:cover; }
+  .nar-player { display:flex; align-items:center; gap:12px; background:rgba(22,163,74,0.12);
+    border:2px solid rgba(22,163,74,0.4); border-radius:14px; padding:12px 16px; margin-bottom:16px; }
+  .nar-btn { width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; flex-shrink:0;
+    background:linear-gradient(135deg,#15803d,#16a34a); color:white; font-size:18px;
+    display:flex; align-items:center; justify-content:center; transition:transform 0.15s; }
+  .nar-btn:hover { transform:scale(1.1); }
+  .nar-info { flex:1; min-width:0; }
+  .nar-status { font-size:12px; color:#4ade80; font-weight:700; }
+  .nar-bar { height:4px; background:#0a2a0a; border-radius:4px; margin-top:5px; overflow:hidden; }
+  .nar-bar-fill { height:100%; background:linear-gradient(90deg,#16a34a,#86efac); border-radius:4px; width:0%; transition:width 0.3s; }
+  .story-text { background:rgba(255,255,255,0.04); border-left:4px solid #16a34a;
+    border-radius:0 12px 12px 0; padding:18px 22px; font-size:18px; line-height:1.9; color:#d1fae5; margin-bottom:20px;
+    transition:border-color 0.4s, background 0.4s; }
+  .story-text.playing { border-left-color:#86efac; background:rgba(22,163,74,0.08); }
+  .story-text.done { border-left-color:#fbbf24; background:rgba(251,191,36,0.04); }
+  .story-text strong { color:#fbbf24; }
+  .story-text em { color:#86efac; font-style:normal; font-weight:700; }
+  .quiz-lock { text-align:center; padding:16px 20px; background:rgba(22,163,74,0.06);
+    border:2px dashed rgba(22,163,74,0.3); border-radius:16px; margin-bottom:20px;
+    font-size:14px; color:#4ade80; font-weight:700; }
+  .quiz-box { background:rgba(22,163,74,0.08); border:2px solid rgba(22,163,74,0.35);
+    border-radius:16px; padding:22px; margin-bottom:20px; display:none; animation:fadeIn 0.4s ease; }
+  .quiz-box.show { display:block; }
+  .quiz-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .difficulty { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; }
+  .diff-warmup { background:rgba(100,200,255,0.2); color:#66ddff; border:1px solid #66ddff; }
+  .diff-easy   { background:rgba(134,239,172,0.2); color:#86efac; border:1px solid #86efac; }
+  .diff-medium { background:rgba(255,200,0,0.2);   color:#fbbf24; border:1px solid #fbbf24; }
+  .diff-hard   { background:rgba(255,80,80,0.2);   color:#ff8888; border:1px solid #ff8888; }
+  .diff-boss   { background:rgba(255,0,200,0.2);   color:#ff44ee; border:1px solid #ff44ee; }
+  .acara-tag { display:inline-block; font-size:10px; font-weight:700; padding:3px 10px; border-radius:10px;
+    background:rgba(255,255,255,0.07); color:#6ee7b7; border:1px solid rgba(255,255,255,0.1); text-transform:uppercase; letter-spacing:0.5px; }
+  .quiz-icon { font-size:26px; display:block; margin-bottom:6px; }
+  .quiz-label { font-size:12px; font-weight:900; color:#4ade80; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+  .yr-badge { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; margin-right:6px; }
+  .yr3 { background:rgba(22,163,74,0.2); color:#86efac; border:1px solid #86efac; }
+  .yr4 { background:rgba(251,191,36,0.2); color:#fbbf24; border:1px solid #fbbf24; }
+  .question { font-size:20px; font-weight:900; color:#fff; margin-bottom:18px; line-height:1.5; }
+  .question-img { display:block; max-width:300px; width:100%; margin:14px auto 18px; border-radius:8px; border:2px solid rgba(22,163,74,0.3); }
+  .options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .opt-btn { background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.12); color:#fff;
+    font-family:'Nunito',Arial,sans-serif; font-size:19px; font-weight:700; padding:16px 10px;
+    border-radius:12px; cursor:pointer; transition:all 0.15s; }
+  .opt-btn:hover:not(:disabled) { background:rgba(22,163,74,0.25); border-color:#16a34a; transform:scale(1.03); }
+  .opt-btn.correct { background:rgba(22,163,74,0.25)!important; border-color:#86efac!important; color:#86efac!important; }
+  .opt-btn.wrong   { background:rgba(255,50,50,0.2)!important; border-color:#ff3232!important; color:#ff8888!important; animation:shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .feedback { margin-top:16px; padding:14px 18px; border-radius:10px; font-size:15px; font-weight:700; display:none; line-height:1.5; }
+  .feedback.show { display:block; }
+  .feedback.good { background:rgba(22,163,74,0.15); border:2px solid #86efac; color:#86efac; }
+  .feedback.bad  { background:rgba(255,50,50,0.15); border:2px solid #ff3232; color:#ff9999; }
+  .next-btn { display:none; width:100%; margin-top:16px; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px; border-radius:50px;
+    border:none; cursor:pointer; box-shadow:0 4px 20px rgba(22,163,74,0.4); transition:transform 0.15s; }
+  .next-btn:hover { transform:scale(1.03); }
+  .next-btn.show { display:block; }
+  #win-screen { display:none; text-align:center; padding:48px 24px 24px; animation:fadeIn 0.5s ease; }
+  .trophy { font-size:80px; display:block; margin-bottom:16px; animation:bounce 0.8s ease infinite alternate; }
+  @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.15)} }
+  #win-screen h2 { font-size:38px; font-weight:900; color:#fbbf24; margin-bottom:8px; }
+  .win-score { font-size:22px; font-weight:900; color:#86efac; margin-bottom:16px; }
+  .win-stars { font-size:36px; margin-bottom:20px; }
+  #win-screen > p { font-size:17px; color:#6ee7b7; line-height:1.75; margin-bottom:20px; }
+  .win-summary { background:rgba(255,255,255,0.04); border-radius:14px; padding:18px 20px; margin-bottom:24px; text-align:left; }
+  .win-summary h3 { font-size:14px; color:#fbbf24; font-weight:900; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .win-summary ul { list-style:none; }
+  .win-summary li { font-size:14px; color:#d1fae5; padding:4px 0; }
+  .replay-btn { display:inline-block; background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#0a2a0a;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px 40px;
+    border-radius:50px; border:none; cursor:pointer; margin-bottom:16px; transition:transform 0.15s; }
+  .replay-btn:hover { transform:scale(1.04); }
+  .next-issue-btn { display:block; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:16px; font-weight:900; padding:12px 32px;
+    border-radius:50px; border:none; cursor:pointer; text-decoration:none; margin-bottom:12px;
+    box-shadow:0 4px 20px rgba(22,163,74,0.3); transition:transform 0.15s; }
+  .next-issue-btn:hover { transform:scale(1.03); }
+  #ctrl-bar { position:fixed; top:14px; left:14px; display:flex; gap:8px; z-index:999;
+    background:rgba(0,0,0,0.6); padding:6px 10px; border-radius:24px; border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(6px); }
+  .ctrl-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:white;
+    font-family:'Nunito',sans-serif; font-weight:700; font-size:12px; padding:5px 12px; border-radius:16px; cursor:pointer; transition:background 0.15s; }
+  .ctrl-btn:hover { background:rgba(255,255,255,0.18); }
+  .ctrl-btn.muted { background:rgba(255,50,50,0.3); border-color:#ff3232; }
+</style>
+</head>
+<body>
+<div class="leaffield" id="leaffield"></div>
+<div class="wrapper">
+
+  <!-- TITLE -->
+  <div id="title-screen" class="title-screen">
+    <span class="hero-emoji">🪨</span>
+    <p class="issue-label">The Jungle Arc · Issue 5</p>
+    <h1>MATH BLAST<br><span>🪨 SPLIT RIDGE</span></h1>
+    <p class="tagline">When things don't divide evenly — what do you do with what's left over?</p>
+    <p class="meta">5 chapters · 10 challenges · Remainders · Year 4</p>
+    <div class="narrated-badge">🎙️ Narrated Edition</div><br>
+    <button class="start-btn" onclick="startGame()">🪨 START ADVENTURE</button>
+    <p style="font-size:12px;color:#166534;margin-top:16px;">Narrated by Eric · Blaze voiced by Jessica · Elder Crag voiced by Bill</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label" id="progress-label">Chapter 1 of 5</div>
+      <div class="progress-score" id="progress-score">⭐ 0 / 10</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- ===== CHAPTER 1 ===== -->
+  <div class="chapter" id="chapter-1">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🪨 Chapter 1 — The Ridge That Nothing Fits</div>
+      <h2>Tangle Looked Back. Now What?</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue005/ch1-split-ridge-arrival.png" alt="Blaze arriving at Split Ridge" />
+    <div class="nar-player" id="player-ch1">
+      <button class="nar-btn" id="btn-ch1" onclick="togglePlayer('ch1')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch1">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch1"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch1">
+      Tangle had looked back. That one moment changed everything. Footprints in Branchwick. Wrong divisions in Fernmoss. Grouping patterns at the Cascade Festival. Arrays in the sacred forest. And then — a bundle of twelve vines, placed at her feet. Whatever Tangle was, it was trying to reach her.<br><br>
+      But right now, Blaze had a more urgent problem. Split Ridge was the most awkward village in the Verdant Canopy — carved into a cliff face, with platforms at different heights connected by rope bridges. Nothing here was regular. Nothing divided evenly. And thirteen Sprockets were stranded on the far side of a crumbling ledge, waiting for help.<br><br>
+      Elder Crag, a weathered Sprocket with only two of his original three antennae, looked up at Blaze with weary eyes. <em>"Each raft holds four. We have one raft. How many crossings do we need?"</em>
+    </div>
+    <div id="lock-q1" class="quiz-lock">🔒 Listen to the story first to unlock your challenge!</div>
+    <div class="quiz-box" id="quiz-q1">
+      <div class="quiz-meta"><span class="difficulty diff-warmup">🌱 Warm-Up</span><span class="acara-tag">Remainders · Year 4</span></div>
+      <span class="quiz-icon">🪵</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 1 — Remainders: Round Up</div>
+      <div class="question"><strong>13 Sprockets</strong> need to cross.<br>Each raft holds <strong>4</strong>.<br><br>How many crossings are needed to save everyone?</div>
+      <img src="images/jungle/issue005/q1-raft-13.png" alt="13 Sprockets waiting for a raft" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q1')">3</button>
+        <button class="opt-btn" onclick="answer(this,true,'q1')">4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">5</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">13</button>
+      </div>
+      <div class="feedback" id="feedback-q1"></div>
+      <button class="next-btn" id="next-q1" onclick="nextChapter(2)">Chapter 2 ➜</button>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 2 ===== -->
+  <div class="chapter" id="chapter-2">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🪨 Chapter 2 — What to Do With What's Left</div>
+      <h2>On the Ridge, Leftovers Mean Arguments.</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue005/ch2-sharing-rocks.png" alt="Sprockets arguing about leftover rocks" />
+    <div class="nar-player" id="player-ch2">
+      <button class="nar-btn" id="btn-ch2" onclick="togglePlayer('ch2')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch2">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch2"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch2">
+      The rescued Sprockets were safe on the platform. But now the real trouble started. Split Ridge ran entirely on equal shares — and equal shares at Split Ridge almost never came out perfectly.<br><br>
+      Twenty-two building rocks for five Sprocket families. Three families wanted to round up. One wanted to throw the extras off the cliff. Blaze had a better idea: split the leftover into fractions. Each family gets four rocks, and the two leftover rocks are shared between all five as two-fifths each.<br><br>
+      <em>"What's two-fifths of a rock?"</em> Elder Crag asked. <em>"Ask me a harder one,"</em> said Blaze.
+    </div>
+    <div id="lock-q2" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q2">
+      <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Remainders · Year 4</span></div>
+      <span class="quiz-icon">🪨</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 2 — Remainders</div>
+      <div class="question"><strong>22 rocks</strong> shared between <strong>5 families</strong>.<br><br>How many whole rocks per family, and how many left over?</div>
+      <img src="images/jungle/issue005/q2-rocks-22.png" alt="22 rocks divided among 5 families" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q2')">3 remainder 7</button>
+        <button class="opt-btn" onclick="answer(this,true,'q2')">4 remainder 2</button>
+        <button class="opt-btn" onclick="answer(this,false,'q2')">5 remainder 0</button>
+        <button class="opt-btn" onclick="answer(this,false,'q2')">4 remainder 3</button>
+      </div>
+      <div class="feedback" id="feedback-q2"></div>
+      <button class="next-btn" id="next-q2" onclick="showQ3Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q3" style="display:none">
+      <div class="nar-player" id="player-q3s">
+        <button class="nar-btn" id="btn-q3s" onclick="togglePlayer('q3s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q3s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q3s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q3s">
+        The cook's fire-nut supply: <strong>nineteen nuts</strong> for <strong>six Sprockets</strong>. By tradition at Split Ridge, the one leftover always goes to the eldest.
+      </div>
+      <div id="lock-q3" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q3">
+        <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Remainders · Year 4</span></div>
+        <span class="quiz-icon">🔥</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 3 — Remainders</div>
+        <div class="question"><strong>19 fire-nuts</strong> shared between <strong>6 Sprockets</strong>.<br><br>How many each, and how many left over?</div>
+        <img src="images/jungle/issue005/q3-firenuts-19.png" alt="19 fire-nuts shared among 6 Sprockets" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q3')">2 remainder 1</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">3 remainder 3</button>
+          <button class="opt-btn" onclick="answer(this,true,'q3')">3 remainder 1</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">4 remainder 1</button>
+        </div>
+        <div class="feedback" id="feedback-q3"></div>
+        <button class="next-btn" id="next-q3" onclick="nextChapter(3)">Chapter 3 ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 3 ===== -->
+  <div class="chapter" id="chapter-3">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌿 Chapter 3 — Tangle Arrives</div>
+      <h2>It Followed Her All the Way Here.</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue005/ch3-tangle-arrives.png" alt="Tangle arriving at Split Ridge with vines" />
+    <div class="nar-player" id="player-ch3">
+      <button class="nar-btn" id="btn-ch3" onclick="togglePlayer('ch3')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch3">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch3"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch3">
+      The ground shook slightly. Then stopped. Then shook again. Blaze turned slowly.<br><br>
+      Tangle had followed her from the Array Forest all the way to Split Ridge. It stood at the edge of the cliff platform, an enormous tangle of natural brown vines, carrying fifty vines in its trailing tendrils. It set them down — and began arranging them into groups of eight. Seven groups of eight, and two left over. Tangle stopped. Stared at the two remaining vines. Did it again. Same result. The two leftover vines clearly distressed it.<br><br>
+      Blaze crouched down beside the vines. <em>"I know,"</em> she said quietly. <em>"Sometimes things just don't divide evenly. That's called a remainder. Watch."</em>
+    </div>
+    <div id="lock-q4" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q4">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Remainders · Year 4</span></div>
+      <span class="quiz-icon">🌿</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 4 — Tangle's Remainder</div>
+      <div class="question">Tangle has <strong>50 vines</strong>, arranged in groups of <strong>8</strong>.<br><br>How many groups, and how many left over?</div>
+      <img src="images/jungle/issue005/q4-vines-50-groups8.png" alt="50 vines in groups of 8 with 2 left over" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q4')">5 remainder 10</button>
+        <button class="opt-btn" onclick="answer(this,false,'q4')">7 remainder 0</button>
+        <button class="opt-btn" onclick="answer(this,true,'q4')">6 remainder 2</button>
+        <button class="opt-btn" onclick="answer(this,false,'q4')">6 remainder 8</button>
+      </div>
+      <div class="feedback" id="feedback-q4"></div>
+      <button class="next-btn" id="next-q4" onclick="showQ5Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q5" style="display:none">
+      <div class="nar-player" id="player-q5s">
+        <button class="nar-btn" id="btn-q5s" onclick="togglePlayer('q5s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q5s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q5s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q5s">
+        Blaze showed Tangle: try groups of <strong>five</strong> instead of eight. She spread the fifty vines out evenly. Ten perfect groups. No vines left over. Tangle went very still.
+      </div>
+      <div id="lock-q5" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q5">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Division · Year 4</span></div>
+        <span class="quiz-icon">🌿</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 5 — No Remainder</div>
+        <div class="question">Now try <strong>50 vines</strong> in groups of <strong>5</strong>.<br><br>How many groups? Any left over?</div>
+        <img src="images/jungle/issue005/q5-vines-50-groups5.png" alt="50 vines in 10 perfect groups of 5" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q5')">8 groups, 2 left over</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">9 groups, 5 left over</button>
+          <button class="opt-btn" onclick="answer(this,true,'q5')">10 groups, none left over</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">10 groups, 2 left over</button>
+        </div>
+        <div class="feedback" id="feedback-q5"></div>
+        <button class="next-btn" id="next-q5" onclick="nextChapter(4)">Chapter 4 ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 4 ===== -->
+  <div class="chapter" id="chapter-4">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🪵 Chapter 4 — The Bridge Problem</div>
+      <h2>Not Enough Planks. Almost Enough.</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue005/ch4-bridge-building.png" alt="Sprockets building rope bridges across the ridge" />
+    <div class="nar-player" id="player-ch4">
+      <button class="nar-btn" id="btn-ch4" onclick="togglePlayer('ch4')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch4">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch4"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch4">
+      The raft had solved the immediate problem. But the crumbling ledge wasn't going anywhere. Split Ridge needed proper rope bridges — and Elder Crag had twenty-seven planks stored in the supply cave. Each bridge needed six planks to be safe.<br><br>
+      Blaze did the calculation and smiled. Four complete bridges, with three planks to spare. Not enough for a fifth, but enough for four solid crossings. Sometimes a remainder is exactly what you need — it just can't be the answer on its own.<br><br>
+      Then: thirty-one Sprockets. Four bridges. Elder Crag looked at Blaze. Blaze looked at the bridges. <em>"It won't divide evenly,"</em> she said. <em>"It never does at Split Ridge. That's why we need to know what to do with the leftovers."</em>
+    </div>
+    <div id="lock-q6" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q6">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Remainders · Year 4</span></div>
+      <span class="quiz-icon">🪵</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 6 — Planks and Bridges</div>
+      <div class="question"><strong>27 planks</strong> available. Each bridge needs <strong>6 planks</strong>.<br><br>How many complete bridges can be built? How many planks are left over?</div>
+      <img src="images/jungle/issue005/q6-planks-27.png" alt="27 planks divided into groups of 6" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q6')">3 bridges, 9 left over</button>
+        <button class="opt-btn" onclick="answer(this,true,'q6')">4 bridges, 3 left over</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">5 bridges, 0 left over</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">4 bridges, 6 left over</button>
+      </div>
+      <div class="feedback" id="feedback-q6"></div>
+      <button class="next-btn" id="next-q6" onclick="showQ7Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q7" style="display:none">
+      <div class="nar-player" id="player-q7s">
+        <button class="nar-btn" id="btn-q7s" onclick="togglePlayer('q7s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q7s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q7s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q7s">
+        <strong>Thirty-one Sprockets</strong>, spread across <strong>four bridges</strong>. They need to cross in roughly equal groups. Three bridges carry seven Sprockets each, and one bridge carries the last four.
+      </div>
+      <div id="lock-q7" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q7">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Remainders · Year 4</span></div>
+        <span class="quiz-icon">🪵</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 7 — Sprockets on Bridges</div>
+        <div class="question"><strong>31 Sprockets</strong> across <strong>4 bridges</strong>.<br><br>How many per bridge, and how many left over for the last bridge?</div>
+        <img src="images/jungle/issue005/q7-sprockets-31.png" alt="31 Sprockets divided across 4 bridges" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q7')">8 remainder 1</button>
+          <button class="opt-btn" onclick="answer(this,true,'q7')">7 remainder 3</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">6 remainder 7</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">8 remainder 3</button>
+        </div>
+        <div class="feedback" id="feedback-q7"></div>
+        <button class="next-btn" id="next-q7" onclick="showQ8Block()">Next Question ➜</button>
+      </div>
+    </div>
+
+    <div id="block-q8" style="display:none">
+      <div class="nar-player" id="player-q8s">
+        <button class="nar-btn" id="btn-q8s" onclick="togglePlayer('q8s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q8s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q8s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q8s">
+        The bridges could move <strong>eight Sprockets per minute</strong>. All thirty-one needed to cross. How many minutes to get everyone safely across?
+      </div>
+      <div id="lock-q8" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q8">
+        <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Remainders · Year 4</span></div>
+        <span class="quiz-icon">⏱️</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 8 — Round Up to Save Everyone</div>
+        <div class="question"><strong>31 Sprockets</strong>, <strong>8 per minute</strong> crossing.<br><br>How many minutes to get everyone across? (Remember: you must round up!)</div>
+        <img src="images/jungle/issue005/q8-crossing-time.png" alt="Sprockets crossing the bridge over time" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q8')">3 minutes</button>
+          <button class="opt-btn" onclick="answer(this,true,'q8')">4 minutes</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">5 minutes</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">8 minutes</button>
+        </div>
+        <div class="feedback" id="feedback-q8"></div>
+        <button class="next-btn" id="next-q8" onclick="nextChapter(5)">Final Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 5 ===== -->
+  <div class="chapter" id="chapter-5">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌿 Chapter 5 — The Vines Come Back</div>
+      <h2>It Brought Them All Back.</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue005/ch5-tangle-returns-vines.png" alt="Tangle returning the stolen vines to the village" />
+    <div class="nar-player" id="player-ch5">
+      <button class="nar-btn" id="btn-ch5" onclick="togglePlayer('ch5')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch5">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch5"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch5">
+      The rescue was complete. Every Sprocket was safe on the platform, the bridges were holding, and Elder Crag had reluctantly conceded that remainders were sometimes useful. A good day at Split Ridge.<br><br>
+      The rescued Sprockets had brought a gift from their side of the ridge: forty-three star-fruits for the whole village of seven families. Another remainder problem. Blaze was beginning to think Split Ridge had been built by someone who hated even numbers.<br><br>
+      But it was what happened next that stopped everyone. Tangle, which had been sitting quietly at the edge of the platform, stood up. And began unloading vines. Not fifty. Not a hundred. Vine after vine after vine — all the ones it had taken. All of them. Arranged in perfect groups of twelve, laid out along the clifftop. It was giving them back.
+    </div>
+    <div id="lock-q9" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q9">
+      <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Remainders · Year 4</span></div>
+      <span class="quiz-icon">⭐</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 9 — Star-Fruit Share</div>
+      <div class="question"><strong>43 star-fruits</strong> for <strong>7 families</strong>.<br><br>How many whole fruits per family, and how many left over?</div>
+      <img src="images/jungle/issue005/q9-starfruit-43.png" alt="43 star-fruits shared among 7 families" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q9')">5 remainder 8</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">7 remainder 1</button>
+        <button class="opt-btn" onclick="answer(this,true,'q9')">6 remainder 1</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">6 remainder 7</button>
+      </div>
+      <div class="feedback" id="feedback-q9"></div>
+      <button class="next-btn" id="next-q9" onclick="showQ10Block()">Boss Challenge ➜</button>
+    </div>
+
+    <div id="block-q10" style="display:none">
+      <div class="nar-player" id="player-q10s">
+        <button class="nar-btn" id="btn-q10s" onclick="togglePlayer('q10s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q10s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q10s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q10s">
+        The biggest share of all: Split Ridge needed to send food to three cut-off villages. <strong>One hundred units</strong>, divided as equally as possible between <strong>three villages</strong>. Not everything fits perfectly. But sometimes, almost equal is fair enough.
+      </div>
+      <div id="lock-q10" class="quiz-lock">🔒 Listen to unlock the Boss Challenge!</div>
+      <div class="quiz-box" id="quiz-q10">
+        <div class="quiz-meta"><span class="difficulty diff-boss">👑 Boss Challenge</span><span class="acara-tag">Remainders · Year 4</span></div>
+        <span class="quiz-icon">🏆</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 10 — BOSS: The Big Share</div>
+        <div class="question"><strong>100 units of food</strong> for <strong>3 villages</strong>.<br><br>How many does each village get? How many are left over?</div>
+        <img src="images/jungle/issue005/q10-boss-100.png" alt="100 food units divided among 3 villages" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q10')">34 remainder 0</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">32 remainder 4</button>
+          <button class="opt-btn" onclick="answer(this,true,'q10')">33 remainder 1</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">30 remainder 10</button>
+        </div>
+        <div class="feedback" id="feedback-q10"></div>
+        <button class="next-btn" id="next-q10" onclick="showCliffhanger()">🌿 WHAT HAPPENS NEXT? →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIFFHANGER -->
+  <div id="cliffhanger-screen" style="display:none; text-align:center; padding:40px 24px; animation:fadeIn 0.5s ease;">
+    <img src="images/jungle/issue005/cliffhanger-tangle-watching.png" style="width:100%;border-radius:16px;margin-bottom:24px;border:3px solid rgba(22,163,74,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.6);" alt="Tangle sitting outside the village, watching" />
+    <div class="nar-player" id="player-cf" style="text-align:left;margin-bottom:20px;">
+      <button class="nar-btn" id="btn-cf" onclick="togglePlayer('cf')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-cf">Press ▶ to hear what happens next</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-cf"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-cf" style="text-align:left;">
+      When the last vine was laid down, Tangle stepped back. All the stolen vines — returned. Arranged in perfect groups of twelve along the clifftop.<br><br>
+      Then it sat down at the edge of the platform. Not leaving. Just... waiting.<br><br>
+      Blaze looked at the rows of vine bundles. Then at Tangle. It hadn't taken the vines to cause harm. It had taken them because they were beautiful, and because it had never known there was anyone else to share them with. Now it did.
+    </div>
+    <button onclick="showWin()" style="background:linear-gradient(135deg,#15803d,#16a34a);color:white;font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(22,163,74,0.4);">🌿 See Your Results →</button>
+  </div>
+
+  <!-- WIN SCREEN -->
+  <div id="win-screen">
+    <span class="trophy">🪨</span>
+    <h2>MISSION COMPLETE!</h2>
+    <div class="win-score" id="win-score">You scored 10 / 10!</div>
+    <div class="win-stars" id="win-stars">⭐⭐⭐</div>
+    <p>The bridges are built, the Sprockets are safe, and Tangle has given back everything it took. <strong>It just didn't know there was anyone to share with.</strong> Now it does.</p>
+    <div class="win-summary">
+      <h3>What You Mastered Today 🧠</h3>
+      <ul>
+        <li>✅ <strong>Remainders — round up</strong> — 13÷4=3r1 → 4 rafts (Year 4)</li>
+        <li>✅ <strong>Remainders — share evenly</strong> — 22÷5, 19÷6, 43÷7 (Year 4)</li>
+        <li>✅ <strong>Remainders — what they mean</strong> — planks, bridges, crossing time (Year 4)</li>
+        <li>✅ <strong>Boss: Big remainder</strong> — 100÷3=33r1 (Year 4)</li>
+      </ul>
+    </div>
+    <p style="font-size:14px;color:#4ade80;margin-bottom:16px;">Join us for Issue 6 — The Deep Root, where Tangle leads Blaze to its home and reveals the truth behind everything. 🌿</p>
+    <a href="landing.html" class="next-issue-btn">🌿 Back to Math Blast</a>
+    <button class="replay-btn" onclick="location.reload()">🔄 Play Again</button>
+  </div>
+
+</div>
+<div id="ctrl-bar">
+  <button class="ctrl-btn" id="mute-ctrl" onclick="toggleMute()">🔊 Sound On</button>
+  <button class="ctrl-btn" onclick="replayCurrent()">🔁 Replay</button>
+</div>
+
+<script>
+const lf=document.getElementById('leaffield');
+const leafEmoji=['🍃','🌿','🌳','🍀'];
+for(let i=0;i<30;i++){
+  const l=document.createElement('div');l.className='leaf';
+  l.textContent=leafEmoji[Math.floor(Math.random()*leafEmoji.length)];
+  l.style.left=Math.random()*100+'%';l.style.top=Math.random()*100+'%';
+  l.style.animationDelay=(Math.random()*8)+'s';l.style.animationDuration=(6+Math.random()*6)+'s';
+  lf.appendChild(l);
+}
+const BASE='sounds/jungle/issue005/';
+let muted=false,currentAudio=null,correctVariant=0,activePlayerId=null;
+const playerConfigs={};
+const triedWrong=new Set();
+
+function stopAll(){if(currentAudio){currentAudio.pause();currentAudio=null;}document.querySelectorAll('.nar-btn').forEach(b=>{if(b.textContent!=='✓')b.textContent='▶';});}
+function playFile(file,onEnd){if(muted){if(onEnd)setTimeout(onEnd,100);return null;}if(currentAudio){currentAudio.pause();currentAudio=null;}const a=new Audio(BASE+file);a.volume=1.0;currentAudio=a;a.play().catch(()=>{currentAudio=null;if(onEnd)onEnd();});a.onended=()=>{currentAudio=null;if(onEnd)onEnd();};a.onerror=()=>{currentAudio=null;if(onEnd)onEnd();};return a;}
+function setupPlayer(id,files,labels,storyId,lockId,onDone,unlockAtIndex){playerConfigs[id]={files,labels,storyId,lockId,unlockAtIndex:unlockAtIndex??files.length,active:false};}
+function togglePlayer(id){if(activePlayerId===id&&currentAudio&&!currentAudio.paused){currentAudio.pause();currentAudio=null;document.getElementById('btn-'+id).textContent='▶';document.getElementById('status-'+id).textContent='Paused — press ▶ to resume';activePlayerId=null;return;}stopAll();activePlayerId=id;runPlayer(id);}
+function runPlayer(id){const cfg=playerConfigs[id];if(!cfg)return;cfg.active=true;const btn=document.getElementById('btn-'+id);const statusEl=document.getElementById('status-'+id);const barFill=document.getElementById('bar-'+id);const story=cfg.storyId?document.getElementById(cfg.storyId):null;if(btn)btn.textContent='⏸';if(story)story.classList.add('playing');const totalFiles=cfg.files.length;let fileIdx=0;function playNext(){if(fileIdx>=totalFiles){if(btn)btn.textContent='✓';if(statusEl)statusEl.textContent='✅ Done — solve the puzzle!';if(barFill)barFill.style.width='100%';if(story){story.classList.remove('playing');story.classList.add('done');}if(cfg.lockId){const l=document.getElementById(cfg.lockId);if(l)l.style.display='none';}const qId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(qId){const q=document.getElementById(qId);if(q){q.classList.add('show');setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}cfg.active=false;activePlayerId=null;return;}if(fileIdx===cfg.unlockAtIndex){if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(quizId){const quiz=document.getElementById(quizId);if(quiz&&!quiz.classList.contains('show')){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}}const file=cfg.files[fileIdx];const label=cfg.labels&&cfg.labels[fileIdx]?cfg.labels[fileIdx]:'🎙️ Narrating...';if(statusEl)statusEl.textContent=label;const segStart=(fileIdx/totalFiles)*100,segEnd=((fileIdx+1)/totalFiles)*100;fileIdx++;const audio=playFile(file,playNext);if(audio&&barFill){const tick=setInterval(()=>{if(!audio||audio.paused||audio.ended){clearInterval(tick);return;}const pct=audio.duration?(segStart+(audio.currentTime/audio.duration)*(segEnd-segStart)):segStart;barFill.style.width=pct+'%';},200);}}playNext();}
+
+function initPlayers(){
+  // Ch1: Eric(arc recap — Tangle looked back), Eric(Split Ridge terrain), Crag(raft problem), Blaze(Q1) — unlock at 3
+  setupPlayer('ch1',
+    ['ch1-intro.mp3','ch1-ridge.mp3','ch1-crag.mp3','ch1-q1-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','🪨 Elder Crag speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch1','lock-q1',null,3);
+
+  // Ch2: Eric(equal shares, 22 rocks), Eric(fire-nuts + remainder tradition), Blaze(exchange) — unlock at 3
+  setupPlayer('ch2',
+    ['ch2-intro.mp3','ch2-nuts.mp3','ch2-blaze.mp3','ch2-q2-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch2','lock-q2',null,3);
+
+  // Q3 block: Eric(19 fire-nuts, 6 Sprockets, tradition), Blaze(Q3) — unlock at 1
+  setupPlayer('q3s',
+    ['ch2-q3-setup.mp3','ch2-q3-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q3s','lock-q3',null,1);
+
+  // Ch3: Eric(Tangle arrives, 50 vines groups of 8, distressed), Eric(Blaze crouches, remainder), Blaze(I know) — unlock at 3
+  setupPlayer('ch3',
+    ['ch3-intro.mp3','ch3-tangle.mp3','ch3-blaze.mp3','ch3-q4-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch3','lock-q4',null,3);
+
+  // Q5 block: Eric(groups of 5, 10 perfect groups), Blaze(Q5) — unlock at 1
+  setupPlayer('q5s',
+    ['ch3-q5-setup.mp3','ch3-q5-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q5s','lock-q5',null,1);
+
+  // Ch4: Eric(27 planks, 4 bridges, 3 spare), Eric(31 Sprockets, 4 bridges), Blaze(it never divides evenly) — unlock at 3
+  setupPlayer('ch4',
+    ['ch4-intro.mp3','ch4-planks.mp3','ch4-cross.mp3','ch4-q6-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch4','lock-q6',null,3);
+
+  // Q7 block: Eric(31 Sprockets, 4 bridges), Blaze(Q7) — unlock at 1
+  setupPlayer('q7s',
+    ['ch4-q7-setup.mp3','ch4-q7-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q7s','lock-q7',null,1);
+
+  // Q8 block: Eric(8 per minute, 31 total, must round up), Blaze(Q8) — unlock at 1
+  setupPlayer('q8s',
+    ['ch4-q8-setup.mp3','ch4-q8-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q8s','lock-q8',null,1);
+
+  // Ch5: Eric(rescue complete, star-fruits), Eric(Tangle unloads all vines, groups of 12), Eric(giving back) — unlock at 4
+  setupPlayer('ch5',
+    ['ch5-intro.mp3','ch5-tangle.mp3','ch5-blaze.mp3','ch5-q9-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-ch5','lock-q9',null,3);
+
+  // Q10 block: Eric(100 units, 3 villages, almost equal is fair), Blaze(Q10) — unlock at 1
+  setupPlayer('q10s',
+    ['ch5-q10-setup.mp3','ch5-q10-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q10s','lock-q10',null,1);
+
+  setupPlayer('cf',
+    ['ch5-cliffhanger.mp3'],
+    ['📖 Eric narrating...'],
+    'story-cf',null,null,0);
+}
+
+function showQ3Block(){const b=document.getElementById('block-q3');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q3s'),400);}
+function showQ5Block(){const b=document.getElementById('block-q5');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q5s'),400);}
+function showQ7Block(){const b=document.getElementById('block-q7');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q7s'),400);}
+function showQ8Block(){const b=document.getElementById('block-q8');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q8s'),400);}
+function showQ10Block(){const b=document.getElementById('block-q10');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q10s'),400);}
+
+let score=0,questionsAnswered=0;
+const totalQ=10;
+const correctMsg={
+  q1:'🪨 Yes! 13 divided by 4 is 3 remainder 1. That leftover Sprocket still needs saving — so you need 4 crossings.',
+  q2:'🪨 Right! 22 divided by 5 is 4 remainder 2. Four rocks each, two left over.',
+  q3:'🔥 Correct! 19 divided by 6 is 3 remainder 1. Three each, one left over for the eldest.',
+  q4:'🌿 Yes! 50 divided by 8 is 6 remainder 2. Six groups, with two vines that just won\'t fit. That\'s what\'s bothering Tangle.',
+  q5:'🌿 Perfect! 50 divided by 5 is 10, with nothing left over. Ten perfect groups. Tangle went still.',
+  q6:'🪵 Correct! 27 divided by 6 is 4 remainder 3. Four complete bridges, three planks spare.',
+  q7:'🪵 Right! 31 divided by 4 is 7 remainder 3. Seven per bridge on three of them, and four on the last one.',
+  q8:'⏱️ Yes! 31 divided by 8 is 3 remainder 7. Three minutes isn\'t enough — you must round up to 4 minutes to get everyone across.',
+  q9:'⭐ Correct! 43 divided by 7 is 6 remainder 1. Six fruits each, one left over.',
+  q10:'🏆 BOSS CLEARED! 100 divided by 3 is 33 remainder 1. Two villages get 33, one gets 34. Almost equal — and fair enough.'
+};
+const wrongMsg={
+  q1:'❌ Not quite! 13 divided by 4. Three full groups of 4 is only 12 — that last Sprocket still needs a crossing!',
+  q2:'❌ Try again! 22 divided by 5. Count in fives: 5, 10, 15, 20. That\'s 4 fives, with 2 left over.',
+  q3:'❌ Not quite! 19 divided by 6. Count in sixes: 6, 12, 18. That\'s 3 sixes, with 1 left over.',
+  q4:'❌ Try again! 50 divided by 8. Count in eights: 8, 16, 24, 32, 40, 48. Six groups of 8 is 48, so 2 are left over.',
+  q5:'❌ Not quite! 50 divided by 5. Count in fives: 5, 10, 15... all the way to 50. That\'s 10 groups, nothing left over.',
+  q6:'❌ Try again! 27 divided by 6. Six, twelve, eighteen, twenty-four — that\'s 4 groups of 6, with 3 planks left over.',
+  q7:'❌ Not quite! 31 divided by 4. Four, eight, twelve... up to 28. That\'s 7 groups, with 3 left over.',
+  q8:'❌ Try again! 31 divided by 8 is 3 remainder 7. Three minutes only moves 24 Sprockets — 7 are still waiting! Round up to 4.',
+  q9:'❌ Not quite! 43 divided by 7. Count in sevens: 7, 14, 21, 28, 35, 42. Six sevens is 42, so 1 is left over.',
+  q10:'❌ Try again! 100 divided by 3. Three times 33 is 99, so there\'s 1 left over. Answer: 33 remainder 1.'
+};
+const answerAudio={q1:'ch1-q1-answer.mp3',q2:'ch2-q2-answer.mp3',q3:'ch2-q3-answer.mp3',q4:'ch3-q4-answer.mp3',q5:'ch3-q5-answer.mp3',q6:'ch4-q6-answer.mp3',q7:'ch4-q7-answer.mp3',q8:'ch4-q8-answer.mp3',q9:'ch5-q9-answer.mp3',q10:'ch5-q10-answer.mp3'};
+
+function answer(btn,correct,qId){
+  const box=btn.closest('.quiz-box');
+  box.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedback-'+qId);
+  const next=document.getElementById('next-'+qId);
+  if(correct){
+    btn.classList.add('correct');
+    if(!triedWrong.has(qId))score++;
+    questionsAnswered++;
+    fb.className='feedback show good';fb.innerHTML=correctMsg[qId];
+    updateProgress();next.classList.add('show');
+    const qNum=parseInt(qId.replace('q',''));
+    let celebFile;
+    if(qNum===1)celebFile='feedback-correct-1.mp3';
+    else{let v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];celebFile=v[correctVariant%v.length];correctVariant++;}
+    playFile(celebFile,answerAudio[qId]?()=>playFile(answerAudio[qId],null):null);
+  } else {
+    triedWrong.add(qId);btn.classList.add('wrong');fb.className='feedback show bad';fb.innerHTML=wrongMsg[qId];stopAll();
+    const wrongFile=['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)];
+    const wrongAudio=playFile(wrongFile,null);
+    setTimeout(()=>{box.querySelectorAll('.opt-btn').forEach(b=>{if(!b.classList.contains('correct')){b.disabled=false;b.classList.remove('wrong');}});fb.className='feedback';},wrongAudio?2800:1200);
+  }
+}
+function updateProgress(){document.getElementById('progress-fill').style.width=((questionsAnswered/totalQ)*100)+'%';document.getElementById('progress-score').textContent='⭐ '+score+' / '+totalQ;}
+function shuffleOptions(){document.querySelectorAll('.quiz-box').forEach(box=>{const opts=box.querySelector('.options');if(!opts)return;const btns=[...opts.children];for(let i=btns.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));opts.appendChild(btns[j]);btns.splice(j,1);}});}
+function startGame(){document.getElementById('title-screen').style.display='none';document.getElementById('progress-wrap').style.display='block';initPlayers();shuffleOptions();showChapter(1);}
+let currentChapter=0;
+function showChapter(n){stopAll();document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));const ch=document.getElementById('chapter-'+n);if(!ch)return;ch.classList.add('active');currentChapter=n;window.scrollTo({top:0,behavior:'smooth'});const labels=['','Chapter 1 — The Ridge That Nothing Fits','Chapter 2 — What to Do With What\'s Left','Chapter 3 — Tangle Arrives 🌿','Chapter 4 — The Bridge Problem 🪵','Chapter 5 — The Vines Come Back 🌿'];document.getElementById('progress-label').textContent=labels[n]||'';const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};if(playerMap[n])setTimeout(()=>togglePlayer(playerMap[n]),700);}
+function nextChapter(n){showChapter(n);}
+function showCliffhanger(){stopAll();document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));document.getElementById('progress-wrap').style.display='none';const cf=document.getElementById('cliffhanger-screen');cf.style.display='block';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>togglePlayer('cf'),600);}
+function showWin(){stopAll();document.getElementById('cliffhanger-screen').style.display='none';const win=document.getElementById('win-screen');win.style.display='block';document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+' on the first try!';document.getElementById('win-stars').textContent=score===10?'⭐⭐⭐':score>=7?'⭐⭐':score>=4?'⭐':'';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>playFile('win.mp3',null),500);}
+function toggleMute(){muted=!muted;const ctrl=document.getElementById('mute-ctrl');ctrl.textContent=muted?'🔇 Muted':'🔊 Sound On';ctrl.classList.toggle('muted',muted);if(muted)stopAll();}
+function replayCurrent(){const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};const pid=playerMap[currentChapter];if(!pid)return;stopAll();const cfg=playerConfigs[pid];if(cfg)cfg.active=false;const story=cfg&&cfg.storyId?document.getElementById(cfg.storyId):null;if(story)story.classList.remove('playing','done');const barFill=document.getElementById('bar-'+pid);if(barFill)barFill.style.width='0%';const statusEl=document.getElementById('status-'+pid);if(statusEl)statusEl.textContent='Press ▶ to hear the story';const btn=document.getElementById('btn-'+pid);if(btn)btn.textContent='▶';setTimeout(()=>togglePlayer(pid),300);}
+</script>
+</body>
+</html>
