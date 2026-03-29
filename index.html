@@ -1,874 +1,935 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Math Blast 🚀 — Space Adventure Math for Kids!</title>
-  <meta name="description" content="Math Blast is a free space-adventure math magazine for kids in Years 3–4. Join Jake on exciting missions and blast through fun math challenges every month!" />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #0d0630;
-      --purple: #a855f7;
-      --yellow: #fbbf24;
-      --cyan: #22d3ee;
-      --white: #f0e6ff;
-      --card-bg: rgba(255,255,255,0.05);
-      --card-border: rgba(168,85,247,0.3);
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Nunito', sans-serif;
-      background: var(--bg);
-      color: var(--white);
-      overflow-x: hidden;
-      min-height: 100vh;
-    }
-
-    /* ===== STARFIELD ===== */
-    .stars-container {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .star {
-      position: absolute;
-      border-radius: 50%;
-      background: white;
-      animation: twinkle var(--dur) ease-in-out infinite;
-      opacity: 0;
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0; transform: scale(0.8); }
-      50%       { opacity: var(--max-op); transform: scale(1.2); }
-    }
-
-    /* ===== NAV ===== */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(13,6,48,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(168,85,247,0.2);
-      padding: 0.75rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .nav-logo {
-      font-size: 1.4rem;
-      font-weight: 900;
-      background: linear-gradient(90deg, var(--purple), var(--cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-decoration: none;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.2rem;
-      list-style: none;
-      flex-wrap: wrap;
-    }
-
-    .nav-links a {
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.9rem;
-      opacity: 0.8;
-      transition: opacity 0.2s, color 0.2s;
-    }
-
-    .nav-links a:hover { opacity: 1; color: var(--cyan); }
-
-    .nav-cta {
-      background: linear-gradient(135deg, var(--purple), #7c3aed);
-      color: white !important;
-      padding: 0.4rem 1rem;
-      border-radius: 999px;
-      opacity: 1 !important;
-      font-weight: 800 !important;
-      transition: transform 0.2s, box-shadow 0.2s !important;
-    }
-
-    .nav-cta:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 20px rgba(168,85,247,0.5);
-    }
-
-    /* ===== SECTIONS WRAPPER ===== */
-    section, footer {
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ===== HERO ===== */
-    #hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 5rem 1.5rem 3rem;
-      background: radial-gradient(ellipse at 50% 0%, rgba(168,85,247,0.2) 0%, transparent 70%);
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: rgba(168,85,247,0.15);
-      border: 1px solid rgba(168,85,247,0.4);
-      border-radius: 999px;
-      padding: 0.3rem 1rem;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--purple);
-      margin-bottom: 1.5rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .hero-title {
-      font-size: clamp(2.8rem, 8vw, 6rem);
-      font-weight: 900;
-      line-height: 1.05;
-      margin-bottom: 0.5rem;
-    }
-
-    .hero-title .blast {
-      background: linear-gradient(90deg, var(--yellow), #f97316, var(--purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-subtitle {
-      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-      font-weight: 700;
-      color: var(--cyan);
-      margin-bottom: 1.2rem;
-    }
-
-    .hero-desc {
-      max-width: 580px;
-      font-size: clamp(1rem, 2vw, 1.15rem);
-      font-weight: 600;
-      opacity: 0.85;
-      line-height: 1.7;
-      margin: 0 auto 2rem;
-    }
-
-    .hero-btns {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 2.5rem;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--yellow), #f97316);
-      color: #1a0a00;
-      font-weight: 900;
-      font-size: 1.1rem;
-      padding: 0.85rem 2rem;
-      border-radius: 999px;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 24px rgba(251,191,36,0.4);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 8px 32px rgba(251,191,36,0.6);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: var(--white);
-      font-weight: 800;
-      font-size: 1rem;
-      padding: 0.85rem 2rem;
-      border-radius: 999px;
-      text-decoration: none;
-      border: 2px solid rgba(168,85,247,0.5);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: all 0.2s;
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--purple);
-      background: rgba(168,85,247,0.1);
-      transform: translateY(-2px);
-    }
-
-    .hero-image-wrap {
-      position: relative;
-      display: inline-block;
-      margin-top: 1rem;
-    }
-
-    .hero-image-wrap::before {
-      content: '';
-      position: absolute;
-      inset: -20px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(168,85,247,0.3), transparent 70%);
-      animation: glow-pulse 3s ease-in-out infinite;
-    }
-
-    @keyframes glow-pulse {
-      0%, 100% { opacity: 0.5; transform: scale(1); }
-      50%       { opacity: 1;   transform: scale(1.08); }
-    }
-
-    .hero-image {
-      width: min(320px, 80vw);
-      height: auto;
-      border-radius: 1rem;
-      position: relative;
-      filter: drop-shadow(0 0 40px rgba(168,85,247,0.5));
-    }
-
-    /* ===== SECTION COMMON ===== */
-    .section-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 5rem 1.5rem;
-    }
-
-    .section-tag {
-      display: inline-block;
-      font-size: 0.8rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--cyan);
-      margin-bottom: 0.75rem;
-    }
-
-    .section-title {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 900;
-      margin-bottom: 1rem;
-      line-height: 1.15;
-    }
-
-    .section-title .accent-purple { color: var(--purple); }
-    .section-title .accent-yellow { color: var(--yellow); }
-    .section-title .accent-cyan   { color: var(--cyan); }
-
-    .section-desc {
-      font-size: 1.05rem;
-      font-weight: 600;
-      opacity: 0.8;
-      max-width: 560px;
-      line-height: 1.7;
-    }
-
-    /* ===== HOW IT WORKS ===== */
-    #how-it-works {
-      background: linear-gradient(180deg, transparent, rgba(34,211,238,0.04), transparent);
-    }
-
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
-      margin-top: 3rem;
-    }
-
-    .step-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 1.25rem;
-      padding: 2rem 1.5rem;
-      text-align: center;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .step-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--purple), var(--cyan));
-      border-radius: 1.25rem 1.25rem 0 0;
-    }
-
-    .step-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(168,85,247,0.6);
-      box-shadow: 0 12px 40px rgba(168,85,247,0.2);
-    }
-
-    .step-num {
-      width: 3rem;
-      height: 3rem;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--purple), #7c3aed);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      font-weight: 900;
-      margin: 0 auto 1rem;
-      box-shadow: 0 4px 16px rgba(168,85,247,0.4);
-    }
-
-    .step-emoji {
-      font-size: 2.5rem;
-      display: block;
-      margin-bottom: 0.75rem;
-    }
-
-    .step-card h3 {
-      font-size: 1.25rem;
-      font-weight: 900;
-      margin-bottom: 0.5rem;
-      color: var(--yellow);
-    }
-
-    .step-card p {
-      font-size: 0.95rem;
-      font-weight: 600;
-      opacity: 0.8;
-      line-height: 1.6;
-    }
-
-    /* ===== ISSUES ===== */
-    #issues {
-      background: linear-gradient(180deg, transparent, rgba(168,85,247,0.04), transparent);
-    }
-
-    .issues-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-      margin-top: 3rem;
-    }
-
-    .issue-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 1.5rem;
-      overflow: hidden;
-      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .issue-card:hover {
-      transform: translateY(-8px) scale(1.01);
-      box-shadow: 0 20px 60px rgba(168,85,247,0.25);
-      border-color: rgba(168,85,247,0.7);
-    }
-
-    .issue-badge-strip {
-      padding: 1.2rem 1.5rem 1rem;
-      background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(34,211,238,0.1));
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .issue-num-badge {
-      background: linear-gradient(135deg, var(--purple), #7c3aed);
-      border-radius: 0.75rem;
-      padding: 0.5rem 0.85rem;
-      font-size: 0.75rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      white-space: nowrap;
-    }
-
-    .issue-badge-strip .issue-emoji {
-      font-size: 2rem;
-    }
-
-    .issue-body {
-      padding: 1.25rem 1.5rem 1.5rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .issue-title {
-      font-size: 1.3rem;
-      font-weight: 900;
-      color: var(--yellow);
-    }
-
-    .issue-tagline {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--cyan);
-    }
-
-    .issue-desc {
-      font-size: 0.9rem;
-      font-weight: 600;
-      opacity: 0.78;
-      line-height: 1.6;
-      flex: 1;
-    }
-
-    .issue-meta {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin-top: 0.5rem;
-    }
-
-    .issue-chip {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 999px;
-      padding: 0.2rem 0.7rem;
-      font-size: 0.78rem;
-      font-weight: 700;
-      opacity: 0.85;
-    }
-
-    .issue-play-btn {
-      display: block;
-      text-align: center;
-      background: linear-gradient(135deg, var(--yellow), #f97316);
-      color: #1a0a00;
-      font-weight: 900;
-      font-size: 1rem;
-      padding: 0.85rem 1.5rem;
-      border-radius: 0 0 1.5rem 1.5rem;
-      text-decoration: none;
-      transition: filter 0.2s, transform 0.2s;
-      margin-top: auto;
-    }
-
-    .issue-play-btn:hover {
-      filter: brightness(1.1);
-      transform: scale(1.01);
-    }
-
-    /* ===== SUBSCRIBE ===== */
-    #subscribe {
-      background: linear-gradient(180deg, transparent, rgba(251,191,36,0.04), transparent);
-    }
-
-    .subscribe-box {
-      max-width: 640px;
-      margin: 2rem auto 0;
-      background: var(--card-bg);
-      border: 1px solid rgba(251,191,36,0.3);
-      border-radius: 1.5rem;
-      padding: 2.5rem 2rem;
-      text-align: center;
-      box-shadow: 0 0 60px rgba(251,191,36,0.08);
-    }
-
-    .subscribe-box .rocket-icon {
-      font-size: 3rem;
-      display: block;
-      margin-bottom: 1rem;
-      animation: rocket-float 3s ease-in-out infinite;
-    }
-
-    @keyframes rocket-float {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-10px); }
-    }
-
-    .subscribe-box h3 {
-      font-size: 1.6rem;
-      font-weight: 900;
-      color: var(--yellow);
-      margin-bottom: 0.5rem;
-    }
-
-    .subscribe-box p {
-      font-size: 1rem;
-      font-weight: 600;
-      opacity: 0.85;
-      line-height: 1.6;
-      margin-bottom: 1.8rem;
-    }
-
-    .subscribe-form {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.85rem;
-    }
-
-    @media (max-width: 480px) {
-      .form-row { grid-template-columns: 1fr; }
-    }
-
-    .subscribe-form input {
-      width: 100%;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(168,85,247,0.3);
-      border-radius: 0.75rem;
-      padding: 0.85rem 1rem;
-      color: var(--white);
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      outline: none;
-      transition: border-color 0.2s, background 0.2s;
-    }
-
-    .subscribe-form input::placeholder { opacity: 0.5; }
-
-    .subscribe-form input:focus {
-      border-color: var(--purple);
-      background: rgba(168,85,247,0.08);
-    }
-
-    .subscribe-form button {
-      width: 100%;
-      background: linear-gradient(135deg, var(--purple), #7c3aed);
-      color: white;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 900;
-      font-size: 1.05rem;
-      padding: 0.9rem 1.5rem;
-      border-radius: 0.75rem;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
-      box-shadow: 0 4px 20px rgba(168,85,247,0.35);
-    }
-
-    .subscribe-form button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(168,85,247,0.55);
-      filter: brightness(1.1);
-    }
-
-    .subscribe-note {
-      font-size: 0.8rem;
-      opacity: 0.55;
-      margin-top: 0.75rem;
-      font-weight: 600;
-    }
-
-    /* ===== FOOTER ===== */
-    footer {
-      background: rgba(0,0,0,0.35);
-      border-top: 1px solid rgba(168,85,247,0.15);
-      padding: 2.5rem 1.5rem;
-      text-align: center;
-    }
-
-    .footer-logo {
-      font-size: 1.6rem;
-      font-weight: 900;
-      background: linear-gradient(90deg, var(--purple), var(--cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.5rem;
-    }
-
-    .footer-tagline {
-      font-size: 0.9rem;
-      font-weight: 600;
-      opacity: 0.55;
-      margin-bottom: 1.5rem;
-    }
-
-    .footer-social {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .social-chip {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 999px;
-      padding: 0.4rem 1rem;
-      font-size: 0.82rem;
-      font-weight: 700;
-      opacity: 0.5;
-      cursor: default;
-    }
-
-    .footer-copy {
-      font-size: 0.82rem;
-      opacity: 0.4;
-      font-weight: 600;
-    }
-
-    /* ===== DIVIDER ===== */
-    .star-divider {
-      text-align: center;
-      font-size: 1.2rem;
-      letter-spacing: 0.5rem;
-      opacity: 0.3;
-      padding: 0.5rem 0;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 600px) {
-      nav { padding: 0.6rem 1rem; }
-      .subscribe-box { padding: 2rem 1.2rem; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Blast — Adventures that teach maths</title>
+<meta name="description" content="Weekly interactive maths adventures for kids aged 7–9. Space, Jungle, Pyramids and more. No app needed.">
+<style>
+  :root {
+    --purple: #7c3aed;
+    --purple-light: #a855f7;
+    --magenta: #ec4899;
+    --yellow: #fbbf24;
+    --teal: #06b6d4;
+    --orange: #f97316;
+    --green: #22c55e;
+    --bg: #06040f;
+    --surface: #0f0a1e;
+    --surface2: #171228;
+    --text: #f1f0f7;
+    --muted: #9ca3af;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* STARS */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 15% 12%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 72% 8%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 8% 55%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 88% 42%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 78%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 62% 22%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 33% 91%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 95% 65%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 38%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 78% 82%, rgba(255,255,255,0.5) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* NAV */
+  nav {
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 10;
+  }
+
+  .nav-logo {
+    font-size: 22px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--purple-light), var(--magenta));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+  }
+
+  .nav-link {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+  .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+
+  .nav-cta {
+    background: linear-gradient(135deg, var(--purple), var(--magenta));
+    color: white;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* HERO */
+  .hero {
+    padding: 80px 40px 40px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(124,58,237,0.2);
+    border: 1px solid rgba(124,58,237,0.4);
+    border-radius: 99px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: var(--purple-light);
+    font-weight: 500;
+    margin-bottom: 28px;
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 6vw, 68px);
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 1.05;
+    margin-bottom: 20px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--yellow), var(--magenta));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 20px;
+    color: var(--muted);
+    max-width: 580px;
+    margin: 0 auto 36px;
+    line-height: 1.5;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--purple), var(--magenta));
+    color: white;
+    padding: 16px 40px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 32px rgba(124,58,237,0.4);
+    display: inline-block;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124,58,237,0.5); }
+
+  .hero-fine { font-size: 13px; color: var(--muted); margin-top: 12px; }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(124,58,237,0.3), transparent);
+    margin: 0 40px;
+    position: relative; z-index: 1;
+  }
+
+  /* SECTION */
+  section { position: relative; z-index: 1; padding: 72px 40px; }
+
+  .section-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--purple-light); margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 4vw, 42px); font-weight: 800;
+    letter-spacing: -1px; margin-bottom: 14px; line-height: 1.15;
+  }
+
+  .section-sub {
+    font-size: 17px; color: var(--muted); max-width: 560px; margin-bottom: 48px; line-height: 1.6;
+  }
+
+  /* ─── ADVENTURE CARDS ─────────────────────────────── */
+  .adventures-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .adventure-card {
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+
+  .adventure-card:hover { transform: translateY(-4px); }
+
+  .adventure-card.coming-soon {
+    opacity: 0.6;
+    filter: saturate(0.4);
+  }
+
+  .adventure-card.coming-soon:hover { transform: none; }
+
+  .coming-soon-badge {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 99px;
+    z-index: 2;
+  }
+
+  /* SPACE card */
+  .card-space {
+    background: linear-gradient(135deg, #0d0b2e 0%, #1a0a3d 40%, #0d1a3d 100%);
+    box-shadow: 0 8px 32px rgba(124,58,237,0.2);
+  }
+  .card-space:hover { box-shadow: 0 16px 48px rgba(124,58,237,0.3); }
+
+  /* JUNGLE card */
+  .card-jungle {
+    background: linear-gradient(135deg, #0a1f0a 0%, #0f2d15 40%, #0a2010 100%);
+    box-shadow: 0 8px 32px rgba(34,197,94,0.15);
+  }
+  .card-jungle:hover { box-shadow: 0 16px 48px rgba(34,197,94,0.25); }
+
+  /* PYRAMIDS card */
+  .card-pyramids {
+    background: linear-gradient(135deg, #1f1508 0%, #2d1f0a 40%, #1f1508 100%);
+    box-shadow: 0 8px 32px rgba(251,191,36,0.1);
+  }
+
+  /* TREASURE card */
+  .card-treasure {
+    background: linear-gradient(135deg, #0a0f1f 0%, #0a1525 40%, #080f1a 100%);
+    box-shadow: 0 8px 32px rgba(6,182,212,0.1);
+  }
+
+  .card-inner {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    min-height: 340px;
+  }
+
+  .card-emoji { font-size: 48px; margin-bottom: 16px; }
+
+  .card-world {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .card-space .card-world { color: var(--purple-light); }
+  .card-jungle .card-world { color: var(--green); }
+  .card-pyramids .card-world { color: var(--yellow); }
+  .card-treasure .card-world { color: var(--teal); }
+
+  .card-title { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .card-hero { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+
+  .card-desc { font-size: 15px; color: #d1d5db; line-height: 1.6; margin-bottom: 20px; flex: 1; }
+
+  .card-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+
+  .topic-chip {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-weight: 500;
+  }
+
+  .card-space .topic-chip { background: rgba(124,58,237,0.2); color: var(--purple-light); border: 1px solid rgba(124,58,237,0.3); }
+  .card-jungle .topic-chip { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+  .card-pyramids .topic-chip { background: rgba(251,191,36,0.12); color: var(--yellow); border: 1px solid rgba(251,191,36,0.2); }
+  .card-treasure .topic-chip { background: rgba(6,182,212,0.12); color: var(--teal); border: 1px solid rgba(6,182,212,0.2); }
+
+  .card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+    align-self: flex-start;
+  }
+
+  .card-space .card-cta {
+    background: linear-gradient(135deg, var(--purple), var(--magenta));
+    color: white;
+    box-shadow: 0 4px 16px rgba(124,58,237,0.4);
+  }
+  .card-space .card-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,0.5); }
+
+  .card-jungle .card-cta {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: white;
+    box-shadow: 0 4px 16px rgba(34,197,94,0.3);
+  }
+  .card-jungle .card-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(34,197,94,0.4); }
+
+  .card-divider {
+    height: 1px;
+    margin: 0 32px;
+  }
+  .card-space .card-divider { background: rgba(124,58,237,0.2); }
+  .card-jungle .card-divider { background: rgba(34,197,94,0.15); }
+  .card-pyramids .card-divider { background: rgba(251,191,36,0.15); }
+  .card-treasure .card-divider { background: rgba(6,182,212,0.15); }
+
+  .card-issues {
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .issue-dots { display: flex; gap: 5px; }
+  .issue-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .card-space .issue-dot { background: rgba(124,58,237,0.6); }
+  .card-jungle .issue-dot { background: rgba(34,197,94,0.5); }
+  .card-pyramids .issue-dot { background: rgba(251,191,36,0.2); border: 1px dashed rgba(251,191,36,0.4); }
+  .card-treasure .issue-dot { background: rgba(6,182,212,0.2); border: 1px dashed rgba(6,182,212,0.4); }
+
+  .issues-label { font-size: 12px; color: var(--muted); }
+
+  /* FREE BADGE */
+  .free-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(251,191,36,0.15);
+    border: 1px solid rgba(251,191,36,0.35);
+    border-radius: 99px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--yellow);
+    margin-bottom: 8px;
+  }
+
+  /* HOW IT WORKS */
+  .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+  .how-card {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 28px;
+    transition: border-color 0.2s;
+  }
+  .how-card:hover { border-color: rgba(124,58,237,0.35); }
+
+  .how-num {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--purple), var(--magenta));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800;
+    margin-bottom: 16px;
+  }
+
+  .how-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .how-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  /* TESTIMONIALS */
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .testi-card {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .testi-stars { color: var(--yellow); font-size: 14px; margin-bottom: 12px; }
+  .testi-text { font-size: 15px; color: #d1d5db; line-height: 1.6; margin-bottom: 16px; font-style: italic; }
+  .testi-author { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+  /* PRICING */
+  .pricing-wrap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .pricing-card {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 36px 28px;
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .pricing-card:hover { transform: translateY(-3px); }
+
+  .pricing-card.featured {
+    background: linear-gradient(135deg, #1a0a3d, #0d1a3d);
+    border: 2px solid rgba(124,58,237,0.6);
+    box-shadow: 0 16px 48px rgba(124,58,237,0.2);
+  }
+
+  .pricing-badge {
+    position: absolute;
+    top: -14px; left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--purple), var(--magenta));
+    color: white;
+    font-size: 11px; font-weight: 700;
+    padding: 4px 14px; border-radius: 99px;
+    white-space: nowrap; letter-spacing: 0.5px;
+  }
+
+  .pricing-icon { font-size: 36px; margin-bottom: 12px; }
+  .pricing-name { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+
+  .pricing-price {
+    font-size: 52px; font-weight: 900; letter-spacing: -2px;
+    line-height: 1; margin: 8px 0 4px;
+  }
+  .pricing-price sup { font-size: 22px; font-weight: 700; vertical-align: top; margin-top: 8px; }
+  .pricing-per { color: var(--muted); font-size: 13px; margin-bottom: 6px; }
+  .pricing-save { font-size: 12px; font-weight: 600; color: var(--yellow); margin-bottom: 20px; min-height: 18px; }
+
+  .pricing-features { list-style: none; margin-bottom: 28px; text-align: left; flex: 1; }
+  .pricing-features li {
+    padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 14px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.4;
+  }
+  .pricing-features li:last-child { border: none; }
+  .pricing-features li::before { content: '✓'; color: #34d399; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .pricing-features li.muted::before { content: '·'; color: var(--muted); }
+  .pricing-features li.muted { color: var(--muted); }
+
+  .pricing-cta {
+    display: block; width: 100%; text-align: center;
+    padding: 13px 20px; border-radius: 10px;
+    font-size: 15px; font-weight: 700; text-decoration: none;
+    transition: all 0.2s; margin-top: auto;
+  }
+
+  .pricing-cta.primary {
+    background: linear-gradient(135deg, var(--purple), var(--magenta));
+    color: white;
+    box-shadow: 0 4px 16px rgba(124,58,237,0.35);
+  }
+  .pricing-cta.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(124,58,237,0.5); }
+
+  .pricing-cta.secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .pricing-cta.secondary:hover { border-color: rgba(124,58,237,0.4); color: var(--purple-light); }
+
+  .pricing-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
+
+  @media (max-width: 768px) {
+    .pricing-wrap { grid-template-columns: 1fr; max-width: 400px; }
+  }
+
+  /* FAQ */
+  .faq-list { max-width: 700px; }
+  .faq-item { border-bottom: 1px solid rgba(255,255,255,0.07); padding: 20px 0; }
+  .faq-q { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+  .faq-a { font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+  /* CTA BOTTOM */
+  .cta-section {
+    text-align: center;
+    padding: 100px 40px;
+    background: radial-gradient(ellipse at center, rgba(124,58,237,0.12) 0%, transparent 70%);
+    position: relative; z-index: 1;
+  }
+  .cta-section h2 { font-size: clamp(30px, 5vw, 50px); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 14px; }
+  .cta-section p { font-size: 18px; color: var(--muted); margin-bottom: 36px; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 32px 40px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    position: relative; z-index: 1;
+  }
+
+  footer a { color: var(--purple-light); text-decoration: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-link { display: none; }
+    .hero { padding: 60px 20px 40px; }
+    section { padding: 60px 20px; }
+    .adventures-grid { grid-template-columns: 1fr; }
+    .how-grid { grid-template-columns: 1fr; }
+    .testi-grid { grid-template-columns: 1fr; }
+    footer { padding: 24px 20px; }
+    .divider { margin: 0 20px; }
+  }
+</style>
 </head>
 <body>
 
-  <!-- Starfield -->
-  <div class="stars-container" id="stars"></div>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🚀 Math Blast</div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <a href="#how" class="nav-link">How it works</a>
+    <a href="#subscribe" class="nav-link">Pricing</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+    <a href="#adventures" class="nav-cta" style="margin-left:8px;">Explore Adventures</a>
+  </div>
+</nav>
 
-  <!-- NAV -->
-  <nav>
-    <a href="#" class="nav-logo">🚀 Math Blast</a>
-    <ul class="nav-links">
-      <li><a href="#how-it-works">How It Works</a></li>
-      <li><a href="#issues">Issues</a></li>
-      <li><a href="#subscribe" class="nav-cta">🔔 Get Notified</a></li>
-    </ul>
-  </nav>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">✨ Ages 7–9 · Years 2–4 · Australian Curriculum</div>
+  <h1>Adventure stories that<br><span class="highlight">teach maths for real</span></h1>
+  <p class="hero-sub">Pick your world. Follow the hero. Solve the puzzles. No app, no login — just a great story that sneaks in real maths along the way.</p>
+  <a href="#adventures" class="btn-primary">Choose Your Adventure →</a>
+  <p class="hero-fine">Two adventures free to try · No sign-up needed</p>
+</section>
 
-  <!-- HERO -->
-  <section id="hero">
-    <div class="hero-badge">⭐ Free · New Issues Monthly</div>
+<div class="divider"></div>
 
-    <h1 class="hero-title">
-      Math is an<br>
-      <span class="blast">Adventure!</span> 🚀
-    </h1>
+<!-- ADVENTURES -->
+<section id="adventures">
+  <div class="container">
+    <div class="section-label">Adventure Worlds</div>
+    <div class="section-title">Pick your universe</div>
+    <p class="section-sub">Each world has its own hero, setting, and maths theme — 7 issues per arc, a new one every week.</p>
 
-    <p class="hero-subtitle">Space stories + math challenges for kids in Years 3–4</p>
+    <div class="adventures-grid">
 
-    <p class="hero-desc">
-      Join <strong>Jake</strong> on epic space missions where solving maths problems saves the day.
-      Each issue is a story + 10 challenges — free forever.
+      <!-- SPACE -->
+      <div class="adventure-card card-space">
+        <div class="card-inner">
+          <div class="free-badge">⭐ Free to try</div>
+          <div class="card-emoji">🚀</div>
+          <div class="card-world">Space Adventure</div>
+          <div class="card-title">Jake & the Fraction Phantom</div>
+          <div class="card-hero">Hero: Jake · Antagonist: The Fraction Phantom · Ages 7–9</div>
+          <p class="card-desc">Jake arrives at Kepler Station to find the fuel readings make no sense — and someone is sabotaging the Interstellar Fuel Network. Fractions are the key to every puzzle, and the mysterious Fraction Phantom is always one step ahead.</p>
+          <div class="card-topics">
+            <span class="topic-chip">Fractions</span>
+            <span class="topic-chip">Comparing fractions</span>
+            <span class="topic-chip">Adding fractions</span>
+            <span class="topic-chip">Fraction patterns</span>
+          </div>
+          <a href="issue-001-narrated.html" class="card-cta">Read Issue 1 Free →</a>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-issues">
+          <div class="issue-dots">
+            <div class="issue-dot" title="Issue 1"></div>
+            <div class="issue-dot" title="Issue 2"></div>
+            <div class="issue-dot" title="Issue 3"></div>
+            <div class="issue-dot" title="Issue 4"></div>
+            <div class="issue-dot" title="Issue 5"></div>
+            <div class="issue-dot" title="Issue 6"></div>
+            <div class="issue-dot" title="Issue 7"></div>
+          </div>
+          <span class="issues-label">✅ All 7 issues complete</span>
+        </div>
+      </div>
+
+      <!-- JUNGLE -->
+      <div class="adventure-card card-jungle">
+        <div class="card-inner">
+          <div class="free-badge">⭐ Free to try</div>
+          <div class="card-emoji">🌿</div>
+          <div class="card-world">Jungle Adventure</div>
+          <div class="card-title">Blaze</div>
+          <div class="card-hero">Hero: Blaze Chen-Okoro · Ages 7–9</div>
+          <p class="card-desc">Sharp, fearless Blaze arrives in the Verdant Canopy — an ancient jungle where the Sprocket tribe shares everything equally. But vines are going missing, villages are getting cut off, and something enormous is watching from the shadows. Division has never felt so urgent.</p>
+          <div class="card-topics">
+            <span class="topic-chip">Division</span>
+            <span class="topic-chip">Arrays</span>
+            <span class="topic-chip">Remainders</span>
+            <span class="topic-chip">Short division</span>
+          </div>
+          <a href="jungle-001-narrated.html" class="card-cta">Read Issue 1 Free →</a>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-issues">
+          <div class="issue-dots">
+            <div class="issue-dot" title="Issue 1"></div>
+            <div class="issue-dot" title="Issue 2"></div>
+            <div class="issue-dot" title="Issue 3"></div>
+            <div class="issue-dot" title="Issue 4"></div>
+            <div class="issue-dot" title="Issue 5"></div>
+            <div class="issue-dot" title="Issue 6"></div>
+            <div class="issue-dot" title="Issue 7"></div>
+          </div>
+          <span class="issues-label">✅ All 7 issues complete</span>
+        </div>
+      </div>
+
+      <!-- PYRAMIDS — COMING SOON -->
+      <div class="adventure-card card-pyramids coming-soon">
+        <div class="coming-soon-badge">Coming Soon</div>
+        <div class="card-inner">
+          <div class="card-emoji">🏺</div>
+          <div class="card-world">Pyramid Adventure</div>
+          <div class="card-title">Blaze in the Ancient World</div>
+          <div class="card-hero">Hero: Blaze Chen-Okoro · Ages 7–9</div>
+          <p class="card-desc">Blaze steps into a world of ancient architects where the pyramids were built with pure mathematics. To unlock the hidden chambers, she'll need to master multiplication, area, and the secrets of the golden ratio.</p>
+          <div class="card-topics">
+            <span class="topic-chip">Multiplication</span>
+            <span class="topic-chip">Area & volume</span>
+            <span class="topic-chip">Angles</span>
+            <span class="topic-chip">Decimals</span>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-issues">
+          <div class="issue-dots">
+            <div class="issue-dot"></div>
+            <div class="issue-dot"></div>
+            <div class="issue-dot"></div>
+            <div class="issue-dot"></div>
+            <div class="issue-dot"></div>
+            <div class="issue-dot"></div>
+            <div class="issue-dot"></div>
+          </div>
+          <span class="issues-label">7 issues · Available soon</span>
+        </div>
+      </div>
+
+      <!-- TREASURE — COMING SOON -->
+      <div class="adventure-card card-treasure coming-soon">
+        <div class="coming-soon-badge">Coming Soon</div>
+        <div class="card-inner">
+          <div class="card-emoji">🗺️</div>
+          <div class="card-world">Treasure Hunt</div>
+          <div class="card-title">Jake & the Pirate Code</div>
+          <div class="card-hero">Hero: Jake · Ages 7–9</div>
+          <p class="card-desc">Jake stumbles onto a centuries-old pirate map — but every clue is a maths puzzle in disguise. Decode coordinates, crack riddles, and outsmart the rival crew before they find the treasure first.</p>
+          <div class="card-topics">
+            <span class="topic-chip">Coordinates</span>
+            <span class="topic-chip">Data & graphs</span>
+            <span class="topic-chip">Long division</span>
+            <span class="topic-chip">Mixed operations</span>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-issues">
+          <div class="issue-dots">
+            <div class="issue-dot"></div>
+            <div class="issue-dot"></div>
+            <div class="issue-dot"></div>
+            <div class="issue-dot"></div>
+            <div class="issue-dot"></div>
+            <div class="issue-dot"></div>
+            <div class="issue-dot"></div>
+          </div>
+          <span class="issues-label">7 issues · Available soon</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="container">
+    <div class="section-label">Inside the Adventures</div>
+    <div class="section-title" style="margin-bottom:28px;">See the worlds for yourself</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:900px; margin:0 auto;">
+      <div style="border-radius:16px; overflow:hidden; border:2px solid rgba(124,58,237,0.3); box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+        <img src="images/ch1-kepler-docking.png" alt="Jake arriving at Kepler Station" style="width:100%; display:block; object-fit:cover;" />
+        <div style="padding:12px 16px; background:rgba(124,58,237,0.08);">
+          <div style="font-size:12px; font-weight:700; color:var(--purple-light); text-transform:uppercase; letter-spacing:1px;">🚀 Space Arc</div>
+          <div style="font-size:14px; color:#d1d5db; margin-top:4px;">Jake arrives at Kepler Station — and the fuel readings make no sense.</div>
+        </div>
+      </div>
+      <div style="border-radius:16px; overflow:hidden; border:2px solid rgba(124,58,237,0.3); box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+        <img src="images/ch1-issue007.png" alt="Jake in the Space Arc" style="width:100%; display:block; object-fit:cover;" />
+        <div style="padding:12px 16px; background:rgba(124,58,237,0.08);">
+          <div style="font-size:12px; font-weight:700; color:var(--purple-light); text-transform:uppercase; letter-spacing:1px;">🚀 Space Arc</div>
+          <div style="font-size:14px; color:#d1d5db; margin-top:4px;">Every puzzle is a step closer to unmasking the Fraction Phantom.</div>
+        </div>
+      </div>
+      <div style="border-radius:16px; overflow:hidden; border:2px solid rgba(34,197,94,0.3); box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+        <img src="images/jungle/issue007/ch1-all-villages.png" alt="All five Sprocket villages gathered" style="width:100%; display:block; object-fit:cover;" />
+        <div style="padding:12px 16px; background:rgba(34,197,94,0.08);">
+          <div style="font-size:12px; font-weight:700; color:var(--green); text-transform:uppercase; letter-spacing:1px;">🌿 Jungle Arc</div>
+          <div style="font-size:14px; color:#d1d5db; margin-top:4px;">All five Sprocket villages together for the first time in centuries.</div>
+        </div>
+      </div>
+      <div style="border-radius:16px; overflow:hidden; border:2px solid rgba(34,197,94,0.3); box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+        <img src="images/jungle/issue005/ch3-tangle-arrives.png" alt="Tangle arrives at Split Ridge" style="width:100%; display:block; object-fit:cover;" />
+        <div style="padding:12px 16px; background:rgba(34,197,94,0.08);">
+          <div style="font-size:12px; font-weight:700; color:var(--green); text-transform:uppercase; letter-spacing:1px;">🌿 Jungle Arc</div>
+          <div style="font-size:14px; color:#d1d5db; margin-top:4px;">Tangle follows Blaze to Split Ridge — and discovers what remainders feel like.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div class="section-label">How it works</div>
+    <div class="section-title">Three steps, zero hassle</div>
+    <p class="section-sub">No app to install. No account for your child. Just click the link and read.</p>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">1</div>
+        <h3>Pick an adventure</h3>
+        <p>Choose a world — Space, Jungle, or more coming soon. Try the first issue of any adventure completely free, no sign-up needed.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">2</div>
+        <h3>The story pulls them in</h3>
+        <p>Jake or Blaze hits a problem they can't solve without maths. The story stops. Your child has to figure it out to find out what happens next.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">3</div>
+        <h3>Maths happens naturally</h3>
+        <p>Every puzzle is curriculum-aligned for Years 2–4. Fractions, times tables, geometry — embedded in the adventure so it never feels like homework.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="container">
+    <div class="section-label">Early readers</div>
+    <div class="section-title">Kids actually ask for it</div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"My son asked me if the new Math Blast was out yet. He has never once asked about homework. Never."</p>
+        <div class="testi-author">Sarah M. · Mum of a Year 3 boy, Perth</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"We do Sunday mornings with Jake and Bolt now. She loves the characters. I love that she's doing fractions without knowing it."</p>
+        <div class="testi-author">James K. · Dad of a Year 2 girl, Melbourne</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Finally, screen time I don't feel guilty about. The stories are genuinely engaging — even I got caught up in them."</p>
+        <div class="testi-author">Emma R. · Mum of two, Brisbane</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section id="subscribe">
+  <div class="container">
+    <div style="text-align:center; margin-bottom: 48px;">
+      <div class="section-label">Pricing</div>
+      <div class="section-title">Your call — arc or all-access</div>
+      <p class="section-sub" style="margin: 0 auto;">Start with a single adventure. Upgrade when your child is hooked. Two issues always free, no sign-up needed.</p>
+    </div>
+
+    <div class="pricing-wrap">
+
+      <!-- SINGLE ARC -->
+      <div class="pricing-card">
+        <div class="pricing-icon">🗺️</div>
+        <div class="pricing-name">Single Arc</div>
+        <div class="pricing-price"><sup>$</sup>12.99</div>
+        <div class="pricing-per">one-time · one adventure world</div>
+        <div class="pricing-save">&nbsp;</div>
+        <ul class="pricing-features">
+          <li>Full story arc — all 7 issues</li>
+          <li>All issues unlocked immediately</li>
+          <li>Audio narration with character voices</li>
+          <li>Works on any device, no app</li>
+          <li>Pay once, yours forever</li>
+          <li class="muted">One adventure world only</li>
+        </ul>
+        <a href="mailto:leohiem2026@gmail.com?subject=Math Blast - Single Arc&body=Hi! I'd like to buy a single adventure arc.%0A%0AWhich arc (Space / Jungle): %0AEmail to send issues to: " class="pricing-cta secondary">Buy an Arc — $12.99 →</a>
+        <p class="pricing-note">No subscription · pay once, keep forever</p>
+      </div>
+
+      <!-- BUNDLE -->
+      <div class="pricing-card">
+        <div class="pricing-icon">📦</div>
+        <div class="pricing-name">Two Arc Bundle</div>
+        <div class="pricing-price"><sup>$</sup>19.99</div>
+        <div class="pricing-per">one-time · two adventure worlds</div>
+        <div class="pricing-save">Save $6 vs buying separately</div>
+        <ul class="pricing-features">
+          <li>Two full arcs — 14 issues total</li>
+          <li>All issues unlocked immediately</li>
+          <li>Audio narration with character voices</li>
+          <li>Works on any device, no app</li>
+          <li>Mix and match any two worlds</li>
+          <li>Pay once, yours forever</li>
+        </ul>
+        <a href="mailto:leohiem2026@gmail.com?subject=Math Blast - Two Arc Bundle&body=Hi! I'd like to buy the two arc bundle.%0A%0AWhich arcs (Space / Jungle): %0AEmail to send issues to: " class="pricing-cta secondary">Get Two Arcs — $19.99 →</a>
+        <p class="pricing-note">No subscription · pay once, keep forever</p>
+      </div>
+
+      <!-- FOUNDER PASS -->
+      <div class="pricing-card featured">
+        <div class="pricing-badge">⭐ Founder's Pick</div>
+        <div class="pricing-icon">🏆</div>
+        <div class="pricing-name">Founder Pass</div>
+        <div class="pricing-price"><sup>$</sup>44.99</div>
+        <div class="pricing-per">one-time · every arc, forever</div>
+        <div class="pricing-save">All current + future arcs included</div>
+        <ul class="pricing-features">
+          <li>Every arc we ever release — forever</li>
+          <li>Space, Jungle, Pyramids, Treasure Hunt</li>
+          <li>Audio narration with character voices</li>
+          <li>Works on any device, no app</li>
+          <li>New arcs added automatically</li>
+          <li>No subscription, no ongoing fees</li>
+        </ul>
+        <a href="mailto:leohiem2026@gmail.com?subject=Math Blast - Founder Pass&body=Hi! I'd like to buy the Math Blast Founder Pass.%0A%0AChild's age / year level: %0AEmail to send issues to: " class="pricing-cta primary">Get the Founder Pass — $44.99 →</a>
+        <p class="pricing-note">Limited early supporter offer · one-time payment only</p>
+      </div>
+
+    </div>
+
+    <p style="text-align:center; margin-top:28px; font-size:14px; color:var(--muted);">
+      Not sure yet? <a href="issue-001-narrated.html" target="_blank" style="color:var(--purple-light);">Read Space Issue 1 free</a> &nbsp;·&nbsp; <a href="#adventures" style="color:var(--purple-light);">Read Jungle Issue 1 free</a> — no sign-up, no card required.
     </p>
+  </div>
+</section>
 
-    <div class="hero-btns">
-      <a href="#issues" class="btn-primary">🎮 Play Now — It's Free!</a>
-      <a href="#how-it-works" class="btn-secondary">📖 How It Works</a>
-    </div>
+<div class="divider"></div>
 
-    <div class="hero-characters" style="display:flex; gap:1.5rem; justify-content:center; align-items:flex-end; flex-wrap:wrap; margin-top:1rem;">
-      <div class="hero-image-wrap">
-        <img
-          src="https://mathblastau.github.io/math-blast/images/ch1-crashed-rocket.png"
-          alt="Jake in his orange space suit next to a crashed rocket"
-          class="hero-image"
-        />
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-label">Questions</div>
+    <div class="section-title">FAQ</div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">What age is it for?</div>
+        <div class="faq-a">Math Blast is designed for children aged 7–9 (Years 2–4). The maths content follows the Australian National Curriculum — times tables, fractions, geometry, measurement, and more.</div>
       </div>
-      <div class="hero-image-wrap">
-        <img
-          src="images/blaze-concept.png"
-          alt="Blaze, Jake's co-pilot and tech genius"
-          class="hero-image"
-        />
+      <div class="faq-item">
+        <div class="faq-q">Do we need to install anything?</div>
+        <div class="faq-a">No. Each issue is a webpage — just click the link. Works on any phone, tablet, or computer. No app, no account for your child, no passwords.</div>
       </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section id="how-it-works">
-    <div class="section-inner">
-      <div class="star-divider">✦ ✦ ✦</div>
-      <span class="section-tag">🛸 How It Works</span>
-      <h2 class="section-title">Three easy steps to <span class="accent-cyan">blast off</span></h2>
-      <p class="section-desc">No downloads, no logins — just click and go. Perfect for home or classroom.</p>
-
-      <div class="steps-grid">
-        <div class="step-card">
-          <span class="step-emoji">📚</span>
-          <div class="step-num">1</div>
-          <h3>Pick Your Mission</h3>
-          <p>Choose any issue from the launch pad. New missions drop every month for free!</p>
-        </div>
-
-        <div class="step-card">
-          <span class="step-emoji">🌌</span>
-          <div class="step-num">2</div>
-          <h3>Read the Story</h3>
-          <p>Follow Jake through the galaxy. Each chapter is a fast, exciting adventure packed with action.</p>
-        </div>
-
-        <div class="step-card">
-          <span class="step-emoji">🧮</span>
-          <div class="step-num">3</div>
-          <h3>Answer the Challenges</h3>
-          <p>10 maths questions tied to the story. Get them right to unlock the next part of Jake's mission!</p>
-        </div>
+      <div class="faq-item">
+        <div class="faq-q">What's the difference between the adventure worlds?</div>
+        <div class="faq-a">Each world has a different hero, setting, and maths focus. The Space arc (Jake & Bolt) covers fractions and times tables. The Jungle arc (Blaze) focuses on measurement and patterns. Pyramids and Treasure Hunt are coming soon. A subscription gives access to all active worlds.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How long does each issue take?</div>
+        <div class="faq-a">About 15–25 minutes — perfect for a Sunday morning or after-school wind-down. There's audio narration too, so you can listen along together.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is it actually curriculum-aligned?</div>
+        <div class="faq-a">Yes. Every puzzle maps to the Australian Curriculum for Years 2–4. It's not just maths-flavoured fun — it covers the content they need to know.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What's the difference between the three pricing options?</div>
+        <div class="faq-a">A Single Arc ($12.99) gives you all 7 issues of one adventure world — great if you want to try one topic. The Two Arc Bundle ($19.99) saves $6 and suits families with kids at different year levels. The Founder Pass ($44.99) is a one-time payment that unlocks every arc we ever release — Space, Jungle, Pyramids, Treasure Hunt, and anything we add in future. No subscription, no ongoing fees.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I cancel?</div>
+        <div class="faq-a">Absolutely. No lock-in, no fees. Just email us and we'll stop your subscription straight away. Arc purchases are yours to keep regardless.</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ISSUES -->
-  <section id="issues">
-    <div class="section-inner">
-      <div class="star-divider">✦ ✦ ✦</div>
-      <span class="section-tag">🚀 Launch Pad</span>
-      <h2 class="section-title">Pick a <span class="accent-yellow">Mission</span></h2>
-      <p class="section-desc">Two missions are live and ready to play. Which one will you choose, astronaut?</p>
+<!-- CTA BOTTOM -->
+<div class="cta-section">
+  <div class="container">
+    <h2>Ready for the adventure? 🚀</h2>
+    <p>Try two worlds free. Subscribe to unlock them all.</p>
+    <a href="#adventures" class="btn-primary">Choose Your Adventure →</a>
+    <p style="font-size:13px; color:var(--muted); margin-top:14px;">Space Issue 1 & Jungle Issue 1 free · No sign-up</p>
+  </div>
+</div>
 
-      <div class="issues-grid">
-
-        <!-- Issue 1 -->
-        <div class="issue-card">
-          <div class="issue-badge-strip">
-            <span class="issue-num-badge">Issue #1</span>
-            <span class="issue-emoji">🛸</span>
-          </div>
-          <div class="issue-body">
-            <div class="issue-title">The Crashed Rocket</div>
-            <div class="issue-tagline">Jake's first mission — and it's already going wrong!</div>
-            <p class="issue-desc">
-              Jake crash-lands on an alien planet with no fuel and no signal. Can you solve the maths puzzles and help him get home before the battery dies?
-            </p>
-            <div class="issue-meta">
-              <span class="issue-chip">⏱ ~20 min</span>
-              <span class="issue-chip">🧮 10 questions</span>
-              <span class="issue-chip">⭐ Years 3–4</span>
-            </div>
-          </div>
-          <a href="issue-001-v3.html" class="issue-play-btn" target="_blank" rel="noopener">
-            🚀 Launch Mission #1
-          </a>
-        </div>
-
-        <!-- Issue 2 -->
-        <div class="issue-card">
-          <div class="issue-badge-strip">
-            <span class="issue-num-badge">Issue #2</span>
-            <span class="issue-emoji">🌙</span>
-          </div>
-          <div class="issue-body">
-            <div class="issue-title">The Space Station Rescue</div>
-            <div class="issue-tagline">Someone's trapped — and only maths can save them!</div>
-            <p class="issue-desc">
-              Jake gets a distress signal from a failing space station. Solve the challenges to restore power, seal the airlocks, and bring the crew home safely.
-            </p>
-            <div class="issue-meta">
-              <span class="issue-chip">⏱ ~20 min</span>
-              <span class="issue-chip">🧮 10 questions</span>
-              <span class="issue-chip">⭐ Years 3–4</span>
-            </div>
-          </div>
-          <a href="issue-002-v1.html" class="issue-play-btn" target="_blank" rel="noopener">
-            🚀 Launch Mission #2
-          </a>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- SUBSCRIBE -->
-  <section id="subscribe">
-    <div class="section-inner">
-      <div class="star-divider">✦ ✦ ✦</div>
-      <span class="section-tag">🔔 Stay in the Loop</span>
-      <h2 class="section-title">Never miss a <span class="accent-purple">launch</span></h2>
-
-      <div class="subscribe-box">
-        <span class="rocket-icon">🚀</span>
-        <h3>Mission Alert — Sign Up!</h3>
-        <p>New issues drop every month — free!<br>Sign up to get notified when the next mission launches.</p>
-
-        <form
-          action="https://formspree.io/f/xpwzgkqb"
-          method="POST"
-          class="subscribe-form"
-        >
-          <div class="form-row">
-            <input type="text" name="name" placeholder="Your name" required autocomplete="name" />
-            <input type="email" name="email" placeholder="Your email" required autocomplete="email" />
-          </div>
-          <button type="submit">
-            🚀 Join the Mission — It's Free!
-          </button>
-        </form>
-
-        <p class="subscribe-note">No spam. No cost. Just awesome maths adventures. Unsubscribe any time.</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-logo">🚀 Math Blast</div>
-    <p class="footer-tagline">Space adventures + maths skills for kids in Years 3–4</p>
-    <div class="footer-social">
-      <span class="social-chip">📘 Facebook — coming soon</span>
-      <span class="social-chip">📸 Instagram — coming soon</span>
-    </div>
-    <p class="footer-copy">© 2026 Math Blast. All rights reserved. Made with ❤️ for curious kids everywhere.</p>
-  </footer>
-
-  <script>
-    // ===== GENERATE STARFIELD =====
-    (function() {
-      const container = document.getElementById('stars');
-      const count = 120;
-      for (let i = 0; i < count; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        const size = Math.random() * 2.5 + 0.5;
-        const maxOp = (Math.random() * 0.5 + 0.3).toFixed(2);
-        const dur = (Math.random() * 4 + 2).toFixed(1) + 's';
-        const delay = (Math.random() * 6).toFixed(1) + 's';
-        star.style.cssText = `
-          width: ${size}px;
-          height: ${size}px;
-          top: ${Math.random() * 100}%;
-          left: ${Math.random() * 100}%;
-          --dur: ${dur};
-          --max-op: ${maxOp};
-          animation-delay: ${delay};
-        `;
-        container.appendChild(star);
-      }
-    })();
-  </script>
+<!-- FOOTER -->
+<footer>
+  <p>🚀 Math Blast · Weekly maths adventures for kids · Made with ❤️ in Perth, Australia</p>
+  <p style="margin-top:8px;">
+    <a href="issue-001-narrated.html">Free Space Issue</a> ·
+    <a href="mailto:leohiem2026@gmail.com">Contact us</a>
+  </p>
+</footer>
 
 </body>
 </html>
