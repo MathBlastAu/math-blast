@@ -803,33 +803,20 @@ function answer(btn, correct, qId){
       q10:null, // Q10 answer plays in showCliffhanger
     };
 
-    // Play answer explanation immediately, THEN the short celebration clip
+    // 1. Confirmation clip, then 2. Explanation clip
     const aFile = answerAudio[qId];
-    if(aFile){
-      playFile(aFile, ()=>{
-        // After explanation, play a short celebration
-        if(qNum===1){
-          playFile('feedback-correct-1.mp3',null);
-        } else {
-          let v;
-          if(qNum>=4&&qNum<=5)      v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];
-          else if(qNum>=6&&qNum<=8) v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-6.mp3'];
-          else                       v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-6.mp3'];
-          playFile(v[correctVariant%v.length],null); correctVariant++;
-        }
-      });
+    let celebFile;
+    if(qNum===1){
+      celebFile='feedback-correct-1.mp3';
     } else {
-      // No answer clip — just play celebration
-      if(qNum===1){
-        playFile('feedback-correct-1.mp3',null);
-      } else {
-        let v;
-        if(qNum>=4&&qNum<=5)      v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];
-        else if(qNum>=6&&qNum<=8) v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-6.mp3'];
-        else                       v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-6.mp3'];
-        playFile(v[correctVariant%v.length],null); correctVariant++;
-      }
+      let v;
+      if(qNum>=4&&qNum<=5)      v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];
+      else if(qNum>=6&&qNum<=8) v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-6.mp3'];
+      else                       v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-6.mp3'];
+      celebFile=v[correctVariant%v.length]; correctVariant++;
     }
+    // Play confirmation first, then explanation
+    playFile(celebFile, aFile ? ()=>playFile(aFile,null) : null);
   } else {
     triedWrong.add(qId); // mark this question as having had a wrong attempt
     btn.classList.add('wrong');
