@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Blast 🌿 — Jungle Issue 2 (Narrated)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#061a06; font-family:'Nunito',Arial,sans-serif; color:#fff;
+    background-image:radial-gradient(ellipse at 50% 0%,rgba(0,100,30,0.3) 0%,transparent 70%); min-height:100vh; }
+
+  .leaffield { position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .leaf { position:absolute; font-size:12px; opacity:0.25; animation:fall 8s linear infinite; }
+  @keyframes fall { from{transform:translateY(-20px) rotate(0deg); opacity:0.25} to{transform:translateY(100vh) rotate(360deg); opacity:0} }
+
+  .wrapper { max-width:680px; margin:0 auto; position:relative; z-index:1; padding-bottom:90px; }
+
+  .title-screen { text-align:center; padding:48px 24px 36px; }
+  .hero-emoji { font-size:72px; display:block; margin-bottom:16px; animation:float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  .title-screen h1 { font-size:46px; font-weight:900; line-height:1.1; text-shadow:0 0 24px rgba(0,180,60,0.8); }
+  .title-screen h1 span { color:#86efac; }
+  .issue-label { font-size:13px; font-weight:900; color:#4ade80; letter-spacing:3px; text-transform:uppercase; margin:10px 0 4px; }
+  .tagline { font-size:16px; color:#6ee7b7; margin-bottom:4px; }
+  .meta { font-size:13px; color:#166534; margin-bottom:8px; }
+  .narrated-badge { display:inline-block; background:rgba(134,239,172,0.15); border:1px solid #86efac; color:#86efac;
+    font-size:11px; font-weight:900; padding:4px 14px; border-radius:20px; letter-spacing:2px; text-transform:uppercase; margin-bottom:24px; }
+  .start-btn { display:inline-block; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-size:20px; font-weight:900; padding:18px 48px; border-radius:50px; border:none; cursor:pointer;
+    box-shadow:0 6px 30px rgba(22,163,74,0.5); transition:transform 0.15s; font-family:'Nunito',Arial,sans-serif; }
+  .start-btn:hover { transform:scale(1.05); }
+
+  .progress-wrap { padding:16px 24px 0; display:none; }
+  .progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .progress-label { font-size:13px; color:#4ade80; font-weight:700; }
+  .progress-score { font-size:13px; color:#fbbf24; font-weight:900; }
+  .progress-bar { background:#0a2a0a; border-radius:20px; height:14px; overflow:hidden; }
+  .progress-fill { background:linear-gradient(90deg,#16a34a,#86efac); height:100%; border-radius:20px; transition:width 0.5s ease; }
+
+  .chapter { display:none; padding:20px 20px 0; animation:fadeIn 0.4s ease; }
+  .chapter.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .chapter-badge { display:inline-block; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-size:11px; font-weight:900; padding:5px 16px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; }
+  .chapter h2 { font-size:26px; font-weight:900; margin-bottom:16px; line-height:1.3; }
+  .chapter-img { width:100%; border-radius:16px; display:block; margin-bottom:20px;
+    border:3px solid rgba(0,180,60,0.4); box-shadow:0 8px 30px rgba(0,0,0,0.5); background:#0a2a0a; min-height:180px; object-fit:cover; }
+
+  .nar-player { display:flex; align-items:center; gap:12px; background:rgba(22,163,74,0.12);
+    border:2px solid rgba(22,163,74,0.4); border-radius:14px; padding:12px 16px; margin-bottom:16px; }
+  .nar-btn { width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; flex-shrink:0;
+    background:linear-gradient(135deg,#15803d,#16a34a); color:white; font-size:18px;
+    display:flex; align-items:center; justify-content:center; transition:transform 0.15s; }
+  .nar-btn:hover { transform:scale(1.1); }
+  .nar-info { flex:1; min-width:0; }
+  .nar-status { font-size:12px; color:#4ade80; font-weight:700; }
+  .nar-bar { height:4px; background:#0a2a0a; border-radius:4px; margin-top:5px; overflow:hidden; }
+  .nar-bar-fill { height:100%; background:linear-gradient(90deg,#16a34a,#86efac); border-radius:4px; width:0%; transition:width 0.3s; }
+
+  .story-text { background:rgba(255,255,255,0.04); border-left:4px solid #16a34a;
+    border-radius:0 12px 12px 0; padding:18px 22px; font-size:18px; line-height:1.9; color:#d1fae5; margin-bottom:20px;
+    transition:border-color 0.4s, background 0.4s; }
+  .story-text.playing { border-left-color:#86efac; background:rgba(22,163,74,0.08); }
+  .story-text.done { border-left-color:#fbbf24; background:rgba(251,191,36,0.04); }
+  .story-text strong { color:#fbbf24; }
+  .story-text em { color:#86efac; font-style:normal; font-weight:700; }
+
+  .quiz-lock { text-align:center; padding:16px 20px; background:rgba(22,163,74,0.06);
+    border:2px dashed rgba(22,163,74,0.3); border-radius:16px; margin-bottom:20px;
+    font-size:14px; color:#4ade80; font-weight:700; }
+
+  .quiz-box { background:rgba(22,163,74,0.08); border:2px solid rgba(22,163,74,0.35);
+    border-radius:16px; padding:22px; margin-bottom:20px; display:none; animation:fadeIn 0.4s ease; }
+  .quiz-box.show { display:block; }
+  .quiz-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .difficulty { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; }
+  .diff-warmup { background:rgba(100,200,255,0.2); color:#66ddff; border:1px solid #66ddff; }
+  .diff-easy   { background:rgba(134,239,172,0.2); color:#86efac; border:1px solid #86efac; }
+  .diff-medium { background:rgba(255,200,0,0.2);   color:#fbbf24; border:1px solid #fbbf24; }
+  .diff-hard   { background:rgba(255,80,80,0.2);   color:#ff8888; border:1px solid #ff8888; }
+  .diff-boss   { background:rgba(255,0,200,0.2);   color:#ff44ee; border:1px solid #ff44ee; }
+  .acara-tag { display:inline-block; font-size:10px; font-weight:700; padding:3px 10px; border-radius:10px;
+    background:rgba(255,255,255,0.07); color:#6ee7b7; border:1px solid rgba(255,255,255,0.1); text-transform:uppercase; letter-spacing:0.5px; }
+  .quiz-icon { font-size:26px; display:block; margin-bottom:6px; }
+  .quiz-label { font-size:12px; font-weight:900; color:#4ade80; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+  .yr-badge { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; margin-right:6px; }
+  .yr3 { background:rgba(22,163,74,0.2); color:#86efac; border:1px solid #86efac; }
+  .yr4 { background:rgba(251,191,36,0.2); color:#fbbf24; border:1px solid #fbbf24; }
+  .question { font-size:20px; font-weight:900; color:#fff; margin-bottom:18px; line-height:1.5; }
+  .question-img { display:block; max-width:300px; width:100%; margin:14px auto 18px; border-radius:8px; border:2px solid rgba(22,163,74,0.3); }
+  .options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .opt-btn { background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.12); color:#fff;
+    font-family:'Nunito',Arial,sans-serif; font-size:19px; font-weight:700; padding:16px 10px;
+    border-radius:12px; cursor:pointer; transition:all 0.15s; }
+  .opt-btn:hover:not(:disabled) { background:rgba(22,163,74,0.25); border-color:#16a34a; transform:scale(1.03); }
+  .opt-btn.correct { background:rgba(22,163,74,0.25)!important; border-color:#86efac!important; color:#86efac!important; }
+  .opt-btn.wrong   { background:rgba(255,50,50,0.2)!important; border-color:#ff3232!important; color:#ff8888!important; animation:shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .feedback { margin-top:16px; padding:14px 18px; border-radius:10px; font-size:15px; font-weight:700; display:none; line-height:1.5; }
+  .feedback.show { display:block; }
+  .feedback.good { background:rgba(22,163,74,0.15); border:2px solid #86efac; color:#86efac; }
+  .feedback.bad  { background:rgba(255,50,50,0.15); border:2px solid #ff3232; color:#ff9999; }
+  .next-btn { display:none; width:100%; margin-top:16px; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px; border-radius:50px;
+    border:none; cursor:pointer; box-shadow:0 4px 20px rgba(22,163,74,0.4); transition:transform 0.15s; }
+  .next-btn:hover { transform:scale(1.03); }
+  .next-btn.show { display:block; }
+
+  #win-screen { display:none; text-align:center; padding:48px 24px 24px; animation:fadeIn 0.5s ease; }
+  .trophy { font-size:80px; display:block; margin-bottom:16px; animation:bounce 0.8s ease infinite alternate; }
+  @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.15)} }
+  #win-screen h2 { font-size:38px; font-weight:900; color:#fbbf24; margin-bottom:8px; }
+  .win-score { font-size:22px; font-weight:900; color:#86efac; margin-bottom:16px; }
+  .win-stars { font-size:36px; margin-bottom:20px; }
+  #win-screen > p { font-size:17px; color:#6ee7b7; line-height:1.75; margin-bottom:20px; }
+  .win-summary { background:rgba(255,255,255,0.04); border-radius:14px; padding:18px 20px; margin-bottom:24px; text-align:left; }
+  .win-summary h3 { font-size:14px; color:#fbbf24; font-weight:900; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .win-summary ul { list-style:none; }
+  .win-summary li { font-size:14px; color:#d1fae5; padding:4px 0; }
+  .replay-btn { display:inline-block; background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#0a2a0a;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px 40px;
+    border-radius:50px; border:none; cursor:pointer; margin-bottom:16px; transition:transform 0.15s; }
+  .replay-btn:hover { transform:scale(1.04); }
+  .next-issue-btn { display:block; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:16px; font-weight:900; padding:12px 32px;
+    border-radius:50px; border:none; cursor:pointer; text-decoration:none; margin-bottom:12px;
+    box-shadow:0 4px 20px rgba(22,163,74,0.3); transition:transform 0.15s; }
+  .next-issue-btn:hover { transform:scale(1.03); }
+
+  #ctrl-bar { position:fixed; top:14px; left:14px; display:flex; gap:8px; z-index:999;
+    background:rgba(0,0,0,0.6); padding:6px 10px; border-radius:24px; border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(6px); }
+  .ctrl-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:white;
+    font-family:'Nunito',sans-serif; font-weight:700; font-size:12px; padding:5px 12px; border-radius:16px; cursor:pointer; transition:background 0.15s; }
+  .ctrl-btn:hover { background:rgba(255,255,255,0.18); }
+  .ctrl-btn.muted { background:rgba(255,50,50,0.3); border-color:#ff3232; }
+</style>
+</head>
+<body>
+
+<div class="leaffield" id="leaffield"></div>
+<div class="wrapper">
+
+  <!-- TITLE -->
+  <div id="title-screen" class="title-screen">
+    <span class="hero-emoji">🍄</span>
+    <p class="issue-label">The Jungle Arc · Issue 2</p>
+    <h1>MATH BLAST<br><span>🍄 THE FERNMOSS MUDDLE</span></h1>
+    <p class="tagline">Blaze crosses to Fernmoss — and the division has gone terribly wrong!</p>
+    <p class="meta">5 chapters · 10 challenges · Division · Year 3</p>
+    <div class="narrated-badge">🎙️ Narrated Edition</div><br>
+    <button class="start-btn" onclick="startGame()">🍄 START ADVENTURE</button>
+    <p style="font-size:12px;color:#166534;margin-top:16px;">Narrated by Eric · Blaze voiced by Jessica · Thistle voiced by Matilda</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label" id="progress-label">Chapter 1 of 5</div>
+      <div class="progress-score" id="progress-score">⭐ 0 / 10</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- ===== CHAPTER 1 ===== -->
+  <div class="chapter" id="chapter-1">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🍄 Chapter 1 — Dividing in the Dark</div>
+      <h2>The Wrong Numbers!</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue002/ch1-fernmoss-arrival.png" alt="Blaze arriving at Fernmoss" />
+    <div class="nar-player" id="player-ch1">
+      <button class="nar-btn" id="btn-ch1" onclick="togglePlayer('ch1')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch1">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch1"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch1">
+      The path to Fernmoss was overgrown — half the connecting vines were gone. Blaze pushed through and found the village in chaos.<br><br>
+      <em>"We have thirty-six doses for twelve Sprockets — three each. That's what the record says. But only four of us are here now, and I didn't know what to change..."</em> said Thistle, the acting medicine keeper.<br><br>
+      <em>"Stop,"</em> said Blaze. <em>"You're dividing by the wrong number."</em>
+    </div>
+    <div id="lock-q1" class="quiz-lock">🔒 Listen to the story first to unlock your challenge!</div>
+    <div class="quiz-box" id="quiz-q1">
+      <div class="quiz-meta"><span class="difficulty diff-warmup">🌱 Warm-Up</span><span class="acara-tag">Division · Year 3</span></div>
+      <span class="quiz-icon">💊</span>
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 1 — Division</div>
+      <div class="question"><strong>36 medicine doses</strong> for <strong>12 Sprockets</strong>.<br><br>How many doses does each Sprocket get?</div>
+      <img src="images/jungle/issue002/q1-medicine-doses.png" alt="Medicine doses" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q1')">2</button>
+        <button class="opt-btn" onclick="answer(this,true,'q1')">3</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">6</button>
+      </div>
+      <div class="feedback" id="feedback-q1"></div>
+      <button class="next-btn" id="next-q1" onclick="nextChapter(2)">Chapter 2 ➜</button>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 2 ===== -->
+  <div class="chapter" id="chapter-2">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🥜 Chapter 2 — Wrong Numbers, Wrong Shares</div>
+      <h2>Everything's Been Divided by the Wrong Amount!</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue002/ch2-food-store.png" alt="Blaze in the Fernmoss food store" />
+    <div class="nar-player" id="player-ch2">
+      <button class="nar-btn" id="btn-ch2" onclick="togglePlayer('ch2')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch2">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch2"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch2">
+      The food store had the same problem — everything divided for twelve Sprockets who weren't there.<br><br>
+      <em>"Forty-eight nuts. Eight Sprockets actually here,"</em> Blaze said. <em>"Let me recalculate."</em><br><br>
+      The sick Sprocket, <strong>Curl</strong>, rested on a leaf-bed in the corner. Curl needed four times the normal dose of medicine — but nobody had worked out what that actually was.
+    </div>
+    <div id="lock-q2" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q2">
+      <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Division · Year 3</span></div>
+      <span class="quiz-icon">🥜</span>
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 2 — Division</div>
+      <div class="question"><strong>48 nuts</strong> shared equally between <strong>8 Sprockets</strong>.<br><br>How many does each Sprocket get?</div>
+      <img src="images/jungle/issue002/q2-nut-baskets.png" alt="Nut baskets" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q2')">4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q2')">5</button>
+        <button class="opt-btn" onclick="answer(this,true,'q2')">6</button>
+        <button class="opt-btn" onclick="answer(this,false,'q2')">8</button>
+      </div>
+      <div class="feedback" id="feedback-q2"></div>
+      <button class="next-btn" id="next-q2" onclick="showQ3Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q3" style="display:none">
+      <div class="nar-player" id="player-q3s">
+        <button class="nar-btn" id="btn-q3s" onclick="togglePlayer('q3s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q3s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q3s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q3s">
+        The sick Sprocket needed <strong>four times</strong> the normal medicine dose.
+      </div>
+      <div id="lock-q3" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q3">
+        <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Multiplication · Year 3</span></div>
+        <span class="quiz-icon">🌡️</span>
+        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 3 — Multiplication & Division Link</div>
+        <div class="question">Normal dose = <strong>9</strong>.<br>Curl needs <strong>4 times</strong> that amount.<br><br>What is Curl's dose?</div>
+        <img src="images/jungle/issue002/q3-sick-sprocket.png" alt="Medicine dose" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q3')">27</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">30</button>
+          <button class="opt-btn" onclick="answer(this,true,'q3')">36</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">45</button>
+        </div>
+        <div class="feedback" id="feedback-q3"></div>
+        <button class="next-btn" id="next-q3" onclick="nextChapter(3)">Chapter 3 ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 3 ===== -->
+  <div class="chapter" id="chapter-3">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌿 Chapter 3 — Counting What's Left</div>
+      <h2>Everything Needs Recalculating!</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue002/ch3-counting-store.png" alt="Blaze sorting through storage boxes" />
+    <div class="nar-player" id="player-ch3">
+      <button class="nar-btn" id="btn-ch3" onclick="togglePlayer('ch3')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch3">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch3"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch3">
+      With the medicine sorted, Blaze turned to the rest of the store. Everything had to be recalculated for the Sprockets who were actually present.<br><br>
+      <em>"Fifty-six healing leaves. Seven families,"</em> Blaze said. <em>"Equal shares."</em><br><br>
+      Then she found the storage box — <strong>sixty-three seeds</strong>, neatly stacked. But these weren't being shared — they needed to be grouped into pouches of nine.
+    </div>
+    <div id="lock-q4" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q4">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Division · Year 3</span></div>
+      <span class="quiz-icon">🍃</span>
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 4 — Sharing Equally</div>
+      <div class="question"><strong>56 healing leaves</strong> for <strong>7 families</strong>.<br><br>How many does each family get?</div>
+      <img src="images/jungle/issue002/q4-healing-leaves.png" alt="Healing leaves" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q4')">6</button>
+        <button class="opt-btn" onclick="answer(this,false,'q4')">7</button>
+        <button class="opt-btn" onclick="answer(this,true,'q4')">8</button>
+        <button class="opt-btn" onclick="answer(this,false,'q4')">9</button>
+      </div>
+      <div class="feedback" id="feedback-q4"></div>
+      <button class="next-btn" id="next-q4" onclick="showQ5Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q5" style="display:none">
+      <div class="nar-player" id="player-q5s">
+        <button class="nar-btn" id="btn-q5s" onclick="togglePlayer('q5s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q5s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q5s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q5s">
+        Blaze found the storage box — <strong>sixty-three seeds</strong> that needed to be grouped into pouches of nine.
+      </div>
+      <div id="lock-q5" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q5">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Division · Year 3</span></div>
+        <span class="quiz-icon">🌱</span>
+        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 5 — Grouping</div>
+        <div class="question"><strong>63 seeds</strong>. How many groups of <strong>9</strong> can be made?</div>
+        <img src="images/jungle/issue002/q5-seed-groups.png" alt="Seed groups" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q5')">5</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">6</button>
+          <button class="opt-btn" onclick="answer(this,true,'q5')">7</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">8</button>
+        </div>
+        <div class="feedback" id="feedback-q5"></div>
+        <button class="next-btn" id="next-q5" onclick="nextChapter(4)">Chapter 4 ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 4 ===== -->
+  <div class="chapter" id="chapter-4">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌀 Chapter 4 — Tangle's Pattern</div>
+      <h2>Something Is Taking the Vines on Purpose!</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue002/ch4-vine-pattern.png" alt="Blaze studying the vine trail" />
+    <div class="nar-player" id="player-ch4">
+      <button class="nar-btn" id="btn-ch4" onclick="togglePlayer('ch4')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch4">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch4"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch4">
+      Blaze had been counting the missing vines. There was a pattern — Tangle wasn't taking them randomly. It was taking exactly <strong>six at a time</strong>, from specific paths between villages.<br><br>
+      <em>"Forty-two vines gone. Six at a time. How many trips did it make?"</em><br><br>
+      Then she spotted fresh vine bundles nearby — thirty-five, in five neat stacks. And the next village was seventy-two kilometres away. If Tangle covered eight kilometres a day...
+    </div>
+    <div id="lock-q6" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q6">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Division · Year 3</span></div>
+      <span class="quiz-icon">🌿</span>
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 6 — Grouping</div>
+      <div class="question"><strong>42 vines</strong> taken, <strong>6 at a time</strong>.<br><br>How many trips did Tangle make?</div>
+      <img src="images/jungle/issue002/q6-vine-trips.png" alt="Vine trips" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q6')">5</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">6</button>
+        <button class="opt-btn" onclick="answer(this,true,'q6')">7</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">8</button>
+      </div>
+      <div class="feedback" id="feedback-q6"></div>
+      <button class="next-btn" id="next-q6" onclick="showQ7Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q7" style="display:none">
+      <div class="nar-player" id="player-q7s">
+        <button class="nar-btn" id="btn-q7s" onclick="togglePlayer('q7s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q7s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q7s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q7s">
+        Fresh vine bundles nearby — <strong>thirty-five</strong>, arranged in <strong>five neat stacks</strong>.
+      </div>
+      <div id="lock-q7" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q7">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Division · Year 3</span></div>
+        <span class="quiz-icon">🌿</span>
+        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 7 — Division</div>
+        <div class="question"><strong>35 vines</strong> in <strong>5 equal bundles</strong>.<br><br>How many vines per bundle?</div>
+        <img src="images/jungle/issue002/q7-vine-bundles.png" alt="Vine bundles" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q7')">5</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">6</button>
+          <button class="opt-btn" onclick="answer(this,true,'q7')">7</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">8</button>
+        </div>
+        <div class="feedback" id="feedback-q7"></div>
+        <button class="next-btn" id="next-q7" onclick="showQ8Block()">Next Question ➜</button>
+      </div>
+    </div>
+
+    <div id="block-q8" style="display:none">
+      <div class="nar-player" id="player-q8s">
+        <button class="nar-btn" id="btn-q8s" onclick="togglePlayer('q8s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q8s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q8s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q8s">
+        The next village is <strong>72 kilometres</strong> away. Tangle travels <strong>8 kilometres</strong> a day.
+      </div>
+      <div id="lock-q8" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q8">
+        <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Division · Year 3–4</span></div>
+        <span class="quiz-icon">🗺️</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 8 — Rate & Distance</div>
+        <div class="question">The next village is <strong>72 km</strong> away.<br>Tangle travels <strong>8 km</strong> per day.<br><br>How many days until Tangle reaches it?</div>
+        <img src="images/jungle/issue002/q8-vine-trail-map.png" alt="Vine trail map" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q8')">7</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">8</button>
+          <button class="opt-btn" onclick="answer(this,true,'q8')">9</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">10</button>
+        </div>
+        <div class="feedback" id="feedback-q8"></div>
+        <button class="next-btn" id="next-q8" onclick="nextChapter(5)">Final Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 5 ===== -->
+  <div class="chapter" id="chapter-5">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">✅ Chapter 5 — Fixed</div>
+      <h2>Fernmoss Can Finally Share Fairly Again!</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue002/ch5-distribution-fixed.png" alt="Fernmoss Sprockets with correct shares" />
+    <div class="nar-player" id="player-ch5">
+      <button class="nar-btn" id="btn-ch5" onclick="togglePlayer('ch5')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch5">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch5"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch5">
+      With the distribution corrected, Fernmoss could finally share fairly again. Thistle looked like a weight had been lifted.<br><br>
+      <em>"You fixed it. I've been doing it wrong for three days,"</em> Thistle said quietly.<br><br>
+      Blaze ran the final check — eighty-one items for nine Sprockets. Then Curl asked one more question. The sick Sprocket needed <strong>three-quarters</strong> of their daily share in the first dose. Three-quarters of nine... was a harder problem than it looked.
+    </div>
+    <div id="lock-q9" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q9">
+      <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Division · Year 3</span></div>
+      <span class="quiz-icon">📦</span>
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 9 — Division</div>
+      <div class="question"><strong>81 items</strong> shared equally between <strong>9 Sprockets</strong>.<br><br>How many does each Sprocket get?</div>
+      <img src="images/jungle/issue002/q9-resource-share.png" alt="Resource sharing" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q9')">7</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">8</button>
+        <button class="opt-btn" onclick="answer(this,true,'q9')">9</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">10</button>
+      </div>
+      <div class="feedback" id="feedback-q9"></div>
+      <button class="next-btn" id="next-q9" onclick="showQ10Block()">Boss Challenge ➜</button>
+    </div>
+
+    <div id="block-q10" style="display:none">
+      <div class="nar-player" id="player-q10s">
+        <button class="nar-btn" id="btn-q10s" onclick="togglePlayer('q10s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q10s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q10s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q10s">
+        Curl needed <strong>three-quarters</strong> of their daily share in the first dose. Blaze thought carefully.<br><br>
+        <em>"Divide by four first, then multiply by three. The fraction IS the division."</em>
+      </div>
+      <div id="lock-q10" class="quiz-lock">🔒 Listen to unlock the Boss Challenge!</div>
+      <div class="quiz-box" id="quiz-q10">
+        <div class="quiz-meta"><span class="difficulty diff-boss">👑 Boss Challenge</span><span class="acara-tag">Fractions of a quantity · Year 4</span></div>
+        <span class="quiz-icon">🏆</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 10 — BOSS: Fractions of a Quantity</div>
+        <div class="question">Curl's daily share = <strong>9 items</strong>.<br>Curl needs <strong>¾</strong> of that in the first dose.<br><br>What is ¾ of 9?</div>
+        <img src="images/jungle/issue002/q10-boss-fraction.png" alt="Fraction of quantity" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q10')">6</button>
+          <button class="opt-btn" onclick="answer(this,true,'q10')">6¾</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">7</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">7¼</button>
+        </div>
+        <div class="feedback" id="feedback-q10"></div>
+        <button class="next-btn" id="next-q10" onclick="showCliffhanger()">🌿 WHAT HAPPENS NEXT? →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIFFHANGER -->
+  <div id="cliffhanger-screen" style="display:none; text-align:center; padding:40px 24px; animation:fadeIn 0.5s ease;">
+    <img src="images/jungle/issue002/cliffhanger-deep-root.png" style="width:100%;border-radius:16px;margin-bottom:24px;border:3px solid rgba(22,163,74,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.6);" alt="Footprints leading to the Deep Root" />
+    <div class="nar-player" id="player-cf" style="text-align:left;margin-bottom:20px;">
+      <button class="nar-btn" id="btn-cf" onclick="togglePlayer('cf')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-cf">Press ▶ to hear what happens next</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-cf"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-cf" style="text-align:left;">
+      Blaze stepped outside — and stopped.<br><br>
+      There, pressed deep into the soft mud of the path leading into the ancient jungle, were <strong>enormous footprints</strong>. Leading deeper. Toward the <strong>Deep Root</strong>.<br><br>
+      Whatever Tangle was looking for... it was in there.
+    </div>
+    <button onclick="showWin()" style="background:linear-gradient(135deg,#15803d,#16a34a);color:white;font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(22,163,74,0.4);">🌿 See Your Results →</button>
+  </div>
+
+  <!-- WIN SCREEN -->
+  <div id="win-screen">
+    <span class="trophy">🌿</span>
+    <h2>MISSION COMPLETE!</h2>
+    <div class="win-score" id="win-score">You scored 10 / 10!</div>
+    <div class="win-stars" id="win-stars">⭐⭐⭐</div>
+    <p>Fernmoss is saved — every dose correct, every share recalculated. Blaze is getting closer to understanding Tangle. <strong>What is it looking for in the Deep Root?</strong></p>
+    <div class="win-summary">
+      <h3>What You Mastered Today 🧠</h3>
+      <ul>
+        <li>✅ <strong>Division with larger numbers</strong> — 36÷12, 48÷8, 56÷7 (Year 3)</li>
+        <li>✅ <strong>Multiplication-division link</strong> — 9×4=36 (Year 3)</li>
+        <li>✅ <strong>Grouping division</strong> — 63÷9, 42÷6, 35÷5 (Year 3)</li>
+        <li>✅ <strong>Rate division</strong> — 72÷8=9 days (Year 3–4)</li>
+        <li>✅ <strong>Boss: Fractions of a quantity</strong> — ¾ of 9 = 6¾ (Year 4)</li>
+      </ul>
+    </div>
+    <p style="font-size:14px;color:#4ade80;margin-bottom:16px;">Join us for Issue #3 — the Grouping Festival, and the first glimpse of Tangle in the light! 🌟</p>
+    <a href="landing.html" class="next-issue-btn">🌿 Back to Math Blast</a>
+    <button class="replay-btn" onclick="location.reload()">🔄 Play Again</button>
+  </div>
+
+</div><!-- /wrapper -->
+
+<div id="ctrl-bar">
+  <button class="ctrl-btn" id="mute-ctrl" onclick="toggleMute()">🔊 Sound On</button>
+  <button class="ctrl-btn" onclick="replayCurrent()">🔁 Replay</button>
+</div>
+
+<script>
+// ── LEAF PARTICLES ──────────────────────────────────────────
+const lf = document.getElementById('leaffield');
+const leafEmoji = ['🍃','🌿','🍀','🌱'];
+for(let i=0;i<30;i++){
+  const l=document.createElement('div'); l.className='leaf';
+  l.textContent=leafEmoji[Math.floor(Math.random()*leafEmoji.length)];
+  l.style.left=Math.random()*100+'%'; l.style.top=Math.random()*100+'%';
+  l.style.animationDelay=(Math.random()*8)+'s'; l.style.animationDuration=(6+Math.random()*6)+'s';
+  lf.appendChild(l);
+}
+
+// ── AUDIO ENGINE ───────────────────────────────────────────
+const BASE = 'sounds/jungle/issue002/';
+let muted=false, currentAudio=null, correctVariant=0, activePlayerId=null;
+const playerConfigs={};
+const triedWrong=new Set();
+
+function stopAll(){
+  if(currentAudio){currentAudio.pause();currentAudio=null;}
+  document.querySelectorAll('.nar-btn').forEach(b=>{if(b.textContent!=='✓')b.textContent='▶';});
+}
+
+function playFile(file,onEnd){
+  if(muted){if(onEnd)setTimeout(onEnd,100);return null;}
+  if(currentAudio){currentAudio.pause();currentAudio=null;}
+  const a=new Audio(BASE+file);
+  a.volume=1.0; currentAudio=a;
+  a.play().catch(()=>{currentAudio=null;if(onEnd)onEnd();});
+  a.onended=()=>{currentAudio=null;if(onEnd)onEnd();};
+  a.onerror=()=>{currentAudio=null;if(onEnd)onEnd();};
+  return a;
+}
+
+function setupPlayer(id,files,labels,storyId,lockId,onDone,unlockAtIndex){
+  playerConfigs[id]={files,labels,storyId,lockId,unlockAtIndex:unlockAtIndex??files.length,active:false};
+}
+
+function togglePlayer(id){
+  if(activePlayerId===id&&currentAudio&&!currentAudio.paused){
+    currentAudio.pause();currentAudio=null;
+    document.getElementById('btn-'+id).textContent='▶';
+    document.getElementById('status-'+id).textContent='Paused — press ▶ to resume';
+    activePlayerId=null;return;
+  }
+  stopAll();activePlayerId=id;runPlayer(id);
+}
+
+function runPlayer(id){
+  const cfg=playerConfigs[id];if(!cfg)return;
+  cfg.active=true;
+  const btn=document.getElementById('btn-'+id);
+  const statusEl=document.getElementById('status-'+id);
+  const barFill=document.getElementById('bar-'+id);
+  const story=cfg.storyId?document.getElementById(cfg.storyId):null;
+  if(btn)btn.textContent='⏸';
+  if(story)story.classList.add('playing');
+  const totalFiles=cfg.files.length;
+  let fileIdx=0;
+  function playNext(){
+    if(fileIdx>=totalFiles){
+      if(btn)btn.textContent='✓';
+      if(statusEl)statusEl.textContent='✅ Done — solve the puzzle!';
+      if(barFill)barFill.style.width='100%';
+      if(story){story.classList.remove('playing');story.classList.add('done');}
+      if(cfg.lockId){const l=document.getElementById(cfg.lockId);if(l)l.style.display='none';}
+      const qId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;
+      if(qId){const q=document.getElementById(qId);if(q){q.classList.add('show');setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}
+      cfg.active=false;activePlayerId=null;return;
+    }
+    if(fileIdx===cfg.unlockAtIndex){
+      if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}
+      const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;
+      if(quizId){const quiz=document.getElementById(quizId);if(quiz&&!quiz.classList.contains('show')){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}
+    }
+    const file=cfg.files[fileIdx];
+    const label=cfg.labels&&cfg.labels[fileIdx]?cfg.labels[fileIdx]:'🎙️ Narrating...';
+    if(statusEl)statusEl.textContent=label;
+    const segStart=(fileIdx/totalFiles)*100, segEnd=((fileIdx+1)/totalFiles)*100;
+    fileIdx++;
+    const audio=playFile(file,playNext);
+    if(audio&&barFill){
+      const tick=setInterval(()=>{
+        if(!audio||audio.paused||audio.ended){clearInterval(tick);return;}
+        const pct=audio.duration?(segStart+(audio.currentTime/audio.duration)*(segEnd-segStart)):segStart;
+        barFill.style.width=pct+'%';
+      },200);
+    }
+  }
+  playNext();
+}
+
+// ── PLAYER DEFINITIONS ────────────────────────────────────
+function initPlayers(){
+  setupPlayer('ch1',
+    ['ch1-intro.mp3','ch1-thistle.mp3','ch1-blaze.mp3','ch1-q1-question.mp3'],
+    ['📖 Eric narrating...','🌸 Thistle speaking...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch1','lock-q1',null,3);
+
+  setupPlayer('ch2',
+    ['ch2-intro.mp3','ch2-blaze.mp3','ch2-q2-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch2','lock-q2',null,2);
+
+  setupPlayer('q3s',
+    ['ch2-q3-setup.mp3','ch2-q3-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q3s','lock-q3',null,1);
+
+  setupPlayer('ch3',
+    ['ch3-intro.mp3','ch3-blaze.mp3','ch3-q4-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch3','lock-q4',null,2);
+
+  setupPlayer('q5s',
+    ['ch3-q5-setup.mp3','ch3-q5-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q5s','lock-q5',null,1);
+
+  setupPlayer('ch4',
+    ['ch4-intro.mp3','ch4-blaze-pattern.mp3','ch4-q6-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch4','lock-q6',null,2);
+
+  setupPlayer('q7s',
+    ['ch4-q7-setup.mp3','ch4-q7-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q7s','lock-q7',null,1);
+
+  setupPlayer('q8s',
+    ['ch4-q8-setup.mp3','ch4-q8-question.mp3'],
+    ['⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-q8s','lock-q8',null,1);
+
+  setupPlayer('ch5',
+    ['ch5-intro.mp3','ch5-thistle-thanks.mp3','ch5-blaze.mp3','ch5-q9-question.mp3'],
+    ['📖 Eric narrating...','🌸 Thistle speaking...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch5','lock-q9',null,3);
+
+  setupPlayer('q10s',
+    ['ch5-q10-setup.mp3','ch5-q10-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q10s','lock-q10',null,1);
+
+  setupPlayer('cf',
+    ['ch5-cliffhanger.mp3'],
+    ['📖 Eric narrating...'],
+    'story-cf',null,null,0);
+}
+
+// ── SHOW SECONDARY BLOCKS ─────────────────────────────────
+function showQ3Block(){
+  const b=document.getElementById('block-q3');b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q3s'),400);
+}
+function showQ5Block(){
+  const b=document.getElementById('block-q5');b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q5s'),400);
+}
+function showQ7Block(){
+  const b=document.getElementById('block-q7');b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q7s'),400);
+}
+function showQ8Block(){
+  const b=document.getElementById('block-q8');b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q8s'),400);
+}
+function showQ10Block(){
+  const b=document.getElementById('block-q10');b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q10s'),400);
+}
+
+// ── GAME LOGIC ─────────────────────────────────────────────
+let score=0,questionsAnswered=0;
+const totalQ=10;
+
+const correctMsg={
+  q1:  '🌿 Yes! 36 ÷ 12 = 3. That was the old calculation — but only 4 Sprockets are here. 36 ÷ 4 = 9. They should each be getting 9 doses!',
+  q2:  '🌿 Right! 48 ÷ 8 = 6. Six each — double what they were getting.',
+  q3:  '🌿 Correct! 9 × 4 = 36. Curl needs 36 units. Division and multiplication — always connected.',
+  q4:  '🌿 Yes! 56 ÷ 7 = 8. Eight leaves each family.',
+  q5:  '🌿 Nice! 63 ÷ 9 = 7. Seven groups — no leftovers.',
+  q6:  '🌿 Correct! 42 ÷ 6 = 7. Seven trips — precise and deliberate. This is not random.',
+  q7:  '🌿 Right! 35 ÷ 5 = 7. Seven per bundle. Tangle is very consistent.',
+  q8:  '🌿 Yes! 72 ÷ 8 = 9. Nine days. Blaze needs to move faster than Tangle.',
+  q9:  '🌿 Correct! 81 ÷ 9 = 9. Nine each — and this time, the right nine.',
+  q10: '🌿 BOSS CLEARED! ¾ of 9: divide 9 by 4 = 2¼, then × 3 = 6¾. The fraction IS the division!'
+};
+const wrongMsg={
+  q1:  '❌ Not quite! 36 items shared between 12. Think: 12 × ? = 36.',
+  q2:  '❌ Try again! 48 shared between 8. Think: 8 × ? = 48.',
+  q3:  '❌ Not quite! 9 times 4. Count up in 9s: 9, 18, 27, 36.',
+  q4:  '❌ Try again! 56 shared between 7 families. Think: 7 × ? = 56.',
+  q5:  '❌ Not quite! 63 seeds, groups of 9. Count in 9s: 9, 18, 27, 36, 45, 54, 63.',
+  q6:  '❌ Try again! 42 vines ÷ 6 per trip. Think: 6 × ? = 42.',
+  q7:  '❌ Not quite! 35 vines in 5 bundles. Think: 5 × ? = 35.',
+  q8:  '❌ Try again! 72 km at 8 km per day. Think: 8 × ? = 72.',
+  q9:  '❌ Not quite! 81 shared between 9. Think: 9 × ? = 81.',
+  q10: '❌ Tricky! To find ¾ of 9: first divide by 4 (the bottom number), then multiply by 3 (the top number).'
+};
+
+const answerAudio={
+  q1:'ch1-q1-answer.mp3',
+  q2:'ch2-q2-answer.mp3',
+  q3:'ch2-q3-answer.mp3',
+  q4:'ch3-q4-answer.mp3',
+  q5:'ch3-q5-answer.mp3',
+  q6:'ch4-q6-answer.mp3',
+  q7:'ch4-q7-answer.mp3',
+  q8:'ch4-q8-answer.mp3',
+  q9:'ch5-q9-answer.mp3',
+  q10:'ch5-q10-answer.mp3',
+};
+
+function answer(btn,correct,qId){
+  const box=btn.closest('.quiz-box');
+  box.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedback-'+qId);
+  const next=document.getElementById('next-'+qId);
+  if(correct){
+    btn.classList.add('correct');
+    if(!triedWrong.has(qId))score++;
+    questionsAnswered++;
+    fb.className='feedback show good';fb.innerHTML=correctMsg[qId];
+    updateProgress();next.classList.add('show');
+    const qNum=parseInt(qId.replace('q',''));
+
+    // Celebration clips — Q4 uses Thistle voice for Ch3 questions
+    let celebFile;
+    if(qNum===1) celebFile='feedback-correct-1.mp3';
+    else{
+      let v;
+      if(qNum>=4&&qNum<=5) v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-5.mp3'];
+      else                  v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];
+      celebFile=v[correctVariant%v.length]; correctVariant++;
+    }
+    // Sequence: celebration → explanation
+    playFile(celebFile, answerAudio[qId] ? ()=>playFile(answerAudio[qId],null) : null);
+  } else {
+    triedWrong.add(qId);
+    btn.classList.add('wrong');
+    fb.className='feedback show bad';fb.innerHTML=wrongMsg[qId];
+    stopAll();
+    const wrongFile=['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)];
+    const wrongAudio=playFile(wrongFile,null);
+    setTimeout(()=>{
+      box.querySelectorAll('.opt-btn').forEach(b=>{if(!b.classList.contains('correct')){b.disabled=false;b.classList.remove('wrong');}});
+      fb.className='feedback';
+    },wrongAudio?2800:1200);
+  }
+}
+
+function updateProgress(){
+  document.getElementById('progress-fill').style.width=((questionsAnswered/totalQ)*100)+'%';
+  document.getElementById('progress-score').textContent='⭐ '+score+' / '+totalQ;
+}
+
+function startGame(){
+  document.getElementById('title-screen').style.display='none';
+  document.getElementById('progress-wrap').style.display='block';
+  initPlayers();
+  showChapter(1);
+}
+
+let currentChapter=0;
+function showChapter(n){
+  stopAll();
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
+  const ch=document.getElementById('chapter-'+n);
+  if(!ch)return;
+  ch.classList.add('active');currentChapter=n;
+  window.scrollTo({top:0,behavior:'smooth'});
+  const labels=['','Chapter 1 — Dividing in the Dark','Chapter 2 — Wrong Numbers','Chapter 3 — Counting What\'s Left','Chapter 4 — Tangle\'s Pattern 🌀','Chapter 5 — Fixed ✅'];
+  document.getElementById('progress-label').textContent=labels[n]||'';
+  const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};
+  if(playerMap[n])setTimeout(()=>togglePlayer(playerMap[n]),700);
+}
+
+function nextChapter(n){showChapter(n);}
+
+function showCliffhanger(){
+  stopAll();
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
+  document.getElementById('progress-wrap').style.display='none';
+  const cf=document.getElementById('cliffhanger-screen');cf.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>togglePlayer('cf'),600);
+}
+
+function showWin(){
+  stopAll();
+  document.getElementById('cliffhanger-screen').style.display='none';
+  const win=document.getElementById('win-screen');win.style.display='block';
+  document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+' on the first try!';
+  document.getElementById('win-stars').textContent=score===10?'⭐⭐⭐':score>=7?'⭐⭐':score>=4?'⭐':'';
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>playFile('win.mp3',null),500);
+}
+
+function toggleMute(){
+  muted=!muted;
+  const ctrl=document.getElementById('mute-ctrl');
+  ctrl.textContent=muted?'🔇 Muted':'🔊 Sound On';
+  ctrl.classList.toggle('muted',muted);
+  if(muted)stopAll();
+}
+
+function replayCurrent(){
+  const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};
+  const pid=playerMap[currentChapter];if(!pid)return;
+  stopAll();
+  const cfg=playerConfigs[pid];if(cfg)cfg.active=false;
+  const story=cfg&&cfg.storyId?document.getElementById(cfg.storyId):null;
+  if(story)story.classList.remove('playing','done');
+  const barFill=document.getElementById('bar-'+pid);if(barFill)barFill.style.width='0%';
+  const statusEl=document.getElementById('status-'+pid);if(statusEl)statusEl.textContent='Press ▶ to hear the story';
+  const btn=document.getElementById('btn-'+pid);if(btn)btn.textContent='▶';
+  setTimeout(()=>togglePlayer(pid),300);
+}
+</script>
+</body>
+</html>
