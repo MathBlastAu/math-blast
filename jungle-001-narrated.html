@@ -517,7 +517,7 @@
 
   <!-- CLIFFHANGER SCREEN -->
   <div id="cliffhanger-screen" style="display:none; text-align:center; padding:40px 24px; animation:fadeIn 0.5s ease;">
-    <img src="images/jungle/ch5-tangle-footprint.png" style="width:100%;border-radius:16px;margin-bottom:24px;border:3px solid rgba(22,163,74,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.6);" alt="Tangle's footprint" />
+    <img src="images/jungle/cliffhanger-vines.png" style="width:100%;border-radius:16px;margin-bottom:24px;border:3px solid rgba(22,163,74,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.6);" alt="Something enormous moves through the jungle" />
     <div class="nar-player" id="player-cf" style="text-align:left;margin-bottom:20px;">
       <button class="nar-btn" id="btn-cf" onclick="togglePlayer('cf')">▶</button>
       <div class="nar-info">
@@ -800,7 +800,7 @@ function answer(btn, correct, qId){
       q7:'ch4-q7-answer.mp3',
       q8:'ch4-q8-answer.mp3',
       q9:'ch5-q9-answer.mp3',
-      q10:null, // Q10 answer plays in showCliffhanger
+      q10:'ch5-q10-answer.mp3',
     };
 
     // 1. Confirmation clip, then 2. Explanation clip
@@ -866,8 +866,8 @@ function showCliffhanger(){
   document.getElementById('progress-wrap').style.display='none';
   const cf=document.getElementById('cliffhanger-screen'); cf.style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
-  // Play Q10 answer audio first, then auto-trigger cliffhanger narration player
-  setTimeout(()=>playFile('ch5-q10-answer.mp3',()=>setTimeout(()=>togglePlayer('cf'),400)),500);
+  // Q10 answer already played on correct answer — just trigger cliffhanger narration
+  setTimeout(()=>togglePlayer('cf'),600);
 }
 
 function showWin(){
