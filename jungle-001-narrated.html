@@ -231,7 +231,8 @@
     </div>
     <div class="story-text" id="story-ch2">
       Blaze followed Chief Pip to the harvest platform — a wide surface woven from branches high in the tallest tree. Two enormous baskets sat waiting.<br><br>
-      <em>"Okay. First basket — glow-berries. I'm counting..."</em> Blaze peered inside. <em>"<strong>Twenty-four</strong>. Four Sprocket families. Same amount for each family — that's the rule, right? Let me work this out."</em>
+      <em>"Four Sprocket families,"</em> Chief Pip explained, gesturing to the baskets. <em>"Each must receive exactly the same amount — not one berry more, not one less. It is the Sprocket way. We have done this for ten thousand years."</em><br><br>
+      <em>"Got it,"</em> said Blaze, peering into the first basket. <em>"Twenty-four glow-berries. Four families. Let me work this out."</em>
     </div>
     <div id="lock-q2" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
     <div class="quiz-box" id="quiz-q2">
@@ -326,7 +327,8 @@
         </div>
       </div>
       <div class="story-text" id="story-q5s">
-        The medic had more leaves to sort. <em>"Fifteen this time — and she wants groups of <strong>three</strong>,"</em> Blaze said. <em>"How many groups? And when you've got your answer, write the whole fact family — all four number sentences."</em>
+        Fernleaf wasn't finished. She tipped a second pile of leaves onto the bench — pale silver ones, used for headaches and stings.<br><br>
+        <em>"Fifteen this time,"</em> Blaze said, eyeing the pile. <em>"And she still wants groups of three. How many groups can she make? And here's the challenge: when you've got your answer, write the whole fact family — all four number sentences. Division and multiplication both ways."</em>
       </div>
       <div id="lock-q5" class="quiz-lock">🔒 Listen to unlock this challenge!</div>
       <div class="quiz-box" id="quiz-q5">
@@ -392,7 +394,8 @@
         </div>
       </div>
       <div class="story-text" id="story-q7s">
-        Blaze turned to the elder's table. <em>"Thirty-two pieces of bark-bread for eight Sprockets. How many pieces each? And when you work it out — notice anything interesting about the answer?"</em>
+        Blaze moved to the elder's table — longer than the main table, set with polished bark plates and glowing moss candles. The cook Burble slid a basket of bark-bread toward her.<br><br>
+        <em>"Thirty-two pieces,"</em> Blaze said, counting quickly. <em>"Eight Sprockets at this table. How many pieces each? And when you work it out — compare your answer to the last one. Notice anything interesting?"</em>
       </div>
       <div id="lock-q7" class="quiz-lock">🔒 Listen to unlock!</div>
       <div class="quiz-box" id="quiz-q7">
@@ -511,9 +514,18 @@
   <!-- CLIFFHANGER SCREEN -->
   <div id="cliffhanger-screen" style="display:none; text-align:center; padding:40px 24px; animation:fadeIn 0.5s ease;">
     <img src="images/jungle/ch5-tangle-footprint.png" style="width:100%;border-radius:16px;margin-bottom:24px;border:3px solid rgba(22,163,74,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.6);" alt="Tangle's footprint" />
-    <div style="background:rgba(22,163,74,0.06);border:1px solid rgba(22,163,74,0.2);border-radius:14px;padding:24px;margin-bottom:28px;text-align:left;">
-      <div class="speaker speaker-narrator" style="margin-bottom:12px;">📖 Eric</div>
-      <p style="font-size:17px;line-height:1.8;color:#d1fae5;">That night, as Branchwick slept, more vines went missing from the path to Fernmoss. A Sprocket family who had gone to visit the neighbouring village...<br><br><strong style="color:#fbbf24;">...hadn't come back.</strong><br><br>And deep in the jungle, something enormous moved silently through the trees — gathering vines, bundle by bundle, four at a time.<br><br>The mystery of the Verdant Canopy had only just begun.</p>
+    <div class="nar-player" id="player-cf" style="text-align:left;margin-bottom:20px;">
+      <button class="nar-btn" id="btn-cf" onclick="togglePlayer('cf')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-cf">Press ▶ to hear what happens next</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-cf"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-cf" style="text-align:left;">
+      That night, as Branchwick slept, more vines went missing from the path to Fernmoss. A Sprocket family who had gone to visit the neighbouring village...<br><br>
+      <strong>...hadn't come back.</strong><br><br>
+      And deep in the jungle, something enormous moved silently through the trees — gathering vines, bundle by bundle, four at a time.<br><br>
+      The mystery of the Verdant Canopy had only just begun.
     </div>
     <button onclick="showWin()" style="background:linear-gradient(135deg,#15803d,#16a34a);color:white;font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(22,163,74,0.4);">🌿 See Your Results →</button>
   </div>
@@ -651,8 +663,8 @@ function initPlayers(){
     'story-ch1','lock-q1');
 
   setupPlayer('ch2',
-    ['ch2-intro.mp3','ch2-blaze-inspect.mp3','ch2-q2-question.mp3'],
-    ['📖 Eric narrating...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    ['ch2-intro.mp3','ch2-pip-harvest.mp3','ch2-blaze-inspect.mp3','ch2-q2-question.mp3'],
+    ['📖 Eric narrating...','🫐 Chief Pip speaking...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
     'story-ch2','lock-q2');
 
   setupPlayer('q3s',
@@ -694,6 +706,11 @@ function initPlayers(){
     ['ch5-q10-question.mp3'],
     ['⚡ Blaze — puzzle time!'],
     'story-q10s','lock-q10');
+
+  setupPlayer('cf',
+    ['ch5-cliffhanger.mp3'],
+    ['📖 Eric narrating...'],
+    'story-cf', null);
 }
 
 // ── SHOW SECONDARY BLOCKS ─────────────────────────────────
@@ -828,8 +845,8 @@ function showCliffhanger(){
   document.getElementById('progress-wrap').style.display='none';
   const cf=document.getElementById('cliffhanger-screen'); cf.style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
-  // Play cliffhanger narration only
-  setTimeout(()=>playFile('ch5-cliffhanger.mp3',null),600);
+  // Play Q10 answer audio first, then auto-trigger cliffhanger narration player
+  setTimeout(()=>playFile('ch5-q10-answer.mp3',()=>setTimeout(()=>togglePlayer('cf'),400)),500);
 }
 
 function showWin(){
