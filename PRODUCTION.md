@@ -121,6 +121,8 @@ setupPlayer('ch1',
 - ❌ Don't delegate image gen to sub-agents — they write their own style descriptions and drift
 - ❌ Don't use `/images/edits` for style consistency — it modifies the reference image, not the style
 - ❌ Don't write audio scripts before the HTML text exists
+- ❌ Don't truncate narrator clips to one sentence when the screen paragraph has two — cover the FULL paragraph
+- ❌ Don't split a chapter's narrator text across multiple clips unless there's a character voice in between
 - ❌ Don't forget to `git add sounds/` explicitly — audio files don't auto-stage
 - ❌ Don't defer Q10 answer audio to `showCliffhanger` — it double-plays
 - ❌ Don't put `unlockAtIndex` in `setupPlayer` call without storing it in `playerConfigs`
