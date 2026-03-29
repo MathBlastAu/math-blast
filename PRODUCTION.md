@@ -1,168 +1,177 @@
-# Math Blast — Production Rules
-*Non-negotiable standards. Lock these in. Never reinvent.*
+# Math Blast — Production Workflow
+
+Last updated: 2026-03-29. Refined across Space Arc (7 issues) + Jungle Arc (7 issues).
 
 ---
 
-## Images
+## The Pipeline (per issue)
 
-### The Working Pattern (DO NOT CHANGE)
-- Use `gen_jungle001_images.py` as the template for every new image gen script
-- Define `BLAZE`, `SPROCKETS`, `SETTING` (and any new character constants) ONCE at the top
-- Inject those constants into EVERY prompt — no exceptions
-- Use `client = OpenAI()` with the `openai` Python library — not raw `requests`
-- Use `model="gpt-image-1"`, `size="1536x1024"` for chapter images, `"1024x1024"` for question images
-- Run the script locally — do NOT delegate image generation to a sub-agent with a loose brief
-- The script skips existing files by default — set `force=True` only when explicitly redoing
+### Step 1 — Story & Coverage Map (before writing anything)
+1. Read the arc storyboard for the issue
+2. Read the previous issue's cliffhanger — open with a direct callback
+3. Write the full HTML story text
+4. **Map every paragraph to an audio clip** before writing a single script — this is non-negotiable
+5. Run the question accuracy check (verify every answer manually)
 
-### Locked Character Constants (Jungle Arc)
+### Step 2 — Production Rules (apply before generating)
+- **TTS read-aloud scan:** read every audio script aloud mentally — catch em-dashes (`—`), colons mid-sentence, parentheses. Replace with natural speech equivalents (commas, short pauses)
+- **Paragraph standalone rule:** every paragraph on screen must make sense without the quiz question. If it only works as a lead-in to a question, move it to the Q block setup text
+- **No math symbols in image prompts:** describe visually ("25 rows of 4", not "÷4"). No answers, equations, or numbers in scene images — holographic label only
+- **No answers in images:** include `"Do NOT show any numbers, equations, division symbols, or answers written anywhere in the scene itself."` in every question image prompt
+- **Vine/creature colour rule (Jungle):** always specify `natural earthy brown vines, NOT rainbow, NOT neon` — AI defaults to rainbow without this
+
+### Step 3 — Build (parallel)
+Run audio generation and image generation **simultaneously**:
+```bash
+python3 gen_[arc][issue]_audio.py &
+OPENAI_API_KEY="..." python3 gen_[arc][issue]_images.py &
 ```
-BLAZE = "10-year-old girl named Blaze: short practical dark hair, warm olive-tan skin,
-teal/cyan fitted jumpsuit with purple accent panels on shoulders and sides,
-bright yellow lightning bolt badge prominently on her left chest,
-glowing cyan holographic device strapped to left wrist,
-Disney Pixar CGI 3D animation style, vibrant saturated colours,
-expressive eyes, clean polished render"
+While those run, write the **next issue's HTML**.
 
-SPROCKETS = "tiny cobalt-blue alien creatures about knee-height,
-smooth round heads with exactly three thin antennae,
-large round expressive eyes, small stubby arms and legs,
-some wearing tiny leaf tunics or aprons,
-Disney Pixar CGI 3D animation style, same cobalt-blue skin in every image"
-
-SETTING_FERNMOSS = "lower-canopy jungle village called Fernmoss: built among enormous glowing
-blue-purple bioluminescent mushrooms, misty soft light, hanging moss, fireflies,
-warm blue-green glow, Disney Pixar CGI 3D animation style, rich colour, cinematic quality"
-
-SETTING_JUNGLE = "alien jungle canopy world: enormous ancient trees with platforms and rope bridges,
-bioluminescent blue-green plants glowing softly, warm golden light filtering through giant
-tropical leaves, fireflies drifting through the air,
-Disney Pixar CGI 3D animation style, rich colour, cinematic quality"
+### Step 4 — Preflight
+Before deploying, always run:
+```bash
+python3 preflight.py [issue-file].html
 ```
+Must pass with **0 errors**. Warnings about sound directory path are false positives for jungle issues — ignore.
 
----
-
-## Audio
-
-### The Working Pattern (DO NOT CHANGE)
-1. **Write HTML story text first** — this is the master
-2. **Extract audio scripts verbatim from screen text** — no paraphrasing, no additions
-3. Max 1–2 sentences per clip per character
-4. Run audio gen locally using `gen_jungle00X_audio_v2.py` pattern
-5. **Commit audio files explicitly** — they don't auto-stage
-
-### Narrator Coverage Check (mandatory before generating)
-Before writing audio scripts, do this for every chapter:
-1. List every paragraph in the `story-text` div
-2. Assign each paragraph to a clip (narrator or character)
-3. Any paragraph with no assigned clip = missing audio — fix it before generating
-4. Each narrator paragraph = one Eric clip. Don't combine two narrator paragraphs if a character line falls between them.
-
-### Question Accuracy Check (mandatory)
-Before finalising each question, confirm all 4 of these match:
-- Question text (the numbers/operation shown)
-- Answer options (correct answer matches the question)
-- Image prompt (shows the right numbers and setup)
-- Audio script (reads the same question as screen text)
-
-If any one of these four doesn't match the others — fix before generating.
-
-### Audio Sequence (locked)
-On correct answer: **celebration clip → explanation clip**
-- Celebration: `feedback-correct-X.mp3` plays first
-- Explanation: `ch5-q9-answer.mp3` etc plays second (chained via callback)
-
-### unlockAtIndex (non-negotiable)
-- Must be stored in `playerConfigs` — not just passed as parameter
-- `setupPlayer` function must include: `unlockAtIndex: unlockAtIndex ?? files.length`
-- Set to the index of the question clip so quiz unlocks when question STARTS playing
-
-### Cliffhanger Pattern
-- Q10 answer plays on correct answer (NOT in `showCliffhanger`)
-- `showCliffhanger` auto-triggers the narration player only — no answer audio
-- Cliffhanger always gets its own unique image — never reuse a chapter image
-
----
-
-## HTML Structure
-
-### Per-chapter player setup
-```js
-setupPlayer('ch1',
-  ['ch1-intro.mp3','ch1-character.mp3','ch1-q1-question.mp3'],
-  ['📖 Eric narrating...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
-  'story-ch1','lock-q1',null,2);  // unlockAtIndex=2 (question clip index)
+### Step 5 — Deploy
+```bash
+git add [issue].html images/[arc]/issue00X/ sounds/[arc]/issue00X/
+git commit -m "[Arc] Issue X — [Title] (production complete)"
+git push origin main
 ```
 
-### Secondary Q blocks
-- Q5, Q7, Q8, Q10 each need a setup clip before the question
-- `showQ5Block()` etc: display block → scroll → `setTimeout(()=>togglePlayer('q5s'),400)`
-- Do NOT play answer audio in showQ*Block — it fires on correct answer instead
+### Step 6 — Review
+Art reviews at www.math-blast.com.au/[issue-file].html (~2 min propagation after push).
+
+### Step 7 — Fix & Approve
+- Fix issues, push fixes, wait for propagation
+- When approved: `git tag [arc]-00X-approved && git push origin [arc]-00X-approved`
 
 ---
 
-## Process Order (every issue)
+## Audio Script Rules
 
-1. Read storyboard for the issue
-2. Write all HTML story text (5 chapters)
-3. Extract audio scripts verbatim from that text
-4. Review both before generating anything
-5. Write image gen script using locked constants from prior issue
-6. Run image gen locally (not sub-agent)
-7. Run audio gen locally
-8. Build HTML with `unlockAtIndex` wired from the start
-9. Commit everything (HTML + audio + images explicitly)
-10. Run preflight script
-11. Push → review → tag
-
----
-
-## Characters (locked voices)
-
-| Character | Arc | ElevenLabs ID | Settings |
-|-----------|-----|---------------|----------|
-| Eric (narrator) | Jungle | cjVigY5qzO86Huf0OWal | stability=0.60, similarity=0.75, style=0.20 |
-| Blaze | Jungle | cgSgspJ2msm6clMCkdW9 | stability=0.55, similarity=0.75, style=0.30 |
-| Chief Pip | Jungle | pqHfZKP75CvOlQylNhV4 | stability=0.65, similarity=0.70, style=0.25 |
-| Doz | Jungle | IKne3meq5aSn9XLyUdCD | stability=0.45, similarity=0.70, style=0.50 |
-| Thistle | Jungle | XrExE9yKIg1WjnnlVkGX | stability=0.60, similarity=0.75, style=0.25 |
-| Tangle | Jungle | N2lVS1w4EtoT3dr4eOWO | stability=0.85, similarity=0.30, style=0.55 |
-| George (narrator) | Space | JBFqnCBsd6RMkjVDRZzb | stability=0.55, similarity=0.75 |
-| Andrew (Jake) | Space | BTEPH6wbWkb66Dys0ry6 | stability=0.50, similarity=0.78 |
-| River (Phantom/aliens) | Space | SAz9YHcvj6GT2YYXdXww | stability=0.18, similarity=0.32, style=0.85 |
-
----
-
-## Pre-Generation Script Review (mandatory)
-Before running any audio gen script, read every line aloud mentally and check:
-- **Em-dashes (—)** → replace with comma or "and" to avoid TTS pause
-- **Colons mid-sentence** → replace with a full stop or comma
-- **Parentheses** → remove or rewrite as natural speech
-- **Abbreviations** → spell out (÷ → "divided by", × → "times")
-
-## Story Text Paragraph Rule
-Every paragraph in a `story-text` div must stand alone without the quiz question.
-- If a paragraph only makes sense as a lead-in to the quiz → move it to the Q block setup clip instead
-- Chapter story text = scene-setting and character moments only
+| Rule | Why |
+|------|-----|
+| Replace all em-dashes with commas | TTS stumbles on `—` |
+| No colons mid-sentence | TTS over-pauses |
+| Trailing comma on final sentence of a clip | Prevents audio bleed into next clip |
+| Scripts verbatim from HTML screen text | Sync between audio and visual |
+| Narrator covers every paragraph | No silent text on screen |
 
 ## Image Prompt Rules
-- **Never request mathematical symbols** in image prompts (÷, ×, /, =, fraction bars)
-- Describe visually instead: "25 rows of 4 items" not "÷4"
-- Holographic equation labels are fine (e.g. "holographic '60 ÷ 10 = ?' in cyan") — rendered as decoration, not as readable typography
 
-## Lessons Learned (don't repeat)
+| Rule | Why |
+|------|-----|
+| `Disney Pixar CGI 3D animation style` on every prompt | Consistency |
+| Character constants defined at top of gen script | Consistent appearance |
+| No math symbols, no answers in scene | AI can't render counts reliably |
+| Holographic cyan label = only place for labels | Clean educational look |
+| Chapter images: `size="1536x1024"` | Widescreen cinematic |
+| Question images: `size="1024x1024"` | Square, focused |
+| `retries=2` on every gen call | Handles API timeouts gracefully |
+| 12s sleep between images | Stays within rate limits |
 
-- ❌ Don't delegate image gen to sub-agents — they write their own style descriptions and drift
-- ❌ Don't use `/images/edits` for style consistency — it modifies the reference image, not the style
-- ❌ Don't write audio scripts before the HTML text exists
-- ❌ Don't truncate narrator clips to one sentence when the screen paragraph has two — cover the FULL paragraph
-- ❌ Don't split a chapter's narrator text across multiple clips unless there's a character voice in between
-- ❌ Don't forget to `git add sounds/` explicitly — audio files don't auto-stage
-- ❌ Don't defer Q10 answer audio to `showCliffhanger` — it double-plays
-- ❌ Don't put `unlockAtIndex` in `setupPlayer` call without storing it in `playerConfigs`
-- ✅ Always check existing working scripts before building new ones
-- ✅ Run image gen in background with enough timeout (600s+) for 16 images
-- ✅ Commit and push audio + images together so GitHub Pages gets everything at once
+## unlockAtIndex Pattern
+
+Quiz unlocks when question audio **starts** (not when full player finishes).
+- Set `unlockAtIndex` = index of the question clip in the player files array
+- e.g. player with 4 clips where clip[3] is the question: `unlockAtIndex=3`
+
+## Feedback Audio Pattern
+
+- Q1: always `feedback-correct-1.mp3` ("Pre-launch check passed" / "That's it. Round up to save the last Sprocket.")
+- Q2–Q10: cycle through `feedback-correct-2` to `feedback-correct-6`
+- Wrong: random choice between `feedback-wrong-1` and `feedback-wrong-2`
+- Answer clip plays after celebrate clip: `playFile(celebFile, () => playFile(answerAudio[qId], null))`
 
 ---
 
-*Created: 2026-03-29. Update this file whenever a new working pattern is established.*
+## Arc Structure Template
+
+Each arc = 7 issues:
+- **Issues 1–2:** Introduce the world and core math concept (entry level)
+- **Issues 3–4:** Deepen the concept (grouping, arrays, larger numbers)
+- **Issues 5–6:** Complexity + emotional arc peak (remainders, reverse operations, antagonist reveal)
+- **Issue 7:** Resolution + celebration (multi-step, proportional, arc wrap-up)
+
+Each issue = 5 chapters, 10 questions:
+- Ch1: 1 question (warm-up)
+- Ch2: 2 questions (Q2 + Q3 block)
+- Ch3: 2 questions (Q4 + Q5 block)
+- Ch4: 3 questions (Q6 + Q7 block + Q8 block)
+- Ch5: 2 questions (Q9 + Q10 block) → cliffhanger → win screen
+
+---
+
+## File Structure (per arc)
+
+```
+projects/math-blast/
+  [arc]-00X-narrated.html
+  sounds/[arc]/issue00X/
+    ch1-intro.mp3
+    ch1-[clip].mp3
+    ch1-q1-question.mp3
+    ch1-q1-answer.mp3
+    ch2-intro.mp3
+    ... (one clip per paragraph + one per question/answer)
+    ch2-q3-setup.mp3       ← Q-block setup clips
+    ch2-q3-question.mp3
+    feedback-correct-1.mp3 through 6
+    feedback-wrong-1.mp3, 2
+    win.mp3
+  images/[arc]/issue00X/
+    ch1-[scene].png        ← 1536×1024
+    ch2-[scene].png
+    ... (5 chapter + 1 cliffhanger + 10 question images)
+    cliffhanger-[scene].png
+    q1-[description].png   ← 1024×1024
+    ...
+    q10-boss-[description].png
+  gen_[arc]00X_audio.py
+  gen_[arc]00X_images.py
+```
+
+---
+
+## Naming Conventions
+
+- Tags: `[arc]-00X-approved` (e.g. `jungle-007-approved`)
+- Commits: `[Arc] Issue X — [Title] (production complete)`
+- Fix commits: `[Arc] Issue X fixes: [list of what changed]`
+- HTML: `[arc]-00X-narrated.html`
+- Sounds: `sounds/jungle/issue00X/` or `sounds/issue00X/` (space arc)
+- Images: `images/jungle/issue00X/` or `images/ch[X]-[desc].png` (space arc)
+
+---
+
+## Voice Cast
+
+### Space Arc
+| Character | Voice ID | Model | Notes |
+|-----------|----------|-------|-------|
+| George (narrator) | — | eleven_turbo_v2_5 | stability 0.60 |
+| Andrew (Jake) | — | eleven_turbo_v2_5 | stability 0.55 |
+| River (Priya/Phantom) | — | eleven_multilingual_v2 | stability 0.80, similarity 0.60, style 0.10 |
+
+### Jungle Arc
+| Character | Voice ID | Model | Notes |
+|-----------|----------|-------|-------|
+| Eric (narrator) | cjVigY5qzO86Huf0OWal | eleven_turbo_v2_5 | stability 0.60, sim 0.75, style 0.20 |
+| Jessica (Blaze) | cgSgspJ2msm6clMCkdW9 | eleven_turbo_v2_5 | stability 0.55, sim 0.75, style 0.30 |
+| Bill (Chief Pip/Keeper Moss/Elder Splash) | pqHfZKP75CvOlQylNhV4 | eleven_turbo_v2_5 | stability 0.70, sim 0.70, style 0.15 |
+| Charlie (Doz) | IKne3meq5aSn9XLyUdCD | eleven_turbo_v2_5 | energetic young Australian |
+| Callum (Tangle) | N2lVS1w4EtoT3dr4eOWO | eleven_multilingual_v2 | stability 0.85, sim 0.30, style 0.55 — use sparingly |
+
+---
+
+## Quality Metrics (target)
+
+By following this workflow, target is **≤3 fixes per issue** after Art's review.
+- Issue 4: 8 fixes (baseline)
+- Issue 5: 8 fixes (audio bleed + image issues)
+- Issue 6: 7 fixes
+- Issue 7: 2 fixes ✅ (target achieved)
