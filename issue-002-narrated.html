@@ -622,7 +622,7 @@ function playFile(file, onEnd) {
 const playerConfigs = {};
 let activePlayerId = null;
 
-function setupPlayer(id, files, labels, storyId, lockId, onDone) {
+function setupPlayer(id,files,labels,storyId,lockId,onDone,unlockAtIndex) {
   playerConfigs[id] = { files, labels, storyId, lockId, onDone, active:false };
 }
 
@@ -664,7 +664,7 @@ function runPlayer(id) {
       cfg.active=false; activePlayerId=null;
       return;
     }
-    const file=cfg.files[fileIdx];
+    if(fileIdx===cfg.unlockAtIndex){if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(quizId){const quiz=document.getElementById(quizId);if(quiz&&!quiz.classList.contains('show')){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}}const file=cfg.files[fileIdx];
     const label=cfg.labels && cfg.labels[fileIdx] ? cfg.labels[fileIdx] : '🎙️ Narrating...';
     if(statusEl) statusEl.textContent=label;
     const segStart=(fileIdx/totalFiles)*100;
@@ -689,61 +689,61 @@ function initPlayers(){
   setupPlayer('ch1',
     ['ch1-intro.mp3', 'ch1-q1-question.mp3'],
     ['🎙️ George is narrating...', '🎙️ Listen to the question...'],
-    'story-ch1','lock-q1', null);
+    'story-ch1','lock-q1', null, 1);
 
   // Q2 story: George narrates Meridian distress → Meridian crew (River) → Q2 question
   setupPlayer('q2s',
     ['ch1-q2-story.mp3', 'ch1-meridian.mp3', 'ch1-q2-question.mp3'],
     ['🎙️ George is narrating...', '📡 SS Meridian crew...', '🎙️ Listen to the question...'],
-    'story-q2s', 'lock-q2', null);
+    'story-q2s', 'lock-q2', null, 2);
 
   // Ch2: George narrates Jake racing to Meridian → Meridian crew asks Q3 → Q3 question
   setupPlayer('ch2',
     ['ch2-intro.mp3', 'ch2-meridian.mp3', 'ch2-q3-question.mp3'],
     ['🎙️ George is narrating...', '📡 Meridian crew...', '🎙️ Listen to the question...'],
-    'story-ch2','lock-q3', null);
+    'story-ch2','lock-q3', null, 2);
 
   // Q4 story: George narrates fuel pods discovery → Jake voice (Andrew) → Q4 question
   setupPlayer('q4s',
     ['ch2-q4-story.mp3', 'ch2-jake.mp3', 'ch2-q4-question.mp3'],
     ['🎙️ George is narrating...', '👦 Jake is thinking...', '🎙️ Listen to the question...'],
-    'story-q4s', 'lock-q4', null);
+    'story-q4s', 'lock-q4', null, 2);
 
   // Ch3: George narrates Yusra + reserve → Q5 question
   setupPlayer('ch3',
     ['ch3-intro.mp3', 'ch3-q5-question.mp3'],
     ['🎙️ George is narrating...', '🎙️ Listen to the question...'],
-    'story-ch3','lock-q5', null);
+    'story-ch3','lock-q5', null, 1);
 
   // Q6 story: George narrates three routes → Jake voice considers routes → Q6 question
   setupPlayer('q6s',
     ['ch3-q6-story.mp3', 'ch3-jake.mp3', 'ch3-q6-question.mp3'],
     ['🎙️ George is narrating...', '👦 Jake is thinking...', '🎙️ Listen to the question...'],
-    'story-q6s', 'lock-q6', null);
+    'story-q6s', 'lock-q6', null, 2);
 
   // Ch4: George narrates Route B chosen, 3/4 through → Q7 question
   setupPlayer('ch4',
     ['ch4-intro.mp3', 'ch4-q7-question.mp3'],
     ['🎙️ George is narrating...', '🎙️ Listen to the question...'],
-    'story-ch4','lock-q7', null);
+    'story-ch4','lock-q7', null, 1);
 
   // Q8 story: George narrates 12 minutes for 3/4 → Jake voice calculates → Q8 question
   setupPlayer('q8s',
     ['ch4-q8-story.mp3', 'ch4-jake.mp3', 'ch4-q8-question.mp3'],
     ['🎙️ George is narrating...', '👦 Jake is thinking...', '🎙️ Listen to the question...'],
-    'story-q8s', 'lock-q8', null);
+    'story-q8s', 'lock-q8', null, 2);
 
   // Ch5: George narrates nebula exit + celebration → Meridian pilot (River) spots mysterious route → Q9 question
   setupPlayer('ch5',
     ['ch5-intro.mp3', 'ch5-meridian-pilot.mp3', 'ch5-q9-question.mp3'],
     ['🎙️ George is narrating...', '📡 Meridian pilot...', '🎙️ Listen to the question...'],
-    'story-ch5','lock-q9', null);
+    'story-ch5','lock-q9', null, 2);
 
   // Q10 story: George narrates Yusra discovers theft pattern → Yusra voice (River) explains 1/4 of 1/3 → Q10 question
   setupPlayer('q10s',
     ['ch5-q10-story.mp3', 'ch5-yusra.mp3', 'ch5-q10-question.mp3'],
     ['🎙️ George is narrating...', '👩 Yusra speaking...', '🎙️ Listen to the question...'],
-    'story-q10s', 'lock-q10', null);
+    'story-q10s', 'lock-q10', null, 2);
 }
 
 // ── SHOW STORY BLOCKS ──────────────────────────────────────

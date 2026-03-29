@@ -643,7 +643,7 @@ function playSeq(files, onStep, onDone) {
 const playerConfigs = {};
 let activePlayerId = null;
 
-function setupPlayer(id, files, labels, storyId, lockId, onDone) {
+function setupPlayer(id,files,labels,storyId,lockId,onDone,unlockAtIndex) {
   playerConfigs[id] = { files, labels, storyId, lockId, onDone, active:false };
 }
 
@@ -685,7 +685,7 @@ function runPlayer(id) {
       cfg.active=false; activePlayerId=null;
       return;
     }
-    const file=cfg.files[fileIdx];
+    if(fileIdx===cfg.unlockAtIndex){if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(quizId){const quiz=document.getElementById(quizId);if(quiz&&!quiz.classList.contains('show')){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}}const file=cfg.files[fileIdx];
     const label=cfg.labels && cfg.labels[fileIdx] ? cfg.labels[fileIdx] : '🎙️ Narrating...';
     if(statusEl) statusEl.textContent=label;
     const segStart=(fileIdx/totalFiles)*100;
@@ -708,52 +708,52 @@ function initPlayers(){
   setupPlayer('ch1',
     ['ch1-intro.mp3','ch1-jake.mp3','ch1-q1-question.mp3'],
     ['🎙️ George narrating...','👦 Jake thinking...','🎙️ Listen to question...'],
-    'story-ch1','lock-q1', null);
+    'story-ch1','lock-q1', null, 2);
 
   setupPlayer('q2s',
     ['ch1-q2-story.mp3','ch1-q2-question.mp3'],
     ['🎙️ George narrating...','🎙️ Listen to question...'],
-    'story-q2s', 'lock-q2', null);
+    'story-q2s', 'lock-q2', null, 1);
 
   setupPlayer('ch2',
     ['ch2-intro.mp3','ch2-jake.mp3','ch2-phantom.mp3','ch2-q3-question.mp3'],
     ['🎙️ George narrating...','👦 Jake speaking...','👻 Phantom speaks...','🎙️ Listen to question...'],
-    'story-ch2','lock-q3', null);
+    'story-ch2','lock-q3', null, 3);
 
   setupPlayer('q4s',
     ['ch2-q4-story.mp3','ch2-q4-question.mp3'],
     ['🎙️ George narrating...','🎙️ Listen to question...'],
-    'story-q4s', 'lock-q4', null);
+    'story-q4s', 'lock-q4', null, 1);
 
   setupPlayer('ch3',
     ['ch3-intro.mp3','ch3-q5-question.mp3'],
     ['🎙️ George narrating...','🎙️ Listen to question...'],
-    'story-ch3','lock-q5', null);
+    'story-ch3','lock-q5', null, 1);
 
   setupPlayer('q6s',
     ['ch3-q6-story.mp3','ch3-q6-question.mp3'],
     ['🎙️ George narrating...','🎙️ Listen to question...'],
-    'story-q6s', 'lock-q6', null);
+    'story-q6s', 'lock-q6', null, 1);
 
   setupPlayer('ch4',
     ['ch4-intro.mp3','ch4-jake.mp3','ch4-q7-question.mp3'],
     ['🎙️ George narrating...','👦 Jake thinking...','🎙️ Listen to question...'],
-    'story-ch4','lock-q7', null);
+    'story-ch4','lock-q7', null, 2);
 
   setupPlayer('q8s',
     ['ch4-q8-story.mp3','ch4-q8-question.mp3'],
     ['🎙️ George narrating...','🎙️ Listen to question...'],
-    'story-q8s', 'lock-q8', null);
+    'story-q8s', 'lock-q8', null, 1);
 
   setupPlayer('ch5',
     ['ch5-intro.mp3','ch5-phantom.mp3','ch5-phantom-end.mp3','ch5-q9-question.mp3'],
     ['🎙️ George narrating...','👻 Phantom speaks...','👻 Phantom continues...','🎙️ Listen to question...'],
-    'story-ch5','lock-q9', null);
+    'story-ch5','lock-q9', null, 3);
 
   setupPlayer('q10s',
     ['ch5-q10-story.mp3','ch5-q10-question.mp3'],
     ['🎙️ George narrating...','🎙️ Listen to question...'],
-    'story-q10s', 'lock-q10', null);
+    'story-q10s', 'lock-q10', null, 1);
 }
 
 // ── SHOW STORY BLOCKS ──────────────────────────────────────

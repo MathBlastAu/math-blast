@@ -589,8 +589,8 @@ function playFile(file,onEnd){
   return a;
 }
 
-function setupPlayer(id,files,labels,storyId,lockId){
-  playerConfigs[id]={files,labels,storyId,lockId,active:false};
+function setupPlayer(id,files,labels,storyId,lockId,onDone,unlockAtIndex){
+  playerConfigs[id]={files,labels,storyId,lockId,onDone:null,unlockAtIndex:unlockAtIndex??files.length,active:false};
 }
 
 function togglePlayer(id){
@@ -624,7 +624,7 @@ function runPlayer(id){
       if(qId){const q=document.getElementById(qId);if(q){q.classList.add('show');setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}
       cfg.active=false;activePlayerId=null;return;
     }
-    const file=cfg.files[fileIdx];
+    if(fileIdx===cfg.unlockAtIndex){if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(quizId){const quiz=document.getElementById(quizId);if(quiz&&!quiz.classList.contains('show')){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}}const file=cfg.files[fileIdx];
     const label=cfg.labels&&cfg.labels[fileIdx]?cfg.labels[fileIdx]:'🎙️ Narrating...';
     if(statusEl)statusEl.textContent=label;
     const s=fileIdx/cfg.files.length*100, e=(fileIdx+1)/cfg.files.length*100;
