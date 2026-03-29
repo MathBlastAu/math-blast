@@ -132,6 +132,23 @@ setupPlayer('ch1',
 
 ---
 
+## Pre-Generation Script Review (mandatory)
+Before running any audio gen script, read every line aloud mentally and check:
+- **Em-dashes (—)** → replace with comma or "and" to avoid TTS pause
+- **Colons mid-sentence** → replace with a full stop or comma
+- **Parentheses** → remove or rewrite as natural speech
+- **Abbreviations** → spell out (÷ → "divided by", × → "times")
+
+## Story Text Paragraph Rule
+Every paragraph in a `story-text` div must stand alone without the quiz question.
+- If a paragraph only makes sense as a lead-in to the quiz → move it to the Q block setup clip instead
+- Chapter story text = scene-setting and character moments only
+
+## Image Prompt Rules
+- **Never request mathematical symbols** in image prompts (÷, ×, /, =, fraction bars)
+- Describe visually instead: "25 rows of 4 items" not "÷4"
+- Holographic equation labels are fine (e.g. "holographic '60 ÷ 10 = ?' in cyan") — rendered as decoration, not as readable typography
+
 ## Lessons Learned (don't repeat)
 
 - ❌ Don't delegate image gen to sub-agents — they write their own style descriptions and drift
