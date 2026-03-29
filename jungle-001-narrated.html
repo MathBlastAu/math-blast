@@ -424,7 +424,9 @@
         </div>
       </div>
       <div class="story-text" id="story-q8s">
-        Chief Pip stroked his antennae thoughtfully. <em>"One more question, explorer. What if there had been <strong>five families</strong> tonight instead of four? Twenty-four glow-berries between five families — how many each?"</em> Blaze raised an eyebrow. <em>"Heads up — this one doesn't divide evenly."</em>
+        Chief Pip stroked his antennae thoughtfully.<br><br>
+        <em>"One more question, explorer. What if there had been <strong>five families</strong> tonight instead of four? Twenty-four glow-berries between five families — how many each?"</em><br><br>
+        Blaze raised an eyebrow. <em>"Heads up — this one doesn't divide evenly."</em>
       </div>
       <div id="lock-q8" class="quiz-lock">🔒 Listen to unlock!</div>
       <div class="quiz-box" id="quiz-q8">
@@ -490,7 +492,9 @@
         </div>
       </div>
       <div class="story-text" id="story-q10s">
-        Chief Pip appeared at Blaze's shoulder. <em>"One more, explorer — I am planning tomorrow's meal. The village has <strong>forty-five food items</strong> for <strong>six families</strong>. What does each family get?"</em> Blaze nodded. <em>"And remember — in Branchwick, remainders always go somewhere useful."</em>
+        Chief Pip appeared at Blaze's shoulder.<br><br>
+        <em>"One more, explorer — I am planning tomorrow's meal. The village has <strong>forty-five food items</strong> for <strong>six families</strong>. What does each family get?"</em><br><br>
+        <em>"And remember,"</em> Blaze added, <em>"in Branchwick, remainders always go somewhere useful."</em>
       </div>
       <div id="lock-q10" class="quiz-lock">🔒 Listen to unlock the Boss Challenge!</div>
       <div class="quiz-box" id="quiz-q10">
@@ -657,60 +661,61 @@ function runPlayer(id) {
 
 // ── PLAYER DEFINITIONS ────────────────────────────────────
 function initPlayers(){
+  // unlockAtIndex = the index at which the quiz unlocks (when question clip STARTS)
   setupPlayer('ch1',
-    ['ch1-intro.mp3','ch1-blaze-arrival.mp3','ch1-pip-welcome.mp3','ch1-blaze-response.mp3','ch1-q1-setup.mp3','ch1-q1-question.mp3'],
-    ['📖 Eric narrating...','⚡ Blaze speaking...','🫐 Chief Pip speaking...','⚡ Blaze speaking...','📖 Eric narrating...','⚡ Blaze — puzzle time!'],
-    'story-ch1','lock-q1');
+    ['ch1-intro.mp3','ch1-blaze-arrival.mp3','ch1-pip-welcome.mp3','ch1-q1-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze speaking...','🫐 Chief Pip speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch1','lock-q1',null,3);
 
   setupPlayer('ch2',
     ['ch2-intro.mp3','ch2-pip-harvest.mp3','ch2-blaze-inspect.mp3','ch2-q2-question.mp3'],
     ['📖 Eric narrating...','🫐 Chief Pip speaking...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
-    'story-ch2','lock-q2');
+    'story-ch2','lock-q2',null,3);
 
   setupPlayer('q3s',
     ['ch2-q3-setup.mp3','ch2-q3-question.mp3'],
     ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
-    'story-q3s','lock-q3');
+    'story-q3s','lock-q3',null,1);
 
   setupPlayer('ch3',
-    ['ch3-intro.mp3','ch3-doz-discovery.mp3','ch3-blaze-doz.mp3','ch3-q4-setup.mp3','ch3-q4-question.mp3'],
-    ['📖 Eric narrating...','🍇 Doz speaking...','⚡ Blaze speaking...','📖 Eric narrating...','⚡ Blaze — puzzle time!'],
-    'story-ch3','lock-q4');
+    ['ch3-intro.mp3','ch3-doz-discovery.mp3','ch3-blaze-doz.mp3','ch3-q4-question.mp3'],
+    ['📖 Eric narrating...','🍇 Doz speaking...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch3','lock-q4',null,3);
 
   setupPlayer('q5s',
-    ['ch3-q5-question.mp3'],
-    ['⚡ Blaze — puzzle time!'],
-    'story-q5s','lock-q5');
+    ['ch3-q5-setup.mp3','ch3-q5-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q5s','lock-q5',null,1);
 
   setupPlayer('ch4',
     ['ch4-intro.mp3','ch4-blaze-steps-up.mp3','ch4-pip-explains.mp3','ch4-q6-question.mp3'],
     ['📖 Eric narrating...','⚡ Blaze speaking...','🫐 Chief Pip speaking...','⚡ Blaze — puzzle time!'],
-    'story-ch4','lock-q6');
+    'story-ch4','lock-q6',null,3);
 
   setupPlayer('q7s',
-    ['ch4-q7-question.mp3'],
-    ['⚡ Blaze — puzzle time!'],
-    'story-q7s','lock-q7');
+    ['ch4-q7-setup.mp3','ch4-q7-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q7s','lock-q7',null,1);
 
   setupPlayer('q8s',
-    ['ch4-q8-question.mp3'],
-    ['⚡ Blaze — puzzle time!'],
-    'story-q8s','lock-q8');
+    ['ch4-q8-setup.mp3','ch4-q8-question.mp3'],
+    ['🫐 Chief Pip speaking...','⚡ Blaze — puzzle time!'],
+    'story-q8s','lock-q8',null,1);
 
   setupPlayer('ch5',
     ['ch5-intro.mp3','ch5-blaze-investigates.mp3','ch5-footprint.mp3','ch5-q9-question.mp3'],
     ['📖 Eric narrating...','⚡ Blaze speaking...','📖 Eric narrating...','⚡ Blaze — puzzle time!'],
-    'story-ch5','lock-q9');
+    'story-ch5','lock-q9',null,3);
 
   setupPlayer('q10s',
-    ['ch5-q10-question.mp3'],
-    ['⚡ Blaze — puzzle time!'],
-    'story-q10s','lock-q10');
+    ['ch5-q10-setup.mp3','ch5-q10-question.mp3'],
+    ['🫐 Chief Pip speaking...','⚡ Blaze — puzzle time!'],
+    'story-q10s','lock-q10',null,1);
 
   setupPlayer('cf',
     ['ch5-cliffhanger.mp3'],
     ['📖 Eric narrating...'],
-    'story-cf', null);
+    'story-cf',null,null,0);
 }
 
 // ── SHOW SECONDARY BLOCKS ─────────────────────────────────
