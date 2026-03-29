@@ -601,7 +601,7 @@ function playFile(file, onEnd) {
 }
 
 function setupPlayer(id,files,labels,storyId,lockId,onDone,unlockAtIndex) {
-  playerConfigs[id] = { files, labels, storyId, lockId, active:false };
+  playerConfigs[id] = { files, labels, storyId, lockId, unlockAtIndex: unlockAtIndex ?? files.length, active:false };
 }
 
 function togglePlayer(id) {
