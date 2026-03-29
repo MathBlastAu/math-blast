@@ -722,27 +722,27 @@ function initPlayers(){
 function showQ3Block(){
   const b=document.getElementById('block-q3'); b.style.display='block';
   setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
-  setTimeout(()=>{ playFile('ch2-q2-answer.mp3',()=>togglePlayer('q3s')); },500);
+  setTimeout(()=>togglePlayer('q3s'),400);
 }
 function showQ5Block(){
   const b=document.getElementById('block-q5'); b.style.display='block';
   setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
-  setTimeout(()=>{ playFile('ch3-q4-answer.mp3',()=>togglePlayer('q5s')); },500);
+  setTimeout(()=>togglePlayer('q5s'),400);
 }
 function showQ7Block(){
   const b=document.getElementById('block-q7'); b.style.display='block';
   setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
-  setTimeout(()=>{ playFile('ch4-q6-answer.mp3',()=>togglePlayer('q7s')); },500);
+  setTimeout(()=>togglePlayer('q7s'),400);
 }
 function showQ8Block(){
   const b=document.getElementById('block-q8'); b.style.display='block';
   setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
-  setTimeout(()=>{ playFile('ch4-q7-answer.mp3',()=>togglePlayer('q8s')); },500);
+  setTimeout(()=>togglePlayer('q8s'),400);
 }
 function showQ10Block(){
   const b=document.getElementById('block-q10'); b.style.display='block';
   setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
-  setTimeout(()=>{ playFile('ch5-q9-answer.mp3',()=>togglePlayer('q10s')); },500);
+  setTimeout(()=>togglePlayer('q10s'),400);
 }
 
 // ── GAME LOGIC ─────────────────────────────────────────────
@@ -782,25 +782,54 @@ function answer(btn, correct, qId){
   const next=document.getElementById('next-'+qId);
   if(correct){
     btn.classList.add('correct');
-    if(!triedWrong.has(qId)) score++; // only award point if no wrong attempt first
+    if(!triedWrong.has(qId)) score++;
     questionsAnswered++;
     fb.className='feedback show good'; fb.innerHTML=correctMsg[qId];
     updateProgress();
     next.classList.add('show');
     const qNum=parseInt(qId.replace('q',''));
-    if(qNum===1){
-      playFile('feedback-correct-1.mp3',null);
+
+    // Answer explanation map — plays immediately on correct answer
+    const answerAudio={
+      q1:null, // Q1 has no answer clip (leads to chapter 2, not a secondary block)
+      q2:'ch2-q2-answer.mp3',
+      q3:'ch2-q3-answer.mp3',
+      q4:'ch3-q4-answer.mp3',
+      q5:'ch3-q5-answer.mp3',
+      q6:'ch4-q6-answer.mp3',
+      q7:'ch4-q7-answer.mp3',
+      q8:'ch4-q8-answer.mp3',
+      q9:'ch5-q9-answer.mp3',
+      q10:null, // Q10 answer plays in showCliffhanger
+    };
+
+    // Play answer explanation immediately, THEN the short celebration clip
+    const aFile = answerAudio[qId];
+    if(aFile){
+      playFile(aFile, ()=>{
+        // After explanation, play a short celebration
+        if(qNum===1){
+          playFile('feedback-correct-1.mp3',null);
+        } else {
+          let v;
+          if(qNum>=4&&qNum<=5)      v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];
+          else if(qNum>=6&&qNum<=8) v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-6.mp3'];
+          else                       v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-6.mp3'];
+          playFile(v[correctVariant%v.length],null); correctVariant++;
+        }
+      });
     } else {
-      // feedback-correct-4 = Pip ("You honour the Sprocket tradition") — only use on Ch4 questions
-      // feedback-correct-5 = Doz ("Yes yes yes!") — only use on Ch3 questions
-      // Ch1=Q1, Ch2=Q2-3, Ch3=Q4-5, Ch4=Q6-8, Ch5=Q9-10
-      let v;
-      if(qNum>=4&&qNum<=5)      v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];
-      else if(qNum>=6&&qNum<=8) v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-6.mp3'];
-      else                       v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-6.mp3'];
-      playFile(v[correctVariant%v.length],null); correctVariant++;
+      // No answer clip — just play celebration
+      if(qNum===1){
+        playFile('feedback-correct-1.mp3',null);
+      } else {
+        let v;
+        if(qNum>=4&&qNum<=5)      v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];
+        else if(qNum>=6&&qNum<=8) v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-6.mp3'];
+        else                       v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-6.mp3'];
+        playFile(v[correctVariant%v.length],null); correctVariant++;
+      }
     }
-    // Note: answer audio is played by the showQ*Block and showCliffhanger functions, not here.
   } else {
     triedWrong.add(qId); // mark this question as having had a wrong attempt
     btn.classList.add('wrong');
