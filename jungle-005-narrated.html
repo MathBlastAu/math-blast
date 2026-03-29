@@ -204,7 +204,8 @@
     <div class="story-text" id="story-ch2">
       The rescued Sprockets were safe on the platform. But now the real trouble started. Split Ridge ran entirely on equal shares — and equal shares at Split Ridge almost never came out perfectly.<br><br>
       Twenty-two building rocks for five Sprocket families. Three families wanted to round up. One wanted to throw the extras off the cliff. Blaze had a better idea: split the leftover into fractions. Each family gets four rocks, and the two leftover rocks are shared between all five as two-fifths each.<br><br>
-      <em>"What's two-fifths of a rock?"</em> Elder Crag asked. <em>"Ask me a harder one,"</em> said Blaze.
+      Elder Crag looked at the two leftover rocks. <em>"What's two-fifths of a rock?"</em><br><br>
+      <em>"Ask me a harder one,"</em> said Blaze.
     </div>
     <div id="lock-q2" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
     <div class="quiz-box" id="quiz-q2">
@@ -364,7 +365,7 @@
         </div>
       </div>
       <div class="story-text" id="story-q7s">
-        <strong>Thirty-one Sprockets</strong>, spread across <strong>four bridges</strong>. They need to cross in roughly equal groups. Three bridges carry seven Sprockets each, and one bridge carries the last four.
+        <strong>Thirty-one Sprockets</strong>, spread across <strong>four bridges</strong>. They need to cross in roughly equal groups. Four bridges carry seven Sprockets each, and one bridge carries the three who are left.
       </div>
       <div id="lock-q7" class="quiz-lock">🔒 Listen to unlock!</div>
       <div class="quiz-box" id="quiz-q7">
@@ -553,11 +554,11 @@ function initPlayers(){
     ['📖 Eric narrating...','📖 Eric narrating...','🪨 Elder Crag speaking...','⚡ Blaze — puzzle time!'],
     'story-ch1','lock-q1',null,3);
 
-  // Ch2: Eric(equal shares, 22 rocks), Eric(fire-nuts + remainder tradition), Blaze(exchange) — unlock at 3
+  // Ch2: Eric(equal shares, 22 rocks), Eric(fire-nuts + remainder tradition), Crag(asks), Blaze(responds) — unlock at 4
   setupPlayer('ch2',
-    ['ch2-intro.mp3','ch2-nuts.mp3','ch2-blaze.mp3','ch2-q2-question.mp3'],
-    ['📖 Eric narrating...','📖 Eric narrating...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
-    'story-ch2','lock-q2',null,3);
+    ['ch2-intro.mp3','ch2-nuts.mp3','ch2-crag-rocks.mp3','ch2-blaze.mp3','ch2-q2-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','🪨 Elder Crag speaking...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch2','lock-q2',null,4);
 
   // Q3 block: Eric(19 fire-nuts, 6 Sprockets, tradition), Blaze(Q3) — unlock at 1
   setupPlayer('q3s',
@@ -595,11 +596,11 @@ function initPlayers(){
     ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
     'story-q8s','lock-q8',null,1);
 
-  // Ch5: Eric(rescue complete, star-fruits), Eric(Tangle unloads all vines, groups of 12), Eric(giving back) — unlock at 4
+  // Ch5: Eric(rescue complete, good day), Eric(star-fruits, hated even numbers), Eric(Tangle unloads), Eric(giving back) — unlock at 4
   setupPlayer('ch5',
-    ['ch5-intro.mp3','ch5-tangle.mp3','ch5-blaze.mp3','ch5-q9-question.mp3'],
-    ['📖 Eric narrating...','📖 Eric narrating...','📖 Eric narrating...','⚡ Blaze — puzzle time!'],
-    'story-ch5','lock-q9',null,3);
+    ['ch5-intro.mp3','ch5-starfruit.mp3','ch5-tangle.mp3','ch5-blaze.mp3','ch5-q9-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','📖 Eric narrating...','📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-ch5','lock-q9',null,4);
 
   // Q10 block: Eric(100 units, 3 villages, almost equal is fair), Blaze(Q10) — unlock at 1
   setupPlayer('q10s',
@@ -628,7 +629,7 @@ const correctMsg={
   q4:'🌿 Yes! 50 divided by 8 is 6 remainder 2. Six groups, with two vines that just won\'t fit. That\'s what\'s bothering Tangle.',
   q5:'🌿 Perfect! 50 divided by 5 is 10, with nothing left over. Ten perfect groups. Tangle went still.',
   q6:'🪵 Correct! 27 divided by 6 is 4 remainder 3. Four complete bridges, three planks spare.',
-  q7:'🪵 Right! 31 divided by 4 is 7 remainder 3. Seven per bridge on three of them, and four on the last one.',
+  q7:'🪵 Right! 31 divided by 4 is 7 remainder 3. Seven per bridge on four of them, and three on the last one.',
   q8:'⏱️ Yes! 31 divided by 8 is 3 remainder 7. Three minutes isn\'t enough — you must round up to 4 minutes to get everyone across.',
   q9:'⭐ Correct! 43 divided by 7 is 6 remainder 1. Six fruits each, one left over.',
   q10:'🏆 BOSS CLEARED! 100 divided by 3 is 33 remainder 1. Two villages get 33, one gets 34. Almost equal — and fair enough.'
