@@ -50,6 +50,22 @@ Disney Pixar CGI 3D animation style, rich colour, cinematic quality"
 4. Run audio gen locally using `gen_jungle00X_audio_v2.py` pattern
 5. **Commit audio files explicitly** — they don't auto-stage
 
+### Narrator Coverage Check (mandatory before generating)
+Before writing audio scripts, do this for every chapter:
+1. List every paragraph in the `story-text` div
+2. Assign each paragraph to a clip (narrator or character)
+3. Any paragraph with no assigned clip = missing audio — fix it before generating
+4. Each narrator paragraph = one Eric clip. Don't combine two narrator paragraphs if a character line falls between them.
+
+### Question Accuracy Check (mandatory)
+Before finalising each question, confirm all 4 of these match:
+- Question text (the numbers/operation shown)
+- Answer options (correct answer matches the question)
+- Image prompt (shows the right numbers and setup)
+- Audio script (reads the same question as screen text)
+
+If any one of these four doesn't match the others — fix before generating.
+
 ### Audio Sequence (locked)
 On correct answer: **celebration clip → explanation clip**
 - Celebration: `feedback-correct-X.mp3` plays first
