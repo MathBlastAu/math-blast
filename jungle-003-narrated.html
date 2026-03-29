@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Blast 🌿 — Jungle Issue 3 (Narrated)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#061a06; font-family:'Nunito',Arial,sans-serif; color:#fff;
+    background-image:radial-gradient(ellipse at 50% 0%,rgba(0,100,30,0.3) 0%,transparent 70%); min-height:100vh; }
+  .leaffield { position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .leaf { position:absolute; font-size:12px; opacity:0.25; animation:fall 8s linear infinite; }
+  @keyframes fall { from{transform:translateY(-20px) rotate(0deg); opacity:0.25} to{transform:translateY(100vh) rotate(360deg); opacity:0} }
+  .wrapper { max-width:680px; margin:0 auto; position:relative; z-index:1; padding-bottom:90px; }
+  .title-screen { text-align:center; padding:48px 24px 36px; }
+  .hero-emoji { font-size:72px; display:block; margin-bottom:16px; animation:float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  .title-screen h1 { font-size:46px; font-weight:900; line-height:1.1; text-shadow:0 0 24px rgba(0,180,60,0.8); }
+  .title-screen h1 span { color:#86efac; }
+  .issue-label { font-size:13px; font-weight:900; color:#4ade80; letter-spacing:3px; text-transform:uppercase; margin:10px 0 4px; }
+  .tagline { font-size:16px; color:#6ee7b7; margin-bottom:4px; }
+  .meta { font-size:13px; color:#166534; margin-bottom:8px; }
+  .narrated-badge { display:inline-block; background:rgba(134,239,172,0.15); border:1px solid #86efac; color:#86efac;
+    font-size:11px; font-weight:900; padding:4px 14px; border-radius:20px; letter-spacing:2px; text-transform:uppercase; margin-bottom:24px; }
+  .start-btn { display:inline-block; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-size:20px; font-weight:900; padding:18px 48px; border-radius:50px; border:none; cursor:pointer;
+    box-shadow:0 6px 30px rgba(22,163,74,0.5); transition:transform 0.15s; font-family:'Nunito',Arial,sans-serif; }
+  .start-btn:hover { transform:scale(1.05); }
+  .progress-wrap { padding:16px 24px 0; display:none; }
+  .progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .progress-label { font-size:13px; color:#4ade80; font-weight:700; }
+  .progress-score { font-size:13px; color:#fbbf24; font-weight:900; }
+  .progress-bar { background:#0a2a0a; border-radius:20px; height:14px; overflow:hidden; }
+  .progress-fill { background:linear-gradient(90deg,#16a34a,#86efac); height:100%; border-radius:20px; transition:width 0.5s ease; }
+  .chapter { display:none; padding:20px 20px 0; animation:fadeIn 0.4s ease; }
+  .chapter.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .chapter-badge { display:inline-block; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-size:11px; font-weight:900; padding:5px 16px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; }
+  .chapter h2 { font-size:26px; font-weight:900; margin-bottom:16px; line-height:1.3; }
+  .chapter-img { width:100%; border-radius:16px; display:block; margin-bottom:20px;
+    border:3px solid rgba(0,180,60,0.4); box-shadow:0 8px 30px rgba(0,0,0,0.5); background:#0a2a0a; min-height:180px; object-fit:cover; }
+  .nar-player { display:flex; align-items:center; gap:12px; background:rgba(22,163,74,0.12);
+    border:2px solid rgba(22,163,74,0.4); border-radius:14px; padding:12px 16px; margin-bottom:16px; }
+  .nar-btn { width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; flex-shrink:0;
+    background:linear-gradient(135deg,#15803d,#16a34a); color:white; font-size:18px;
+    display:flex; align-items:center; justify-content:center; transition:transform 0.15s; }
+  .nar-btn:hover { transform:scale(1.1); }
+  .nar-info { flex:1; min-width:0; }
+  .nar-status { font-size:12px; color:#4ade80; font-weight:700; }
+  .nar-bar { height:4px; background:#0a2a0a; border-radius:4px; margin-top:5px; overflow:hidden; }
+  .nar-bar-fill { height:100%; background:linear-gradient(90deg,#16a34a,#86efac); border-radius:4px; width:0%; transition:width 0.3s; }
+  .story-text { background:rgba(255,255,255,0.04); border-left:4px solid #16a34a;
+    border-radius:0 12px 12px 0; padding:18px 22px; font-size:18px; line-height:1.9; color:#d1fae5; margin-bottom:20px;
+    transition:border-color 0.4s, background 0.4s; }
+  .story-text.playing { border-left-color:#86efac; background:rgba(22,163,74,0.08); }
+  .story-text.done { border-left-color:#fbbf24; background:rgba(251,191,36,0.04); }
+  .story-text strong { color:#fbbf24; }
+  .story-text em { color:#86efac; font-style:normal; font-weight:700; }
+  .quiz-lock { text-align:center; padding:16px 20px; background:rgba(22,163,74,0.06);
+    border:2px dashed rgba(22,163,74,0.3); border-radius:16px; margin-bottom:20px;
+    font-size:14px; color:#4ade80; font-weight:700; }
+  .quiz-box { background:rgba(22,163,74,0.08); border:2px solid rgba(22,163,74,0.35);
+    border-radius:16px; padding:22px; margin-bottom:20px; display:none; animation:fadeIn 0.4s ease; }
+  .quiz-box.show { display:block; }
+  .quiz-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .difficulty { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; }
+  .diff-warmup { background:rgba(100,200,255,0.2); color:#66ddff; border:1px solid #66ddff; }
+  .diff-easy   { background:rgba(134,239,172,0.2); color:#86efac; border:1px solid #86efac; }
+  .diff-medium { background:rgba(255,200,0,0.2);   color:#fbbf24; border:1px solid #fbbf24; }
+  .diff-hard   { background:rgba(255,80,80,0.2);   color:#ff8888; border:1px solid #ff8888; }
+  .diff-boss   { background:rgba(255,0,200,0.2);   color:#ff44ee; border:1px solid #ff44ee; }
+  .acara-tag { display:inline-block; font-size:10px; font-weight:700; padding:3px 10px; border-radius:10px;
+    background:rgba(255,255,255,0.07); color:#6ee7b7; border:1px solid rgba(255,255,255,0.1); text-transform:uppercase; letter-spacing:0.5px; }
+  .quiz-icon { font-size:26px; display:block; margin-bottom:6px; }
+  .quiz-label { font-size:12px; font-weight:900; color:#4ade80; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+  .yr-badge { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; margin-right:6px; }
+  .yr3 { background:rgba(22,163,74,0.2); color:#86efac; border:1px solid #86efac; }
+  .yr4 { background:rgba(251,191,36,0.2); color:#fbbf24; border:1px solid #fbbf24; }
+  .question { font-size:20px; font-weight:900; color:#fff; margin-bottom:18px; line-height:1.5; }
+  .question-img { display:block; max-width:300px; width:100%; margin:14px auto 18px; border-radius:8px; border:2px solid rgba(22,163,74,0.3); }
+  .options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .opt-btn { background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.12); color:#fff;
+    font-family:'Nunito',Arial,sans-serif; font-size:19px; font-weight:700; padding:16px 10px;
+    border-radius:12px; cursor:pointer; transition:all 0.15s; }
+  .opt-btn:hover:not(:disabled) { background:rgba(22,163,74,0.25); border-color:#16a34a; transform:scale(1.03); }
+  .opt-btn.correct { background:rgba(22,163,74,0.25)!important; border-color:#86efac!important; color:#86efac!important; }
+  .opt-btn.wrong   { background:rgba(255,50,50,0.2)!important; border-color:#ff3232!important; color:#ff8888!important; animation:shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .feedback { margin-top:16px; padding:14px 18px; border-radius:10px; font-size:15px; font-weight:700; display:none; line-height:1.5; }
+  .feedback.show { display:block; }
+  .feedback.good { background:rgba(22,163,74,0.15); border:2px solid #86efac; color:#86efac; }
+  .feedback.bad  { background:rgba(255,50,50,0.15); border:2px solid #ff3232; color:#ff9999; }
+  .next-btn { display:none; width:100%; margin-top:16px; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px; border-radius:50px;
+    border:none; cursor:pointer; box-shadow:0 4px 20px rgba(22,163,74,0.4); transition:transform 0.15s; }
+  .next-btn:hover { transform:scale(1.03); }
+  .next-btn.show { display:block; }
+  #win-screen { display:none; text-align:center; padding:48px 24px 24px; animation:fadeIn 0.5s ease; }
+  .trophy { font-size:80px; display:block; margin-bottom:16px; animation:bounce 0.8s ease infinite alternate; }
+  @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.15)} }
+  #win-screen h2 { font-size:38px; font-weight:900; color:#fbbf24; margin-bottom:8px; }
+  .win-score { font-size:22px; font-weight:900; color:#86efac; margin-bottom:16px; }
+  .win-stars { font-size:36px; margin-bottom:20px; }
+  #win-screen > p { font-size:17px; color:#6ee7b7; line-height:1.75; margin-bottom:20px; }
+  .win-summary { background:rgba(255,255,255,0.04); border-radius:14px; padding:18px 20px; margin-bottom:24px; text-align:left; }
+  .win-summary h3 { font-size:14px; color:#fbbf24; font-weight:900; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .win-summary ul { list-style:none; }
+  .win-summary li { font-size:14px; color:#d1fae5; padding:4px 0; }
+  .replay-btn { display:inline-block; background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#0a2a0a;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px 40px;
+    border-radius:50px; border:none; cursor:pointer; margin-bottom:16px; transition:transform 0.15s; }
+  .replay-btn:hover { transform:scale(1.04); }
+  .next-issue-btn { display:block; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:16px; font-weight:900; padding:12px 32px;
+    border-radius:50px; border:none; cursor:pointer; text-decoration:none; margin-bottom:12px;
+    box-shadow:0 4px 20px rgba(22,163,74,0.3); transition:transform 0.15s; }
+  .next-issue-btn:hover { transform:scale(1.03); }
+  #ctrl-bar { position:fixed; top:14px; left:14px; display:flex; gap:8px; z-index:999;
+    background:rgba(0,0,0,0.6); padding:6px 10px; border-radius:24px; border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(6px); }
+  .ctrl-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:white;
+    font-family:'Nunito',sans-serif; font-weight:700; font-size:12px; padding:5px 12px; border-radius:16px; cursor:pointer; transition:background 0.15s; }
+  .ctrl-btn:hover { background:rgba(255,255,255,0.18); }
+  .ctrl-btn.muted { background:rgba(255,50,50,0.3); border-color:#ff3232; }
+</style>
+</head>
+<body>
+
+<div class="leaffield" id="leaffield"></div>
+<div class="wrapper">
+
+  <!-- TITLE -->
+  <div id="title-screen" class="title-screen">
+    <span class="hero-emoji">💧</span>
+    <p class="issue-label">The Jungle Arc · Issue 3</p>
+    <h1>MATH BLAST<br><span>💧 GROUPING AT THE WATERFALL</span></h1>
+    <p class="tagline">A festival once in a century — and nothing is ready!</p>
+    <p class="meta">5 chapters · 10 challenges · Division · Year 3–4</p>
+    <div class="narrated-badge">🎙️ Narrated Edition</div><br>
+    <button class="start-btn" onclick="startGame()">💧 START ADVENTURE</button>
+    <p style="font-size:12px;color:#166534;margin-top:16px;">Narrated by Eric · Blaze voiced by Jessica · Elder Splash voiced by Bill · Ripple voiced by Charlie</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label" id="progress-label">Chapter 1 of 5</div>
+      <div class="progress-score" id="progress-score">⭐ 0 / 10</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- ===== CHAPTER 1 ===== -->
+  <div class="chapter" id="chapter-1">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">💧 Chapter 1 — A Festival Once in a Century</div>
+      <h2>Everything Must Be Grouped — Not Shared!</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue003/ch1-cascade-arrival.png" alt="Blaze arriving at Cascade Clearing" />
+    <div class="nar-player" id="player-ch1">
+      <button class="nar-btn" id="btn-ch1" onclick="togglePlayer('ch1')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch1">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch1"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch1">
+      The path from Fernmoss led Blaze through the mist — and suddenly the trees opened up to reveal <strong>Cascade Clearing</strong>: a wide, misty waterfall clearing in the middle-canopy, glowing with soft rainbow light.<br><br>
+      The Splash-Sprockets were everywhere, rushing in every direction. A century-old festival was about to begin — and nothing was ready.<br><br>
+      <em>"You! Explorer! Can you count in groups?"</em> called a small Sprocket with a silver stripe on each antenna — the Elder. <em>"Everything for the festival must be arranged in exact group sizes. Not shared. Grouped. We have sixty lanterns and they must go in groups of ten."</em>
+    </div>
+    <div id="lock-q1" class="quiz-lock">🔒 Listen to the story first to unlock your challenge!</div>
+    <div class="quiz-box" id="quiz-q1">
+      <div class="quiz-meta"><span class="difficulty diff-warmup">🌱 Warm-Up</span><span class="acara-tag">Division · Year 3</span></div>
+      <span class="quiz-icon">🏮</span>
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 1 — Grouping</div>
+      <div class="question"><strong>60 lanterns</strong> arranged in groups of <strong>10</strong>.<br><br>How many groups?</div>
+      <img src="images/jungle/issue003/q1-lanterns.png" alt="Festival lanterns" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q1')">4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">5</button>
+        <button class="opt-btn" onclick="answer(this,true,'q1')">6</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">10</button>
+      </div>
+      <div class="feedback" id="feedback-q1"></div>
+      <button class="next-btn" id="next-q1" onclick="nextChapter(2)">Chapter 2 ➜</button>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 2 ===== -->
+  <div class="chapter" id="chapter-2">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌸 Chapter 2 — Ribbon-Flowers and Sparkle-Stones</div>
+      <h2>More Festival Items to Group!</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue003/ch2-festival-items.png" alt="Blaze sorting festival items" />
+    <div class="nar-player" id="player-ch2">
+      <button class="nar-btn" id="btn-ch2" onclick="togglePlayer('ch2')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch2">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch2"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch2">
+      The lanterns were sorted. Blaze moved to the next table — ribbon-flowers and sparkle-stones, both in unorganised heaps.<br><br>
+      <em>"Forty-five ribbon-flowers,"</em> Blaze counted. <em>"Groups of nine. Let me work this out."</em><br><br>
+      The sparkle-stones were next — seventy-two of them, cool and glittering in her hands. They needed to go in groups of eight for the display arches.
+    </div>
+    <div id="lock-q2" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q2">
+      <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Division · Year 3</span></div>
+      <span class="quiz-icon">🌸</span>
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 2 — Grouping</div>
+      <div class="question"><strong>45 ribbon-flowers</strong> in groups of <strong>9</strong>.<br><br>How many groups?</div>
+      <img src="images/jungle/issue003/q2-ribbon-flowers.png" alt="Ribbon flowers" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q2')">4</button>
+        <button class="opt-btn" onclick="answer(this,true,'q2')">5</button>
+        <button class="opt-btn" onclick="answer(this,false,'q2')">6</button>
+        <button class="opt-btn" onclick="answer(this,false,'q2')">9</button>
+      </div>
+      <div class="feedback" id="feedback-q2"></div>
+      <button class="next-btn" id="next-q2" onclick="showQ3Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q3" style="display:none">
+      <div class="nar-player" id="player-q3s">
+        <button class="nar-btn" id="btn-q3s" onclick="togglePlayer('q3s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q3s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q3s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q3s">
+        The sparkle-stones were next — <strong>seventy-two</strong> of them, for the display arches. They needed to go in groups of eight.
+      </div>
+      <div id="lock-q3" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q3">
+        <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Division · Year 3</span></div>
+        <span class="quiz-icon">💎</span>
+        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 3 — Grouping</div>
+        <div class="question"><strong>72 sparkle-stones</strong> in groups of <strong>8</strong>.<br><br>How many groups?</div>
+        <img src="images/jungle/issue003/q3-sparkle-stones.png" alt="Sparkle stones" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q3')">7</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">8</button>
+          <button class="opt-btn" onclick="answer(this,true,'q3')">9</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">12</button>
+        </div>
+        <div class="feedback" id="feedback-q3"></div>
+        <button class="next-btn" id="next-q3" onclick="nextChapter(3)">Chapter 3 ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 3 ===== -->
+  <div class="chapter" id="chapter-3">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌿 Chapter 3 — Tangle's Bundles</div>
+      <h2>Someone Has Been Here Before Us...</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue003/ch3-tangle-bundles.png" alt="Blaze examining Tangle's vine bundles" />
+    <div class="nar-player" id="player-ch3">
+      <button class="nar-btn" id="btn-ch3" onclick="togglePlayer('ch3')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch3">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch3"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch3">
+      While Blaze worked, a Splash-Sprocket named Ripple came running over, breathless.<br><br>
+      <em>"Explorer! There's something strange near the waterfall — a huge pile of vines, all bundled up. Eighty-four of them, in neat groups of twelve."</em><br><br>
+      Blaze went to look. The bundles were perfect — seven of them, identical. This was not random. She found a second cache deeper in the clearing: ninety-six vines, arranged in groups of six.<br><br>
+      <em>"It's organising,"</em> Blaze said quietly. <em>"Not destroying. Grouping — just like us."</em>
+    </div>
+    <div id="lock-q4" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q4">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Division · Year 3–4</span></div>
+      <span class="quiz-icon">🌿</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 4 — Grouping</div>
+      <div class="question"><strong>84 vines</strong> bundled in groups of <strong>12</strong>.<br><br>How many bundles?</div>
+      <img src="images/jungle/issue003/q4-vine-bundles-12.png" alt="Vine bundles of 12" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q4')">6</button>
+        <button class="opt-btn" onclick="answer(this,true,'q4')">7</button>
+        <button class="opt-btn" onclick="answer(this,false,'q4')">8</button>
+        <button class="opt-btn" onclick="answer(this,false,'q4')">12</button>
+      </div>
+      <div class="feedback" id="feedback-q4"></div>
+      <button class="next-btn" id="next-q4" onclick="showQ5Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q5" style="display:none">
+      <div class="nar-player" id="player-q5s">
+        <button class="nar-btn" id="btn-q5s" onclick="togglePlayer('q5s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q5s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q5s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q5s">
+        A second cache deeper in the clearing: <strong>ninety-six vines</strong>, arranged in groups of <strong>six</strong>.
+      </div>
+      <div id="lock-q5" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q5">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Division · Year 3–4</span></div>
+        <span class="quiz-icon">🌿</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 5 — Grouping</div>
+        <div class="question"><strong>96 vines</strong> in groups of <strong>6</strong>.<br><br>How many groups?</div>
+        <img src="images/jungle/issue003/q5-vine-bundles-6.png" alt="Vine bundles of 6" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q5')">12</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">14</button>
+          <button class="opt-btn" onclick="answer(this,true,'q5')">16</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">18</button>
+        </div>
+        <div class="feedback" id="feedback-q5"></div>
+        <button class="next-btn" id="next-q5" onclick="nextChapter(4)">Chapter 4 ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 4 ===== -->
+  <div class="chapter" id="chapter-4">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🏆 Chapter 4 — The Grouping Challenge</div>
+      <h2>The Elder Sets the Ultimate Test!</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue003/ch4-elder-challenge.png" alt="The Elder challenges Blaze" />
+    <div class="nar-player" id="player-ch4">
+      <button class="nar-btn" id="btn-ch4" onclick="togglePlayer('ch4')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch4">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch4"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch4">
+      The Elder appeared before Blaze with a challenge in their eyes.<br><br>
+      <em>"Explorer. A competition. One hundred festival items. First: arrange them in groups of four. How many groups? Then — same one hundred items, groups of five. Which arrangement gives more groups?"</em><br><br>
+      The last challenge: fifty-seven celebration berries for the half-berry ceremony. Groups of eight — but fifty-seven didn't divide evenly.
+    </div>
+    <div id="lock-q6" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q6">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Division · Year 3–4</span></div>
+      <span class="quiz-icon">🎪</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 6 — Grouping</div>
+      <div class="question"><strong>100 festival items</strong> in groups of <strong>4</strong>.<br><br>How many groups?</div>
+      <img src="images/jungle/issue003/q6-groups-of-4.png" alt="Groups of 4" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q6')">20</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">22</button>
+        <button class="opt-btn" onclick="answer(this,true,'q6')">25</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">40</button>
+      </div>
+      <div class="feedback" id="feedback-q6"></div>
+      <button class="next-btn" id="next-q6" onclick="showQ7Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q7" style="display:none">
+      <div class="nar-player" id="player-q7s">
+        <button class="nar-btn" id="btn-q7s" onclick="togglePlayer('q7s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q7s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q7s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q7s">
+        The Elder's eyes narrowed. <em>"Same one hundred items. Now groups of five. How many groups — and which size gives more?"</em>
+      </div>
+      <div id="lock-q7" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q7">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Division · Year 3–4</span></div>
+        <span class="quiz-icon">🤔</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 7 — Grouping & Comparing</div>
+        <div class="question"><strong>100 items</strong> in groups of <strong>5</strong>.<br><br>How many groups? And which gives MORE groups — groups of 4 or groups of 5?</div>
+        <img src="images/jungle/issue003/q7-groups-of-5.png" alt="Groups of 5" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q7')">20 — groups of 5 give more</button>
+          <button class="opt-btn" onclick="answer(this,true,'q7')">20 — groups of 4 give more</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">25 — groups of 4 give more</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">20 — they give the same</button>
+        </div>
+        <div class="feedback" id="feedback-q7"></div>
+        <button class="next-btn" id="next-q7" onclick="showQ8Block()">Next Question ➜</button>
+      </div>
+    </div>
+
+    <div id="block-q8" style="display:none">
+      <div class="nar-player" id="player-q8s">
+        <button class="nar-btn" id="btn-q8s" onclick="togglePlayer('q8s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q8s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q8s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q8s">
+        The last challenge: <strong>fifty-seven celebration berries</strong> for the half-berry ceremony. Groups of eight — but fifty-seven didn't divide evenly.
+      </div>
+      <div id="lock-q8" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q8">
+        <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Division with remainders · Year 3–4</span></div>
+        <span class="quiz-icon">🫐</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 8 — Division with Remainders</div>
+        <div class="question"><strong>57 celebration berries</strong> in groups of <strong>8</strong>.<br><br>How many complete groups — and how many are left over?</div>
+        <img src="images/jungle/issue003/q8-berry-groups.png" alt="Berry groups with remainder" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q8')">6 r5</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">7 r0</button>
+          <button class="opt-btn" onclick="answer(this,true,'q8')">7 r1</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">8 r1</button>
+        </div>
+        <div class="feedback" id="feedback-q8"></div>
+        <button class="next-btn" id="next-q8" onclick="nextChapter(5)">Final Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 5 ===== -->
+  <div class="chapter" id="chapter-5">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">👁️ Chapter 5 — Blaze Wins. Tangle Watches.</div>
+      <h2>Something at the Edge of the Trees...</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue003/ch5-tangle-watching.png" alt="Tangle watching the festival from the shadows" />
+    <div class="nar-player" id="player-ch5">
+      <button class="nar-btn" id="btn-ch5" onclick="togglePlayer('ch5')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch5">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch5"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch5">
+      Blaze had answered every challenge. The Elder nodded slowly — the closest thing a Splash-Sprocket did to applause.<br><br>
+      <em>"One final test. One hundred and fifty-six sparkle-stones. Groups of twelve. How many groups?"</em><br><br>
+      Then the Elder raised one more question — the hardest yet. Two hundred sparkle-stones, laid out in a long row. The Elder wanted exactly twenty-five groups. But the group size was unknown.<br><br>
+      <em>"Work backwards,"</em> Blaze said. <em>"Two hundred divided by twenty-five tells you the group size."</em>
+    </div>
+    <div id="lock-q9" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q9">
+      <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Division · Year 4</span></div>
+      <span class="quiz-icon">💎</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 9 — Division</div>
+      <div class="question"><strong>156 sparkle-stones</strong> in groups of <strong>12</strong>.<br><br>How many groups?</div>
+      <img src="images/jungle/issue003/q9-sparkle-groups.png" alt="Sparkle stone groups" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q9')">11</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">12</button>
+        <button class="opt-btn" onclick="answer(this,true,'q9')">13</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">14</button>
+      </div>
+      <div class="feedback" id="feedback-q9"></div>
+      <button class="next-btn" id="next-q9" onclick="showQ10Block()">Boss Challenge ➜</button>
+    </div>
+
+    <div id="block-q10" style="display:none">
+      <div class="nar-player" id="player-q10s">
+        <button class="nar-btn" id="btn-q10s" onclick="togglePlayer('q10s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q10s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q10s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q10s">
+        Two hundred sparkle-stones. The Elder wants exactly <strong>twenty-five groups</strong>. The group size is unknown.<br><br>
+        <em>"Work backwards,"</em> Blaze said. <em>"Two hundred divided by twenty-five tells you the group size."</em>
+      </div>
+      <div id="lock-q10" class="quiz-lock">🔒 Listen to unlock the Boss Challenge!</div>
+      <div class="quiz-box" id="quiz-q10">
+        <div class="quiz-meta"><span class="difficulty diff-boss">👑 Boss Challenge</span><span class="acara-tag">Division · Year 4</span></div>
+        <span class="quiz-icon">🏆</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 10 — BOSS: Work Backwards</div>
+        <div class="question"><strong>200 sparkle-stones</strong> need to make exactly <strong>25 groups</strong>.<br><br>200 ÷ ? = 25. What is the group size?</div>
+        <img src="images/jungle/issue003/q10-boss-backwards.png" alt="Working backwards" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q10')">5</button>
+          <button class="opt-btn" onclick="answer(this,true,'q10')">8</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">10</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">25</button>
+        </div>
+        <div class="feedback" id="feedback-q10"></div>
+        <button class="next-btn" id="next-q10" onclick="showCliffhanger()">💧 WHAT HAPPENS NEXT? →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIFFHANGER -->
+  <div id="cliffhanger-screen" style="display:none; text-align:center; padding:40px 24px; animation:fadeIn 0.5s ease;">
+    <img src="images/jungle/issue003/cliffhanger-tangle-shadow.png" style="width:100%;border-radius:16px;margin-bottom:24px;border:3px solid rgba(22,163,74,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.6);" alt="Tangle watching from the shadows" />
+    <div class="nar-player" id="player-cf" style="text-align:left;margin-bottom:20px;">
+      <button class="nar-btn" id="btn-cf" onclick="togglePlayer('cf')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-cf">Press ▶ to hear what happens next</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-cf"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-cf" style="text-align:left;">
+      At the edge of the clearing, half-hidden in the shadows — something enormous watched. Its vine bundles were arranged in the same grouping patterns as the festival lanterns. Six per bundle. Ten per bundle.<br><br>
+      It had been watching the whole time.<br><br>
+      It wasn't threatening. It was <strong>learning</strong>.
+    </div>
+    <button onclick="showWin()" style="background:linear-gradient(135deg,#15803d,#16a34a);color:white;font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(22,163,74,0.4);">🌿 See Your Results →</button>
+  </div>
+
+  <!-- WIN SCREEN -->
+  <div id="win-screen">
+    <span class="trophy">💧</span>
+    <h2>MISSION COMPLETE!</h2>
+    <div class="win-score" id="win-score">You scored 10 / 10!</div>
+    <div class="win-stars" id="win-stars">⭐⭐⭐</div>
+    <p>The festival of Cascade Clearing is saved — every lantern grouped, every stone arranged. And Tangle was watching the whole time, learning. <strong>What happens when Blaze reaches out her hand?</strong></p>
+    <div class="win-summary">
+      <h3>What You Mastered Today 🧠</h3>
+      <ul>
+        <li>✅ <strong>Grouping division</strong> — 60÷10, 45÷9, 72÷8 (Year 3)</li>
+        <li>✅ <strong>Larger grouping</strong> — 84÷12, 96÷6 (Year 3–4)</li>
+        <li>✅ <strong>Comparing group sizes</strong> — smaller group = more groups (Year 4)</li>
+        <li>✅ <strong>Division with remainders</strong> — 57÷8 = 7 r1 (Year 3–4)</li>
+        <li>✅ <strong>Boss: Working backwards</strong> — 200÷?=25, so ?=8 (Year 4)</li>
+      </ul>
+    </div>
+    <p style="font-size:14px;color:#4ade80;margin-bottom:16px;">Join us for Issue #4 — the Array Forest, where Blaze finally reaches out her hand! 🌿</p>
+    <a href="landing.html" class="next-issue-btn">🌿 Back to Math Blast</a>
+    <button class="replay-btn" onclick="location.reload()">🔄 Play Again</button>
+  </div>
+
+</div><!-- /wrapper -->
+
+<div id="ctrl-bar">
+  <button class="ctrl-btn" id="mute-ctrl" onclick="toggleMute()">🔊 Sound On</button>
+  <button class="ctrl-btn" onclick="replayCurrent()">🔁 Replay</button>
+</div>
+
+<script>
+const lf=document.getElementById('leaffield');
+const leafEmoji=['🍃','🌿','🍀','💧'];
+for(let i=0;i<30;i++){
+  const l=document.createElement('div');l.className='leaf';
+  l.textContent=leafEmoji[Math.floor(Math.random()*leafEmoji.length)];
+  l.style.left=Math.random()*100+'%';l.style.top=Math.random()*100+'%';
+  l.style.animationDelay=(Math.random()*8)+'s';l.style.animationDuration=(6+Math.random()*6)+'s';
+  lf.appendChild(l);
+}
+
+const BASE='sounds/jungle/issue003/';
+let muted=false,currentAudio=null,correctVariant=0,activePlayerId=null;
+const playerConfigs={};
+const triedWrong=new Set();
+
+function stopAll(){
+  if(currentAudio){currentAudio.pause();currentAudio=null;}
+  document.querySelectorAll('.nar-btn').forEach(b=>{if(b.textContent!=='✓')b.textContent='▶';});
+}
+
+function playFile(file,onEnd){
+  if(muted){if(onEnd)setTimeout(onEnd,100);return null;}
+  if(currentAudio){currentAudio.pause();currentAudio=null;}
+  const a=new Audio(BASE+file);
+  a.volume=1.0;currentAudio=a;
+  a.play().catch(()=>{currentAudio=null;if(onEnd)onEnd();});
+  a.onended=()=>{currentAudio=null;if(onEnd)onEnd();};
+  a.onerror=()=>{currentAudio=null;if(onEnd)onEnd();};
+  return a;
+}
+
+function setupPlayer(id,files,labels,storyId,lockId,onDone,unlockAtIndex){
+  playerConfigs[id]={files,labels,storyId,lockId,unlockAtIndex:unlockAtIndex??files.length,active:false};
+}
+
+function togglePlayer(id){
+  if(activePlayerId===id&&currentAudio&&!currentAudio.paused){
+    currentAudio.pause();currentAudio=null;
+    document.getElementById('btn-'+id).textContent='▶';
+    document.getElementById('status-'+id).textContent='Paused — press ▶ to resume';
+    activePlayerId=null;return;
+  }
+  stopAll();activePlayerId=id;runPlayer(id);
+}
+
+function runPlayer(id){
+  const cfg=playerConfigs[id];if(!cfg)return;
+  cfg.active=true;
+  const btn=document.getElementById('btn-'+id);
+  const statusEl=document.getElementById('status-'+id);
+  const barFill=document.getElementById('bar-'+id);
+  const story=cfg.storyId?document.getElementById(cfg.storyId):null;
+  if(btn)btn.textContent='⏸';
+  if(story)story.classList.add('playing');
+  const totalFiles=cfg.files.length;
+  let fileIdx=0;
+  function playNext(){
+    if(fileIdx>=totalFiles){
+      if(btn)btn.textContent='✓';
+      if(statusEl)statusEl.textContent='✅ Done — solve the puzzle!';
+      if(barFill)barFill.style.width='100%';
+      if(story){story.classList.remove('playing');story.classList.add('done');}
+      if(cfg.lockId){const l=document.getElementById(cfg.lockId);if(l)l.style.display='none';}
+      const qId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;
+      if(qId){const q=document.getElementById(qId);if(q){q.classList.add('show');setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}
+      cfg.active=false;activePlayerId=null;return;
+    }
+    if(fileIdx===cfg.unlockAtIndex){
+      if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}
+      const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;
+      if(quizId){const quiz=document.getElementById(quizId);if(quiz&&!quiz.classList.contains('show')){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}
+    }
+    const file=cfg.files[fileIdx];
+    const label=cfg.labels&&cfg.labels[fileIdx]?cfg.labels[fileIdx]:'🎙️ Narrating...';
+    if(statusEl)statusEl.textContent=label;
+    const segStart=(fileIdx/totalFiles)*100,segEnd=((fileIdx+1)/totalFiles)*100;
+    fileIdx++;
+    const audio=playFile(file,playNext);
+    if(audio&&barFill){
+      const tick=setInterval(()=>{
+        if(!audio||audio.paused||audio.ended){clearInterval(tick);return;}
+        const pct=audio.duration?(segStart+(audio.currentTime/audio.duration)*(segEnd-segStart)):segStart;
+        barFill.style.width=pct+'%';
+      },200);
+    }
+  }
+  playNext();
+}
+
+function initPlayers(){
+  // Ch1: Eric(setting+Sprockets), Eric(festival chaos), Elder(dialogue+question), Blaze(Q1)
+  // unlockAtIndex=3 → quiz unlocks when Q1 clip starts
+  setupPlayer('ch1',
+    ['ch1-intro.mp3','ch1-chaos.mp3','ch1-elder.mp3','ch1-q1-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','🌊 Elder Splash speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch1','lock-q1',null,3);
+
+  // Ch2: Eric(lanterns sorted+ribbon-flowers), Blaze(counting), Eric(sparkle-stones), Blaze(Q2)
+  // unlockAtIndex=3
+  setupPlayer('ch2',
+    ['ch2-intro.mp3','ch2-blaze.mp3','ch2-sparkle.mp3','ch2-q2-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze speaking...','📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-ch2','lock-q2',null,3);
+
+  // Q3 block: Eric(sparkle-stones setup), Blaze(Q3)
+  setupPlayer('q3s',
+    ['ch2-q3-setup.mp3','ch2-q3-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q3s','lock-q3',null,1);
+
+  // Ch3: Eric(Ripple running), Ripple(dialogue), Eric(Blaze goes to look + second cache), Blaze(organising), Blaze(Q4)
+  // unlockAtIndex=4
+  setupPlayer('ch3',
+    ['ch3-intro.mp3','ch3-ripple.mp3','ch3-blaze-looks.mp3','ch3-blaze-realises.mp3','ch3-q4-question.mp3'],
+    ['📖 Eric narrating...','💦 Ripple speaking...','📖 Eric narrating...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch3','lock-q4',null,4);
+
+  // Q5 block: Eric(second cache), Blaze(Q5)
+  setupPlayer('q5s',
+    ['ch3-q5-setup.mp3','ch3-q5-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q5s','lock-q5',null,1);
+
+  // Ch4: Eric(Elder appears), Elder(challenge dialogue), Eric(last challenge), Blaze(Q6)
+  // unlockAtIndex=3
+  setupPlayer('ch4',
+    ['ch4-intro.mp3','ch4-elder.mp3','ch4-last-challenge.mp3','ch4-q6-question.mp3'],
+    ['📖 Eric narrating...','🌊 Elder Splash speaking...','📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-ch4','lock-q6',null,3);
+
+  // Q7 block: Elder(same 100, groups of 5), Blaze(Q7)
+  setupPlayer('q7s',
+    ['ch4-q7-setup.mp3','ch4-q7-question.mp3'],
+    ['🌊 Elder Splash speaking...','⚡ Blaze — puzzle time!'],
+    'story-q7s','lock-q7',null,1);
+
+  // Q8 block: Eric(57 berries), Blaze(Q8)
+  setupPlayer('q8s',
+    ['ch4-q8-setup.mp3','ch4-q8-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q8s','lock-q8',null,1);
+
+  // Ch5: Eric(Blaze answered every challenge), Elder(one final test), Eric(200 stones + unknown group), Blaze(work backwards), Blaze(Q9)
+  // unlockAtIndex=4
+  setupPlayer('ch5',
+    ['ch5-intro.mp3','ch5-elder-final.mp3','ch5-200-stones.mp3','ch5-blaze-backwards.mp3','ch5-q9-question.mp3'],
+    ['📖 Eric narrating...','🌊 Elder Splash speaking...','📖 Eric narrating...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch5','lock-q9',null,4);
+
+  // Q10 block: Eric(200 stones, 25 groups unknown), Blaze(work backwards hint), Blaze(Q10)
+  setupPlayer('q10s',
+    ['ch5-q10-setup.mp3','ch5-q10-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q10s','lock-q10',null,1);
+
+  setupPlayer('cf',
+    ['ch5-cliffhanger.mp3'],
+    ['📖 Eric narrating...'],
+    'story-cf',null,null,0);
+}
+
+function showQ3Block(){
+  const b=document.getElementById('block-q3');b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q3s'),400);
+}
+function showQ5Block(){
+  const b=document.getElementById('block-q5');b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q5s'),400);
+}
+function showQ7Block(){
+  const b=document.getElementById('block-q7');b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q7s'),400);
+}
+function showQ8Block(){
+  const b=document.getElementById('block-q8');b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q8s'),400);
+}
+function showQ10Block(){
+  const b=document.getElementById('block-q10');b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q10s'),400);
+}
+
+let score=0,questionsAnswered=0;
+const totalQ=10;
+
+const correctMsg={
+  q1:  '🌿 Yes! 60 ÷ 10 = 6. Six groups of ten lanterns — the festival entrance is ready!',
+  q2:  '🌿 Right! 45 ÷ 9 = 5. Five groups of nine ribbon-flowers.',
+  q3:  '🌿 Correct! 72 ÷ 8 = 9. Nine groups of eight sparkle-stones for the display arches.',
+  q4:  '🌿 Yes! 84 ÷ 12 = 7. Seven bundles of twelve — and Tangle always uses groups of 12.',
+  q5:  '🌿 Nice! 96 ÷ 6 = 16. Sixteen groups of six. Tangle is grouping, not destroying.',
+  q6:  '🌿 Correct! 100 ÷ 4 = 25. Twenty-five groups of four.',
+  q7:  '🌿 Right! 100 ÷ 5 = 20. Groups of 4 give MORE groups (25 vs 20). Smaller group size = more groups!',
+  q8:  '🌿 Yes! 57 ÷ 8 = 7 remainder 1. Seven complete groups, with one berry left over for the half-berry ceremony.',
+  q9:  '🌿 Correct! 156 ÷ 12 = 13. Thirteen groups of twelve sparkle-stones.',
+  q10: '🌿 BOSS CLEARED! 200 ÷ 25 = 8. Working backwards — if you want 25 groups from 200, each group must be 8!'
+};
+const wrongMsg={
+  q1:  '❌ Not quite! 60 lanterns in groups of 10. Think: 10 × ? = 60.',
+  q2:  '❌ Try again! 45 ribbon-flowers in groups of 9. Think: 9 × ? = 45.',
+  q3:  '❌ Not quite! 72 sparkle-stones in groups of 8. Think: 8 × ? = 72.',
+  q4:  '❌ Try again! 84 vines in groups of 12. Think: 12 × ? = 84.',
+  q5:  '❌ Not quite! 96 vines in groups of 6. Think: 6 × ? = 96.',
+  q6:  '❌ Try again! 100 items in groups of 4. Think: 4 × ? = 100.',
+  q7:  '❌ Not quite! 100 ÷ 5 = 20. And compare: groups of 4 gave 25, groups of 5 gave 20. Which is more?',
+  q8:  '❌ Tricky! 8 × 7 = 56. So 7 complete groups, with 57 − 56 = 1 berry left over.',
+  q9:  '❌ Try again! 156 ÷ 12. Think: 12 × 13 = 156. Count in 12s to check.',
+  q10: '❌ Not quite! Work backwards — if 200 ÷ ? = 25, then ? = 200 ÷ 25. What is 200 ÷ 25?'
+};
+
+const answerAudio={
+  q1:'ch1-q1-answer.mp3',
+  q2:'ch2-q2-answer.mp3',
+  q3:'ch2-q3-answer.mp3',
+  q4:'ch3-q4-answer.mp3',
+  q5:'ch3-q5-answer.mp3',
+  q6:'ch4-q6-answer.mp3',
+  q7:'ch4-q7-answer.mp3',
+  q8:'ch4-q8-answer.mp3',
+  q9:'ch5-q9-answer.mp3',
+  q10:'ch5-q10-answer.mp3',
+};
+
+function answer(btn,correct,qId){
+  const box=btn.closest('.quiz-box');
+  box.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedback-'+qId);
+  const next=document.getElementById('next-'+qId);
+  if(correct){
+    btn.classList.add('correct');
+    if(!triedWrong.has(qId))score++;
+    questionsAnswered++;
+    fb.className='feedback show good';fb.innerHTML=correctMsg[qId];
+    updateProgress();next.classList.add('show');
+    const qNum=parseInt(qId.replace('q',''));
+    let celebFile;
+    if(qNum===1) celebFile='feedback-correct-1.mp3';
+    else{
+      let v;
+      if(qNum>=4&&qNum<=5) v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-5.mp3'];
+      else                  v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];
+      celebFile=v[correctVariant%v.length];correctVariant++;
+    }
+    playFile(celebFile,answerAudio[qId]?()=>playFile(answerAudio[qId],null):null);
+  } else {
+    triedWrong.add(qId);
+    btn.classList.add('wrong');
+    fb.className='feedback show bad';fb.innerHTML=wrongMsg[qId];
+    stopAll();
+    const wrongFile=['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)];
+    const wrongAudio=playFile(wrongFile,null);
+    setTimeout(()=>{
+      box.querySelectorAll('.opt-btn').forEach(b=>{if(!b.classList.contains('correct')){b.disabled=false;b.classList.remove('wrong');}});
+      fb.className='feedback';
+    },wrongAudio?2800:1200);
+  }
+}
+
+function updateProgress(){
+  document.getElementById('progress-fill').style.width=((questionsAnswered/totalQ)*100)+'%';
+  document.getElementById('progress-score').textContent='⭐ '+score+' / '+totalQ;
+}
+
+function startGame(){
+  document.getElementById('title-screen').style.display='none';
+  document.getElementById('progress-wrap').style.display='block';
+  initPlayers();showChapter(1);
+}
+
+let currentChapter=0;
+function showChapter(n){
+  stopAll();
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
+  const ch=document.getElementById('chapter-'+n);
+  if(!ch)return;
+  ch.classList.add('active');currentChapter=n;
+  window.scrollTo({top:0,behavior:'smooth'});
+  const labels=['','Chapter 1 — A Festival Once in a Century','Chapter 2 — Ribbon-Flowers & Sparkle-Stones','Chapter 3 — Tangle\'s Bundles 🌿','Chapter 4 — The Grouping Challenge 🏆','Chapter 5 — Blaze Wins. Tangle Watches. 👁️'];
+  document.getElementById('progress-label').textContent=labels[n]||'';
+  const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};
+  if(playerMap[n])setTimeout(()=>togglePlayer(playerMap[n]),700);
+}
+
+function nextChapter(n){showChapter(n);}
+
+function showCliffhanger(){
+  stopAll();
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
+  document.getElementById('progress-wrap').style.display='none';
+  const cf=document.getElementById('cliffhanger-screen');cf.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>togglePlayer('cf'),600);
+}
+
+function showWin(){
+  stopAll();
+  document.getElementById('cliffhanger-screen').style.display='none';
+  const win=document.getElementById('win-screen');win.style.display='block';
+  document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+' on the first try!';
+  document.getElementById('win-stars').textContent=score===10?'⭐⭐⭐':score>=7?'⭐⭐':score>=4?'⭐':'';
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>playFile('win.mp3',null),500);
+}
+
+function toggleMute(){
+  muted=!muted;
+  const ctrl=document.getElementById('mute-ctrl');
+  ctrl.textContent=muted?'🔇 Muted':'🔊 Sound On';
+  ctrl.classList.toggle('muted',muted);
+  if(muted)stopAll();
+}
+
+function replayCurrent(){
+  const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};
+  const pid=playerMap[currentChapter];if(!pid)return;
+  stopAll();
+  const cfg=playerConfigs[pid];if(cfg)cfg.active=false;
+  const story=cfg&&cfg.storyId?document.getElementById(cfg.storyId):null;
+  if(story)story.classList.remove('playing','done');
+  const barFill=document.getElementById('bar-'+pid);if(barFill)barFill.style.width='0%';
+  const statusEl=document.getElementById('status-'+pid);if(statusEl)statusEl.textContent='Press ▶ to hear the story';
+  const btn=document.getElementById('btn-'+pid);if(btn)btn.textContent='▶';
+  setTimeout(()=>togglePlayer(pid),300);
+}
+</script>
+</body>
+</html>
