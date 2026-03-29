@@ -7,7 +7,7 @@ from openai import OpenAI
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 images_dir = "/Users/leohiem/.openclaw/workspace/projects/math-blast/images"
-github_token = "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"
+github_token = ""REDACTED""
 repo = "MathBlastAu/math-blast"
 headers = {"Authorization": f"token {github_token}"}
 

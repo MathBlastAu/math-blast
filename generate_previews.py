@@ -9,7 +9,7 @@ client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 IMAGES_DIR = "/Users/leohiem/.openclaw/workspace/projects/math-blast/images"
 JAKE_REF = os.path.join(IMAGES_DIR, "ch1-crashed-rocket.png")
-GITHUB_TOKEN = "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"
+GITHUB_TOKEN = ""REDACTED""
 REPO = "MathBlastAu/math-blast"
 
 headers = {

@@ -3,7 +3,7 @@ import os, sys, time, base64, json, requests
 from openai import OpenAI
 
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-GH_TOKEN = "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"
+GH_TOKEN = ""REDACTED""
 GH_REPO  = "MathBlastAu/math-blast"
 IMAGES_DIR = "/Users/leohiem/.openclaw/workspace/projects/math-blast/images"
 REFERENCE  = f"{IMAGES_DIR}/ch1-crashed-rocket.png"

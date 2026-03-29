@@ -1,6 +1,6 @@
 import base64, json, urllib.request, urllib.error
 
-TOKEN = "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"
+TOKEN = ""REDACTED""
 REPO = "MathBlastAu/math-blast"
 FILE_PATH = "images/gpt4o-test-result.png"
 LOCAL_PATH = "/Users/leohiem/.openclaw/workspace/projects/math-blast/images/gpt4o-test-result.png"

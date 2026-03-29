@@ -11,7 +11,7 @@ from openai import OpenAI
 
 IMAGES_DIR = Path("/Users/leohiem/.openclaw/workspace/projects/math-blast/images")
 REFERENCE_IMAGE = IMAGES_DIR / "ch1-crashed-rocket.png"
-GITHUB_TOKEN = "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"
+GITHUB_TOKEN = ""REDACTED""
 GITHUB_REPO = "MathBlastAu/math-blast"
 RATE_LIMIT_SECONDS = 15
 
