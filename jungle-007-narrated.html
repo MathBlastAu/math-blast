@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Blast 🌿 — Jungle Issue 7 (Narrated)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#061a06; font-family:'Nunito',Arial,sans-serif; color:#fff;
+    background-image:radial-gradient(ellipse at 50% 0%,rgba(0,100,30,0.3) 0%,transparent 70%); min-height:100vh; }
+  .leaffield { position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .leaf { position:absolute; font-size:12px; opacity:0.25; animation:fall 8s linear infinite; }
+  @keyframes fall { from{transform:translateY(-20px) rotate(0deg); opacity:0.25} to{transform:translateY(100vh) rotate(360deg); opacity:0} }
+  .wrapper { max-width:680px; margin:0 auto; position:relative; z-index:1; padding-bottom:90px; }
+  .title-screen { text-align:center; padding:48px 24px 36px; }
+  .hero-emoji { font-size:72px; display:block; margin-bottom:16px; animation:float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  .title-screen h1 { font-size:46px; font-weight:900; line-height:1.1; text-shadow:0 0 24px rgba(0,180,60,0.8); }
+  .title-screen h1 span { color:#86efac; }
+  .issue-label { font-size:13px; font-weight:900; color:#4ade80; letter-spacing:3px; text-transform:uppercase; margin:10px 0 4px; }
+  .tagline { font-size:16px; color:#6ee7b7; margin-bottom:4px; }
+  .meta { font-size:13px; color:#166534; margin-bottom:8px; }
+  .narrated-badge { display:inline-block; background:rgba(134,239,172,0.15); border:1px solid #86efac; color:#86efac;
+    font-size:11px; font-weight:900; padding:4px 14px; border-radius:20px; letter-spacing:2px; text-transform:uppercase; margin-bottom:24px; }
+  .start-btn { display:inline-block; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-size:20px; font-weight:900; padding:18px 48px; border-radius:50px; border:none; cursor:pointer;
+    box-shadow:0 6px 30px rgba(22,163,74,0.5); transition:transform 0.15s; font-family:'Nunito',Arial,sans-serif; }
+  .start-btn:hover { transform:scale(1.05); }
+  .progress-wrap { padding:16px 24px 0; display:none; }
+  .progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .progress-label { font-size:13px; color:#4ade80; font-weight:700; }
+  .progress-score { font-size:13px; color:#fbbf24; font-weight:900; }
+  .progress-bar { background:#0a2a0a; border-radius:20px; height:14px; overflow:hidden; }
+  .progress-fill { background:linear-gradient(90deg,#16a34a,#86efac); height:100%; border-radius:20px; transition:width 0.5s ease; }
+  .chapter { display:none; padding:20px 20px 0; animation:fadeIn 0.4s ease; }
+  .chapter.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .chapter-badge { display:inline-block; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-size:11px; font-weight:900; padding:5px 16px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; }
+  .chapter h2 { font-size:26px; font-weight:900; margin-bottom:16px; line-height:1.3; }
+  .chapter-img { width:100%; border-radius:16px; display:block; margin-bottom:20px;
+    border:3px solid rgba(0,180,60,0.4); box-shadow:0 8px 30px rgba(0,0,0,0.5); background:#0a2a0a; min-height:180px; object-fit:cover; }
+  .nar-player { display:flex; align-items:center; gap:12px; background:rgba(22,163,74,0.12);
+    border:2px solid rgba(22,163,74,0.4); border-radius:14px; padding:12px 16px; margin-bottom:16px; }
+  .nar-btn { width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; flex-shrink:0;
+    background:linear-gradient(135deg,#15803d,#16a34a); color:white; font-size:18px;
+    display:flex; align-items:center; justify-content:center; transition:transform 0.15s; }
+  .nar-btn:hover { transform:scale(1.1); }
+  .nar-info { flex:1; min-width:0; }
+  .nar-status { font-size:12px; color:#4ade80; font-weight:700; }
+  .nar-bar { height:4px; background:#0a2a0a; border-radius:4px; margin-top:5px; overflow:hidden; }
+  .nar-bar-fill { height:100%; background:linear-gradient(90deg,#16a34a,#86efac); border-radius:4px; width:0%; transition:width 0.3s; }
+  .story-text { background:rgba(255,255,255,0.04); border-left:4px solid #16a34a;
+    border-radius:0 12px 12px 0; padding:18px 22px; font-size:18px; line-height:1.9; color:#d1fae5; margin-bottom:20px;
+    transition:border-color 0.4s, background 0.4s; }
+  .story-text.playing { border-left-color:#86efac; background:rgba(22,163,74,0.08); }
+  .story-text.done { border-left-color:#fbbf24; background:rgba(251,191,36,0.04); }
+  .story-text strong { color:#fbbf24; }
+  .story-text em { color:#86efac; font-style:normal; font-weight:700; }
+  .quiz-lock { text-align:center; padding:16px 20px; background:rgba(22,163,74,0.06);
+    border:2px dashed rgba(22,163,74,0.3); border-radius:16px; margin-bottom:20px;
+    font-size:14px; color:#4ade80; font-weight:700; }
+  .quiz-box { background:rgba(22,163,74,0.08); border:2px solid rgba(22,163,74,0.35);
+    border-radius:16px; padding:22px; margin-bottom:20px; display:none; animation:fadeIn 0.4s ease; }
+  .quiz-box.show { display:block; }
+  .quiz-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .difficulty { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; }
+  .diff-warmup { background:rgba(100,200,255,0.2); color:#66ddff; border:1px solid #66ddff; }
+  .diff-easy   { background:rgba(134,239,172,0.2); color:#86efac; border:1px solid #86efac; }
+  .diff-medium { background:rgba(255,200,0,0.2);   color:#fbbf24; border:1px solid #fbbf24; }
+  .diff-hard   { background:rgba(255,80,80,0.2);   color:#ff8888; border:1px solid #ff8888; }
+  .diff-boss   { background:rgba(255,0,200,0.2);   color:#ff44ee; border:1px solid #ff44ee; }
+  .acara-tag { display:inline-block; font-size:10px; font-weight:700; padding:3px 10px; border-radius:10px;
+    background:rgba(255,255,255,0.07); color:#6ee7b7; border:1px solid rgba(255,255,255,0.1); text-transform:uppercase; letter-spacing:0.5px; }
+  .quiz-icon { font-size:26px; display:block; margin-bottom:6px; }
+  .quiz-label { font-size:12px; font-weight:900; color:#4ade80; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+  .yr-badge { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; margin-right:6px; }
+  .yr4 { background:rgba(251,191,36,0.2); color:#fbbf24; border:1px solid #fbbf24; }
+  .question { font-size:20px; font-weight:900; color:#fff; margin-bottom:18px; line-height:1.5; }
+  .question-img { display:block; max-width:300px; width:100%; margin:14px auto 18px; border-radius:8px; border:2px solid rgba(22,163,74,0.3); }
+  .options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .opt-btn { background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.12); color:#fff;
+    font-family:'Nunito',Arial,sans-serif; font-size:19px; font-weight:700; padding:16px 10px;
+    border-radius:12px; cursor:pointer; transition:all 0.15s; }
+  .opt-btn:hover:not(:disabled) { background:rgba(22,163,74,0.25); border-color:#16a34a; transform:scale(1.03); }
+  .opt-btn.correct { background:rgba(22,163,74,0.25)!important; border-color:#86efac!important; color:#86efac!important; }
+  .opt-btn.wrong   { background:rgba(255,50,50,0.2)!important; border-color:#ff3232!important; color:#ff8888!important; animation:shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .feedback { margin-top:16px; padding:14px 18px; border-radius:10px; font-size:15px; font-weight:700; display:none; line-height:1.5; }
+  .feedback.show { display:block; }
+  .feedback.good { background:rgba(22,163,74,0.15); border:2px solid #86efac; color:#86efac; }
+  .feedback.bad  { background:rgba(255,50,50,0.15); border:2px solid #ff3232; color:#ff9999; }
+  .next-btn { display:none; width:100%; margin-top:16px; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px; border-radius:50px;
+    border:none; cursor:pointer; box-shadow:0 4px 20px rgba(22,163,74,0.4); transition:transform 0.15s; }
+  .next-btn:hover { transform:scale(1.03); }
+  .next-btn.show { display:block; }
+  #win-screen { display:none; text-align:center; padding:48px 24px 24px; animation:fadeIn 0.5s ease; }
+  .trophy { font-size:80px; display:block; margin-bottom:16px; animation:bounce 0.8s ease infinite alternate; }
+  @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.15)} }
+  #win-screen h2 { font-size:38px; font-weight:900; color:#fbbf24; margin-bottom:8px; }
+  .win-score { font-size:22px; font-weight:900; color:#86efac; margin-bottom:16px; }
+  .win-stars { font-size:36px; margin-bottom:20px; }
+  #win-screen > p { font-size:17px; color:#6ee7b7; line-height:1.75; margin-bottom:20px; }
+  .win-summary { background:rgba(255,255,255,0.04); border-radius:14px; padding:18px 20px; margin-bottom:24px; text-align:left; }
+  .win-summary h3 { font-size:14px; color:#fbbf24; font-weight:900; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .win-summary ul { list-style:none; }
+  .win-summary li { font-size:14px; color:#d1fae5; padding:4px 0; }
+  .replay-btn { display:inline-block; background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#0a2a0a;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px 40px;
+    border-radius:50px; border:none; cursor:pointer; margin-bottom:16px; transition:transform 0.15s; }
+  .replay-btn:hover { transform:scale(1.04); }
+  .next-issue-btn { display:block; background:linear-gradient(135deg,#15803d,#16a34a); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:16px; font-weight:900; padding:12px 32px;
+    border-radius:50px; border:none; cursor:pointer; text-decoration:none; margin-bottom:12px;
+    box-shadow:0 4px 20px rgba(22,163,74,0.3); transition:transform 0.15s; }
+  .next-issue-btn:hover { transform:scale(1.03); }
+  #ctrl-bar { position:fixed; top:14px; left:14px; display:flex; gap:8px; z-index:999;
+    background:rgba(0,0,0,0.6); padding:6px 10px; border-radius:24px; border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(6px); }
+  .ctrl-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:white;
+    font-family:'Nunito',sans-serif; font-weight:700; font-size:12px; padding:5px 12px; border-radius:16px; cursor:pointer; transition:background 0.15s; }
+  .ctrl-btn:hover { background:rgba(255,255,255,0.18); }
+  .ctrl-btn.muted { background:rgba(255,50,50,0.3); border-color:#ff3232; }
+</style>
+</head>
+<body>
+<div class="leaffield" id="leaffield"></div>
+<div class="wrapper">
+
+  <!-- TITLE -->
+  <div id="title-screen" class="title-screen">
+    <span class="hero-emoji">🌏</span>
+    <p class="issue-label">The Jungle Arc · Issue 7</p>
+    <h1>MATH BLAST<br><span>🌏 THE GREAT SHARING</span></h1>
+    <p class="tagline">All five villages together for the first time in centuries — and Tangle finally gets to share.</p>
+    <p class="meta">5 chapters · 10 challenges · Division · Fractions · Year 4</p>
+    <div class="narrated-badge">🎙️ Narrated Edition</div><br>
+    <button class="start-btn" onclick="startGame()">🌏 START ADVENTURE</button>
+    <p style="font-size:12px;color:#166534;margin-top:16px;">Narrated by Eric · Blaze voiced by Jessica · Chief Pip voiced by Bill · Tangle voiced by Callum</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label" id="progress-label">Chapter 1 of 5</div>
+      <div class="progress-score" id="progress-score">⭐ 0 / 10</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- ===== CHAPTER 1 ===== -->
+  <div class="chapter" id="chapter-1">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌏 Chapter 1 — Everyone, Together</div>
+      <h2>One Hundred and Twenty Sprockets. All Five Villages.</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue007/ch1-all-villages.png" alt="All five Sprocket villages gathered together" />
+    <div class="nar-player" id="player-ch1">
+      <button class="nar-btn" id="btn-ch1" onclick="togglePlayer('ch1')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch1">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch1"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch1">
+      Tangle had led them all home. Every missing Sprocket — from the Deep Root, from the narrow paths, from the far side of Split Ridge. Vine by vine, patient as it had always been, it had rebuilt every bridge it had taken down. And now, for the first time in centuries, all five villages stood together in a single clearing.<br><br>
+      One hundred and twenty Sprockets. Five villages: Branchwick, Fernmoss, the Cascade Clearing, the Array Forest settlement, and Split Ridge. Chief Pip stood at the front, antenna vibrating with emotion. Tangle stood at the back — enormous, still, watching.<br><br>
+      The first order of business: the food store. Three hundred and sixty items, to be shared equally among all one hundred and twenty Sprockets.
+    </div>
+    <div id="lock-q1" class="quiz-lock">🔒 Listen to the story first to unlock your challenge!</div>
+    <div class="quiz-box" id="quiz-q1">
+      <div class="quiz-meta"><span class="difficulty diff-warmup">🌱 Warm-Up</span><span class="acara-tag">Division · Year 4</span></div>
+      <span class="quiz-icon">🌿</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 1 — The Great Share Begins</div>
+      <div class="question"><strong>360 food items</strong> shared equally between <strong>120 Sprockets</strong>.<br><br>How many items per Sprocket?</div>
+      <img src="images/jungle/issue007/q1-share-360.png" alt="360 items shared among 120 Sprockets" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q1')">2</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">4</button>
+        <button class="opt-btn" onclick="answer(this,true,'q1')">3</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">5</button>
+      </div>
+      <div class="feedback" id="feedback-q1"></div>
+      <button class="next-btn" id="next-q1" onclick="nextChapter(2)">Chapter 2 ➜</button>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 2 ===== -->
+  <div class="chapter" id="chapter-2">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🏘️ Chapter 2 — Village by Village</div>
+      <h2>Fair Doesn't Always Mean Equal Numbers.</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue007/ch2-village-allocation.png" alt="Chief Pip allocating food to each village" />
+    <div class="nar-player" id="player-ch2">
+      <button class="nar-btn" id="btn-ch2" onclick="togglePlayer('ch2')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch2">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch2"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch2">
+      Three items each was the starting point. But Chief Pip had a harder question: each village had a different number of Sprockets. If the food was truly fair, each village should receive an amount proportional to its size — not just an equal number.<br><br>
+      Fernmoss had twenty-four Sprockets — one fifth of the total population. So Fernmoss should receive one fifth of the food. Split Ridge had thirty Sprockets — one quarter of the total. And so on.<br><br>
+      <em>"This is what fair really means,"</em> Chief Pip said quietly. <em>"Not the same for everyone. The right amount for everyone."</em>
+    </div>
+    <div id="lock-q2" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q2">
+      <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Division · Fractions · Year 4</span></div>
+      <span class="quiz-icon">🌿</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 2 — Fernmoss Share</div>
+      <div class="question">Fernmoss has <strong>24 of 120 Sprockets</strong> — that's one fifth of the total.<br><br>One fifth of <strong>360 items</strong> = how many for Fernmoss?</div>
+      <img src="images/jungle/issue007/q2-fernmoss-share.png" alt="Fernmoss village share" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q2')">48</button>
+        <button class="opt-btn" onclick="answer(this,false,'q2')">60</button>
+        <button class="opt-btn" onclick="answer(this,true,'q2')">72</button>
+        <button class="opt-btn" onclick="answer(this,false,'q2')">90</button>
+      </div>
+      <div class="feedback" id="feedback-q2"></div>
+      <button class="next-btn" id="next-q2" onclick="showQ3Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q3" style="display:none">
+      <div class="nar-player" id="player-q3s">
+        <button class="nar-btn" id="btn-q3s" onclick="togglePlayer('q3s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q3s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q3s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q3s">
+        Split Ridge: <strong>30 of 120 Sprockets</strong> — one quarter of the total population. One quarter of 360 items.
+      </div>
+      <div id="lock-q3" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q3">
+        <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Division · Fractions · Year 4</span></div>
+        <span class="quiz-icon">🪨</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 3 — Split Ridge Share</div>
+        <div class="question">Split Ridge has <strong>30 of 120 Sprockets</strong> — one quarter of the total.<br><br>One quarter of <strong>360 items</strong> = how many for Split Ridge?</div>
+        <img src="images/jungle/issue007/q3-split-ridge-share.png" alt="Split Ridge village share" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q3')">72</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">72</button>
+          <button class="opt-btn" onclick="answer(this,true,'q3')">90</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">60</button>
+        </div>
+        <div class="feedback" id="feedback-q3"></div>
+        <button class="next-btn" id="next-q3" onclick="nextChapter(3)">Chapter 3 ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 3 ===== -->
+  <div class="chapter" id="chapter-3">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌿 Chapter 3 — Tangle Builds the Bridges</div>
+      <h2>The Best Use of a Gift Is for Others.</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue007/ch3-tangle-bridges.png" alt="Tangle building vine bridges between the villages" />
+    <div class="nar-player" id="player-ch3">
+      <button class="nar-btn" id="btn-ch3" onclick="togglePlayer('ch3')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch3">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch3"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch3">
+      While the food was being distributed, Tangle was already working. It had counted the broken bridges: five in total, each needing forty-eight vines. Two hundred and forty vines exactly. Tangle had two hundred and forty. A perfect match — no remainder.<br><br>
+      Then came the timeline. The village builders could complete three bridges per day. Five bridges across two days — three on day one, two on day two. Not perfectly equal across the days, but the work would be done.<br><br>
+      Blaze watched Tangle carry the vine bundles in perfect groups of twelve. <em>"You've been planning this,"</em> she said. It didn't answer. But it had.
+    </div>
+    <div id="lock-q4" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q4">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Division · Year 4</span></div>
+      <span class="quiz-icon">🌿</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 4 — Perfect Match</div>
+      <div class="question"><strong>5 bridges</strong>, each needing <strong>48 vines</strong>.<br>Tangle has <strong>240 vines</strong>.<br><br>240 divided by 48 — how many bridges can be built?</div>
+      <img src="images/jungle/issue007/q4-bridges-240.png" alt="240 vines for 5 bridges" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q4')">4</button>
+        <button class="opt-btn" onclick="answer(this,true,'q4')">5</button>
+        <button class="opt-btn" onclick="answer(this,false,'q4')">6</button>
+        <button class="opt-btn" onclick="answer(this,false,'q4')">3</button>
+      </div>
+      <div class="feedback" id="feedback-q4"></div>
+      <button class="next-btn" id="next-q4" onclick="showQ5Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q5" style="display:none">
+      <div class="nar-player" id="player-q5s">
+        <button class="nar-btn" id="btn-q5s" onclick="togglePlayer('q5s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q5s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q5s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q5s">
+        The builders can complete <strong>three bridges per day</strong>. There are <strong>five bridges</strong> to build. How many full days for the first three, and how many bridges on day two?
+      </div>
+      <div id="lock-q5" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q5">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Remainders · Year 4</span></div>
+        <span class="quiz-icon">🌿</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 5 — Building Days</div>
+        <div class="question"><strong>5 bridges</strong>, <strong>3 per day</strong>.<br><br>How many full days + how many bridges left on day 2?</div>
+        <img src="images/jungle/issue007/q5-building-days.png" alt="5 bridges across 2 days" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q5')">2 days, 0 left</button>
+          <button class="opt-btn" onclick="answer(this,true,'q5')">1 full day, 2 on day 2</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">1 full day, 3 on day 2</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">3 days, 1 left</button>
+        </div>
+        <div class="feedback" id="feedback-q5"></div>
+        <button class="next-btn" id="next-q5" onclick="nextChapter(4)">Chapter 4 ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 4 ===== -->
+  <div class="chapter" id="chapter-4">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">💧 Chapter 4 — The Dry Season</div>
+      <h2>The Hardest Division of All.</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue007/ch4-dry-season.png" alt="Sprockets preparing water pods for the Dry Season" />
+    <div class="nar-player" id="player-ch4">
+      <button class="nar-btn" id="btn-ch4" onclick="togglePlayer('ch4')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch4">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch4"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch4">
+      The Dry Season was coming. Every Sprocket knew it — the weeks when the jungle went silent and the water pods were all that kept the tribe alive. Chief Pip pulled out the ledger. Five hundred and four water pods for seven villages. The distribution had to be perfect.<br><br>
+      Each village's share would need to last four months. Branchwick had five families who would need to divide their monthly share between them. At every level, the same question: how many for each?<br><br>
+      <em>"Division keeps us alive,"</em> Chief Pip said. <em>"It always has."</em>
+    </div>
+    <div id="lock-q6" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q6">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Division · Year 4</span></div>
+      <span class="quiz-icon">💧</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 6 — Water Pod Distribution</div>
+      <div class="question"><strong>504 water pods</strong> for <strong>7 villages</strong>.<br><br>How many pods per village?</div>
+      <img src="images/jungle/issue007/q6-pods-504.png" alt="504 water pods for 7 villages" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q6')">63</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">84</button>
+        <button class="opt-btn" onclick="answer(this,true,'q6')">72</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">56</button>
+      </div>
+      <div class="feedback" id="feedback-q6"></div>
+      <button class="next-btn" id="next-q6" onclick="showQ7Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q7" style="display:none">
+      <div class="nar-player" id="player-q7s">
+        <button class="nar-btn" id="btn-q7s" onclick="togglePlayer('q7s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q7s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q7s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q7s">
+        Each village's share of <strong>72 pods</strong> must last <strong>4 months</strong>. How many pods per month?
+      </div>
+      <div id="lock-q7" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q7">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Division · Year 4</span></div>
+        <span class="quiz-icon">💧</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 7 — Monthly Supply</div>
+        <div class="question">Each village gets <strong>72 pods</strong> to last <strong>4 months</strong>.<br><br>How many pods per month?</div>
+        <img src="images/jungle/issue007/q7-monthly-72.png" alt="72 pods over 4 months" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q7')">16</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">20</button>
+          <button class="opt-btn" onclick="answer(this,true,'q7')">18</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">24</button>
+        </div>
+        <div class="feedback" id="feedback-q7"></div>
+        <button class="next-btn" id="next-q7" onclick="showQ8Block()">Next Question ➜</button>
+      </div>
+    </div>
+
+    <div id="block-q8" style="display:none">
+      <div class="nar-player" id="player-q8s">
+        <button class="nar-btn" id="btn-q8s" onclick="togglePlayer('q8s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q8s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q8s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q8s">
+        Branchwick has <strong>5 families</strong>. Their monthly supply is <strong>18 pods</strong>. That doesn't divide evenly — so some families get three pods and some get four.
+      </div>
+      <div id="lock-q8" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q8">
+        <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Remainders · Year 4</span></div>
+        <span class="quiz-icon">💧</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 8 — Branchwick Families</div>
+        <div class="question">Branchwick: <strong>18 pods</strong> for <strong>5 families</strong>.<br><br>How many whole pods per family, and how many left over?</div>
+        <img src="images/jungle/issue007/q8-branchwick-18.png" alt="18 pods shared among 5 families" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q8')">4 remainder 0</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">2 remainder 8</button>
+          <button class="opt-btn" onclick="answer(this,true,'q8')">3 remainder 3</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">3 remainder 5</button>
+        </div>
+        <div class="feedback" id="feedback-q8"></div>
+        <button class="next-btn" id="next-q8" onclick="nextChapter(5)">Final Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 5 ===== -->
+  <div class="chapter" id="chapter-5">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🏆 Chapter 5 — Tangle's Final Act</div>
+      <h2>The Shape of Everything It Learned.</h2>
+    </div>
+    <img class="chapter-img" src="images/jungle/issue007/ch5-tangle-array.png" alt="Tangle arranging all 480 Sprockets into a perfect array" />
+    <div class="nar-player" id="player-ch5">
+      <button class="nar-btn" id="btn-ch5" onclick="togglePlayer('ch5')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch5">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch5"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch5">
+      When the distribution was done, Chief Pip made a calculation. Blaze helped. All five village shares added to three hundred and sixty — the total. Fernmoss seventy-two, Split Ridge ninety, Cascade fifty-four, Array Forest sixty-three, Branchwick eighty-one. Every item accounted for. Not equal amounts — but fair ones. Proportional. And the sum was perfect.<br><br>
+      Then Tangle did something no one expected. It began moving the Sprockets. Not roughly — precisely. Guiding each one gently to a position, then the next, then the next. Row by row. When it was finished, four hundred and eighty Sprockets stood in a perfect rectangular array on the jungle floor.<br><br>
+      Thirty rows of sixteen. A multiplication array. And from above, anyone could see what it was: the same pattern as Tangle's sculptures, but made of living things. Tangle had arranged the whole reunion into a piece of mathematics.
+    </div>
+    <div id="lock-q9" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q9">
+      <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Division · Year 4</span></div>
+      <span class="quiz-icon">🌿</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 9 — Was It Fair?</div>
+      <div class="question">The five village shares were: <strong>72 + 90 + 54 + 63 + 81</strong>.<br><br>Do they add up to 360?</div>
+      <img src="images/jungle/issue007/q9-verify-360.png" alt="Five village shares adding to 360" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,true,'q9')">Yes — they add to 360</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">No — they add to 350</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">No — they add to 370</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">No — they add to 380</button>
+      </div>
+      <div class="feedback" id="feedback-q9"></div>
+      <button class="next-btn" id="next-q9" onclick="showQ10Block()">Boss Challenge ➜</button>
+    </div>
+
+    <div id="block-q10" style="display:none">
+      <div class="nar-player" id="player-q10s">
+        <button class="nar-btn" id="btn-q10s" onclick="togglePlayer('q10s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q10s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q10s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q10s">
+        Tangle's final array: <strong>480 Sprockets</strong> in rows of <strong>16</strong>. How many rows?
+      </div>
+      <div id="lock-q10" class="quiz-lock">🔒 Listen to unlock the Boss Challenge!</div>
+      <div class="quiz-box" id="quiz-q10">
+        <div class="quiz-meta"><span class="difficulty diff-boss">👑 Boss Challenge</span><span class="acara-tag">Division · Year 4</span></div>
+        <span class="quiz-icon">🏆</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 10 — BOSS: Tangle's Greatest Array</div>
+        <div class="question">Tangle arranges <strong>480 Sprockets</strong> in rows of <strong>16</strong>.<br><br>How many rows?</div>
+        <img src="images/jungle/issue007/q10-boss-480.png" alt="480 Sprockets in rows of 16" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q10')">24</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">32</button>
+          <button class="opt-btn" onclick="answer(this,true,'q10')">30</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">28</button>
+        </div>
+        <div class="feedback" id="feedback-q10"></div>
+        <button class="next-btn" id="next-q10" onclick="showCliffhanger()">🌿 THE END →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINALE — replaces cliffhanger for final issue -->
+  <div id="cliffhanger-screen" style="display:none; text-align:center; padding:40px 24px; animation:fadeIn 0.5s ease;">
+    <img src="images/jungle/issue007/finale-honorary-sprocket.png" style="width:100%;border-radius:16px;margin-bottom:24px;border:3px solid rgba(22,163,74,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.6);" alt="Chief Pip declaring Tangle an Honorary Sprocket" />
+    <div class="nar-player" id="player-cf" style="text-align:left;margin-bottom:20px;">
+      <button class="nar-btn" id="btn-cf" onclick="togglePlayer('cf')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-cf">Press ▶ to hear the end</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-cf"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-cf" style="text-align:left;">
+      Chief Pip stood at the front of the array — thirty rows of sixteen, every Sprocket in the Verdant Canopy standing perfectly still.<br><br>
+      <em>"Tangle,"</em> he said, loud enough for all to hear, <em>"you built us a number line. You counted every vine. You organised us into an array. You have been doing mathematics your whole life, and you have done more for this tribe today than any Sprocket alive."</em><br><br>
+      He extended his tiny antenna toward the enormous vine creature at the back.<br><br>
+      <em>"By unanimous decision — you are an Honorary Sprocket. Welcome home."</em><br><br>
+      Tangle set down a bundle of twelve vines. And for the first time, it wasn't a question. It wasn't confusion. It was a gift.
+    </div>
+    <button onclick="showWin()" style="background:linear-gradient(135deg,#15803d,#16a34a);color:white;font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(22,163,74,0.4);">🌿 See Your Results →</button>
+  </div>
+
+  <!-- WIN SCREEN -->
+  <div id="win-screen">
+    <span class="trophy">🌏</span>
+    <h2>ARC COMPLETE!</h2>
+    <div class="win-score" id="win-score">You scored 10 / 10!</div>
+    <div class="win-stars" id="win-stars">⭐⭐⭐</div>
+    <p>The Verdant Canopy is whole again. Tangle found its place. The Sprockets found their numbers. And you mastered division. <strong>The jungle runs on equal sharing — and now so do you.</strong></p>
+    <div class="win-summary">
+      <h3>What You Mastered This Arc 🧠</h3>
+      <ul>
+        <li>✅ <strong>Partitive division</strong> — sharing equally (Issues 1–2)</li>
+        <li>✅ <strong>Quotitive division</strong> — making groups (Issues 3–4)</li>
+        <li>✅ <strong>Remainders</strong> — what to do with leftovers (Issue 5)</li>
+        <li>✅ <strong>Short division</strong> — larger numbers (Issue 6)</li>
+        <li>✅ <strong>Proportional sharing</strong> — fair, not just equal (Issue 7)</li>
+      </ul>
+    </div>
+    <p style="font-size:14px;color:#4ade80;margin-bottom:16px;">More adventures coming soon — Pyramids, Treasure Hunt, and beyond. 🌿</p>
+    <a href="landing.html" class="next-issue-btn">🌿 Back to Math Blast</a>
+    <button class="replay-btn" onclick="location.reload()">🔄 Play Again</button>
+  </div>
+
+</div>
+<div id="ctrl-bar">
+  <button class="ctrl-btn" id="mute-ctrl" onclick="toggleMute()">🔊 Sound On</button>
+  <button class="ctrl-btn" onclick="replayCurrent()">🔁 Replay</button>
+</div>
+
+<script>
+const lf=document.getElementById('leaffield');
+const leafEmoji=['🍃','🌿','🌳','🍀'];
+for(let i=0;i<30;i++){
+  const l=document.createElement('div');l.className='leaf';
+  l.textContent=leafEmoji[Math.floor(Math.random()*leafEmoji.length)];
+  l.style.left=Math.random()*100+'%';l.style.top=Math.random()*100+'%';
+  l.style.animationDelay=(Math.random()*8)+'s';l.style.animationDuration=(6+Math.random()*6)+'s';
+  lf.appendChild(l);
+}
+const BASE='sounds/jungle/issue007/';
+let muted=false,currentAudio=null,correctVariant=0,activePlayerId=null;
+const playerConfigs={};
+const triedWrong=new Set();
+
+function stopAll(){if(currentAudio){currentAudio.pause();currentAudio=null;}document.querySelectorAll('.nar-btn').forEach(b=>{if(b.textContent!=='✓')b.textContent='▶';});}
+function playFile(file,onEnd){if(muted){if(onEnd)setTimeout(onEnd,100);return null;}if(currentAudio){currentAudio.pause();currentAudio=null;}const a=new Audio(BASE+file);a.volume=1.0;currentAudio=a;a.play().catch(()=>{currentAudio=null;if(onEnd)onEnd();});a.onended=()=>{currentAudio=null;if(onEnd)onEnd();};a.onerror=()=>{currentAudio=null;if(onEnd)onEnd();};return a;}
+function setupPlayer(id,files,labels,storyId,lockId,onDone,unlockAtIndex){playerConfigs[id]={files,labels,storyId,lockId,unlockAtIndex:unlockAtIndex??files.length,active:false};}
+function togglePlayer(id){if(activePlayerId===id&&currentAudio&&!currentAudio.paused){currentAudio.pause();currentAudio=null;document.getElementById('btn-'+id).textContent='▶';document.getElementById('status-'+id).textContent='Paused — press ▶ to resume';activePlayerId=null;return;}stopAll();activePlayerId=id;runPlayer(id);}
+function runPlayer(id){const cfg=playerConfigs[id];if(!cfg)return;cfg.active=true;const btn=document.getElementById('btn-'+id);const statusEl=document.getElementById('status-'+id);const barFill=document.getElementById('bar-'+id);const story=cfg.storyId?document.getElementById(cfg.storyId):null;if(btn)btn.textContent='⏸';if(story)story.classList.add('playing');const totalFiles=cfg.files.length;let fileIdx=0;function playNext(){if(fileIdx>=totalFiles){if(btn)btn.textContent='✓';if(statusEl)statusEl.textContent='✅ Done — solve the puzzle!';if(barFill)barFill.style.width='100%';if(story){story.classList.remove('playing');story.classList.add('done');}if(cfg.lockId){const l=document.getElementById(cfg.lockId);if(l)l.style.display='none';}const qId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(qId){const q=document.getElementById(qId);if(q){q.classList.add('show');setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}cfg.active=false;activePlayerId=null;return;}if(fileIdx===cfg.unlockAtIndex){if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(quizId){const quiz=document.getElementById(quizId);if(quiz&&!quiz.classList.contains('show')){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}}const file=cfg.files[fileIdx];const label=cfg.labels&&cfg.labels[fileIdx]?cfg.labels[fileIdx]:'🎙️ Narrating...';if(statusEl)statusEl.textContent=label;const segStart=(fileIdx/totalFiles)*100,segEnd=((fileIdx+1)/totalFiles)*100;fileIdx++;const audio=playFile(file,playNext);if(audio&&barFill){const tick=setInterval(()=>{if(!audio||audio.paused||audio.ended){clearInterval(tick);return;}const pct=audio.duration?(segStart+(audio.currentTime/audio.duration)*(segEnd-segStart)):segStart;barFill.style.width=pct+'%';},200);}}playNext();}
+
+function initPlayers(){
+  // Ch1: Eric(Tangle led them home, all villages together), Eric(120 Sprockets, Chief Pip, Tangle at back), Eric(360 items, 120 Sprockets) — unlock at 3
+  setupPlayer('ch1',
+    ['ch1-intro.mp3','ch1-gathering.mp3','ch1-food.mp3','ch1-q1-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-ch1','lock-q1',null,3);
+
+  // Ch2: Eric(fair vs equal, Fernmoss 1/5), Eric(Split Ridge 1/4), Pip(not the same, the right amount) — unlock at 3
+  setupPlayer('ch2',
+    ['ch2-intro.mp3','ch2-shares.mp3','ch2-pip.mp3','ch2-q2-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','🌿 Chief Pip speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch2','lock-q2',null,3);
+
+  // Q3 block: Eric(Split Ridge, 1/4 of 360), Blaze(Q3) — unlock at 1
+  setupPlayer('q3s',
+    ['ch2-q3-setup.mp3','ch2-q3-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q3s','lock-q3',null,1);
+
+  // Ch3: Eric(Tangle working, 5 bridges 48 vines, 240 exact), Eric(3 per day timeline), Blaze(you've been planning this) — unlock at 3
+  setupPlayer('ch3',
+    ['ch3-intro.mp3','ch3-timeline.mp3','ch3-blaze.mp3','ch3-q4-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','⚡ Blaze speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch3','lock-q4',null,3);
+
+  // Q5 block: Eric(3 per day, 5 bridges, day 2 remainder), Blaze(Q5) — unlock at 1
+  setupPlayer('q5s',
+    ['ch3-q5-setup.mp3','ch3-q5-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q5s','lock-q5',null,1);
+
+  // Ch4: Eric(Dry Season coming, 504 pods 7 villages), Eric(each share lasts 4 months, Branchwick 5 families), Pip(division keeps us alive) — unlock at 3
+  setupPlayer('ch4',
+    ['ch4-intro.mp3','ch4-calculation.mp3','ch4-pip.mp3','ch4-q6-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','🌿 Chief Pip speaking...','⚡ Blaze — puzzle time!'],
+    'story-ch4','lock-q6',null,3);
+
+  // Q7 block: Eric(72 pods, 4 months), Blaze(Q7) — unlock at 1
+  setupPlayer('q7s',
+    ['ch4-q7-setup.mp3','ch4-q7-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q7s','lock-q7',null,1);
+
+  // Q8 block: Eric(Branchwick 5 families, 18 pods, doesn't divide evenly), Blaze(Q8) — unlock at 1
+  setupPlayer('q8s',
+    ['ch4-q8-setup.mp3','ch4-q8-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q8s','lock-q8',null,1);
+
+  // Ch5: Eric(distribution done, all shares add to 360), Eric(Tangle moves Sprockets row by row), Eric(30 rows of 16, multiplication array) — unlock at 3
+  setupPlayer('ch5',
+    ['ch5-intro.mp3','ch5-tangle.mp3','ch5-array.mp3','ch5-q9-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-ch5','lock-q9',null,3);
+
+  // Q10 block: Eric(480 Sprockets, rows of 16), Blaze(Q10) — unlock at 1
+  setupPlayer('q10s',
+    ['ch5-q10-setup.mp3','ch5-q10-question.mp3'],
+    ['📖 Eric narrating...','⚡ Blaze — puzzle time!'],
+    'story-q10s','lock-q10',null,1);
+
+  // Finale narration
+  setupPlayer('cf',
+    ['ch5-finale.mp3'],
+    ['📖 Eric narrating...'],
+    'story-cf',null,null,0);
+}
+
+function showQ3Block(){const b=document.getElementById('block-q3');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q3s'),400);}
+function showQ5Block(){const b=document.getElementById('block-q5');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q5s'),400);}
+function showQ7Block(){const b=document.getElementById('block-q7');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q7s'),400);}
+function showQ8Block(){const b=document.getElementById('block-q8');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q8s'),400);}
+function showQ10Block(){const b=document.getElementById('block-q10');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q10s'),400);}
+
+let score=0,questionsAnswered=0;
+const totalQ=10;
+const correctMsg={
+  q1:'🌿 Yes! 360 divided by 120 equals 3. Three items each — the Great Share begins.',
+  q2:'🌿 Correct! One fifth of 360 is 72. Fernmoss gets 72 items.',
+  q3:'🪨 Right! One quarter of 360 is 90. Split Ridge gets 90 items.',
+  q4:'🌿 Yes! 240 divided by 48 equals 5. A perfect match — exactly enough for all five bridges.',
+  q5:'🌿 Correct! 5 divided by 3 is 1 remainder 2. Three bridges on day one, two on day two.',
+  q6:'💧 Yes! 504 divided by 7 equals 72. Seventy-two pods per village.',
+  q7:'💧 Right! 72 divided by 4 equals 18. Eighteen pods per month.',
+  q8:'💧 Correct! 18 divided by 5 is 3 remainder 3. Three pods for two families and four pods for three families.',
+  q9:'🌿 Yes! 72 + 90 + 54 + 63 + 81 = 360. Every item accounted for. The distribution was perfect.',
+  q10:'🏆 ARC COMPLETE! 480 divided by 16 equals 30. Thirty rows. Tangle\'s greatest array — and it\'s made of living things.'
+};
+const wrongMsg={
+  q1:'❌ Not quite! 360 divided by 120. Think: 120 times what equals 360? Three times 120 is 360.',
+  q2:'❌ Try again! One fifth of 360. Think: 360 divided by 5. What is 360 divided by 5?',
+  q3:'❌ Not quite! One quarter of 360. Think: 360 divided by 4. What is 360 divided by 4?',
+  q4:'❌ Try again! 240 divided by 48. Think: 48 times what equals 240? Count in 48s.',
+  q5:'❌ Not quite! 5 divided by 3. Three goes into 5 once, with 2 left over. One full day of 3, then 2 on day 2.',
+  q6:'❌ Try again! 504 divided by 7. Use short division: 50 divided by 7 is 7 remainder 1. Bring down the 4, making 14. 14 divided by 7 is 2. So 72.',
+  q7:'❌ Not quite! 72 divided by 4. Count in fours: 4, 8, 12... up to 72. Or think: 70 divided by 4 is 17 remainder 2, plus 2 more is 18.',
+  q8:'❌ Try again! 18 divided by 5. Count in fives: 5, 10, 15. That\'s 3 fives, with 3 left over.',
+  q9:'❌ Not quite! Add them up: 72 + 90 = 162. 162 + 54 = 216. 216 + 63 = 279. 279 + 81 = 360. They add to 360.',
+  q10:'❌ Try again! 480 divided by 16. Short division: 48 divided by 16 is 3. Bring down the 0. 0 divided by 16 is 0. So 30.'
+};
+const answerAudio={q1:'ch1-q1-answer.mp3',q2:'ch2-q2-answer.mp3',q3:'ch2-q3-answer.mp3',q4:'ch3-q4-answer.mp3',q5:'ch3-q5-answer.mp3',q6:'ch4-q6-answer.mp3',q7:'ch4-q7-answer.mp3',q8:'ch4-q8-answer.mp3',q9:'ch5-q9-answer.mp3',q10:'ch5-q10-answer.mp3'};
+
+function answer(btn,correct,qId){
+  const box=btn.closest('.quiz-box');
+  box.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedback-'+qId);
+  const next=document.getElementById('next-'+qId);
+  if(correct){
+    btn.classList.add('correct');
+    if(!triedWrong.has(qId))score++;
+    questionsAnswered++;
+    fb.className='feedback show good';fb.innerHTML=correctMsg[qId];
+    updateProgress();next.classList.add('show');
+    const qNum=parseInt(qId.replace('q',''));
+    let celebFile;
+    if(qNum===1)celebFile='feedback-correct-1.mp3';
+    else{let v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];celebFile=v[correctVariant%v.length];correctVariant++;}
+    playFile(celebFile,answerAudio[qId]?()=>playFile(answerAudio[qId],null):null);
+  } else {
+    triedWrong.add(qId);btn.classList.add('wrong');fb.className='feedback show bad';fb.innerHTML=wrongMsg[qId];stopAll();
+    const wrongFile=['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)];
+    const wrongAudio=playFile(wrongFile,null);
+    setTimeout(()=>{box.querySelectorAll('.opt-btn').forEach(b=>{if(!b.classList.contains('correct')){b.disabled=false;b.classList.remove('wrong');}});fb.className='feedback';},wrongAudio?2800:1200);
+  }
+}
+function updateProgress(){document.getElementById('progress-fill').style.width=((questionsAnswered/totalQ)*100)+'%';document.getElementById('progress-score').textContent='⭐ '+score+' / '+totalQ;}
+function shuffleOptions(){document.querySelectorAll('.quiz-box').forEach(box=>{const opts=box.querySelector('.options');if(!opts)return;const btns=[...opts.children];for(let i=btns.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));opts.appendChild(btns[j]);btns.splice(j,1);}});}
+function startGame(){document.getElementById('title-screen').style.display='none';document.getElementById('progress-wrap').style.display='block';initPlayers();shuffleOptions();showChapter(1);}
+let currentChapter=0;
+function showChapter(n){stopAll();document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));const ch=document.getElementById('chapter-'+n);if(!ch)return;ch.classList.add('active');currentChapter=n;window.scrollTo({top:0,behavior:'smooth'});const labels=['','Chapter 1 — Everyone, Together','Chapter 2 — Village by Village 🏘️','Chapter 3 — Tangle Builds the Bridges 🌿','Chapter 4 — The Dry Season 💧','Chapter 5 — Tangle\'s Final Act 🏆'];document.getElementById('progress-label').textContent=labels[n]||'';const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};if(playerMap[n])setTimeout(()=>togglePlayer(playerMap[n]),700);}
+function nextChapter(n){showChapter(n);}
+function showCliffhanger(){stopAll();document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));document.getElementById('progress-wrap').style.display='none';const cf=document.getElementById('cliffhanger-screen');cf.style.display='block';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>togglePlayer('cf'),600);}
+function showWin(){stopAll();document.getElementById('cliffhanger-screen').style.display='none';const win=document.getElementById('win-screen');win.style.display='block';document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+' on the first try!';document.getElementById('win-stars').textContent=score===10?'⭐⭐⭐':score>=7?'⭐⭐':score>=4?'⭐':'';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>playFile('win.mp3',null),500);}
+function toggleMute(){muted=!muted;const ctrl=document.getElementById('mute-ctrl');ctrl.textContent=muted?'🔇 Muted':'🔊 Sound On';ctrl.classList.toggle('muted',muted);if(muted)stopAll();}
+function replayCurrent(){const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};const pid=playerMap[currentChapter];if(!pid)return;stopAll();const cfg=playerConfigs[pid];if(cfg)cfg.active=false;const story=cfg&&cfg.storyId?document.getElementById(cfg.storyId):null;if(story)story.classList.remove('playing','done');const barFill=document.getElementById('bar-'+pid);if(barFill)barFill.style.width='0%';const statusEl=document.getElementById('status-'+pid);if(statusEl)statusEl.textContent='Press ▶ to hear the story';const btn=document.getElementById('btn-'+pid);if(btn)btn.textContent='▶';setTimeout(()=>togglePlayer(pid),300);}
+</script>
+</body>
+</html>
