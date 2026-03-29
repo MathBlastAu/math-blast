@@ -16,7 +16,7 @@ client = openai.OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
 IMAGES_DIR = '/Users/leohiem/.openclaw/workspace/projects/math-blast/images/'
 REFERENCE_IMG = IMAGES_DIR + 'ch1-crashed-rocket.png'
-GITHUB_TOKEN = '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'
+GITHUB_TOKEN = '"REDACTED"'
 GITHUB_REPO = 'MathBlastAu/math-blast'
 
 JAKE = "Jake, a 10-year-old boy with short messy brown hair, bright green eyes, light freckles across his nose, bright orange space suit with silver trim, red rocket patch on left shoulder"
