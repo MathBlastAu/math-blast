@@ -416,14 +416,14 @@
       <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Number · Year 4</span></div>
       <span class="quiz-icon">🎯</span>
       <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 7 — Adding to Make a Whole</div>
-      <div class="question">Jake has <strong>3/8</strong> and <strong>2/8</strong> fraction tokens. He needs tokens that add up to exactly <strong>1 whole (8/8)</strong>.<br><br>What fraction does he still need?</div>
+      <div class="question">Which fraction is larger — <strong>5/6</strong> or <strong>7/8</strong>?<br><br>Think carefully — the denominators are different.</div>
       <img src="images/q7-issue005.png" alt="Fraction token collection tubes" class="question-img" />
       <div class="options">
-        <button class="opt-btn" onclick="answer(this,true,'q7')">3/8</button>
-        <button class="opt-btn" onclick="answer(this,false,'q7')">2/8</button>
-        <button class="opt-btn" onclick="answer(this,false,'q7')">5/8</button>
-        <button class="opt-btn" onclick="answer(this,false,'q7')">1/8</button>
-      </div>
+        <button class="opt-btn" onclick="answer(this,true,'q7')">7/8 is larger</button>
+        <button class="opt-btn" onclick="answer(this,false,'q7')">5/6 is larger</button>
+        <button class="opt-btn" onclick="answer(this,false,'q7')">They are equal</button>
+        <button class="opt-btn" onclick="answer(this,false,'q7')">Cannot compare</button>
+        </div>
       <div class="feedback" id="feedback-q7"></div>
       <button class="next-btn" id="next-q7" onclick="showQ8Story()">Next Question ➜</button>
     </div>
@@ -445,14 +445,14 @@
         <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Number · Year 4</span></div>
         <span class="quiz-icon">🧮</span>
         <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 8 — Adding Fractions &amp; Mixed Numbers</div>
-        <div class="question">What is <strong>1/4 + 2/4 + 3/4</strong>?<br><br>Write the answer as a mixed number.</div>
+        <div class="question">Jake has <strong>3/8</strong> and <strong>2/8</strong> fraction tokens.<br><br>He needs tokens that sum to exactly <strong>1 whole (8/8)</strong>.<br><br>What fraction does he still need?</div>
         <img src="images/q8-issue005.png" alt="Three fraction tokens being added" class="question-img" />
         <div class="options">
-          <button class="opt-btn" onclick="answer(this,true,'q8')">1 and 1/2</button>
-          <button class="opt-btn" onclick="answer(this,false,'q8')">6/4</button>
-          <button class="opt-btn" onclick="answer(this,false,'q8')">1 and 1/4</button>
-          <button class="opt-btn" onclick="answer(this,false,'q8')">2</button>
-        </div>
+          <button class="opt-btn" onclick="answer(this,true,'q8')">3/8</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">2/8</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">5/8</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">1/8</button>
+          </div>
         <div class="feedback" id="feedback-q8"></div>
         <button class="next-btn" id="next-q8" onclick="nextChapter(5)">Final Chapter ➜</button>
       </div>
@@ -655,7 +655,7 @@ const playerConfigs = {};
 let activePlayerId = null;
 
 function setupPlayer(id,files,labels,storyId,lockId,onDone,unlockAtIndex) {
-  playerConfigs[id] = { files, labels, storyId, lockId, onDone, active:false };
+  playerConfigs[id] = { files, labels, storyId, lockId, onDone, unlockAtIndex: unlockAtIndex ?? files.length, active:false };
 }
 
 function togglePlayer(id) {
