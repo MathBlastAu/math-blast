@@ -5,9 +5,55 @@ Run before sending any issue for review.
 Usage: python3 preflight.py issue-007-narrated.html
 """
 
-import re, os, sys, json, hashlib
+import re, os, sys, json, hashlib, struct, wave
 
 BASE = os.path.dirname(os.path.abspath(__file__))
+
+def mp3_duration(path):
+    """Estimate MP3 duration in seconds by scanning frame headers."""
+    try:
+        with open(path, 'rb') as f:
+            data = f.read()
+        # Skip ID3 tag if present
+        offset = 0
+        if data[:3] == b'ID3':
+            id3_size = ((data[6] & 0x7f) << 21 | (data[7] & 0x7f) << 14 |
+                        (data[8] & 0x7f) << 7  | (data[9] & 0x7f))
+            offset = 10 + id3_size
+        # Find first valid MP3 frame header
+        sample_rates = {0: 44100, 1: 48000, 2: 32000}
+        bitrates_v1_l3 = {1:32,2:40,3:48,4:56,5:64,6:80,7:96,8:112,9:128,10:160,11:192,12:224,13:256,14:320}
+        total_frames = 0; total_duration = 0.0
+        i = offset
+        while i < len(data) - 4:
+            if data[i] == 0xff and (data[i+1] & 0xe0) == 0xe0:
+                b1 = data[i+1]; b2 = data[i+2]
+                version = (b1 >> 3) & 0x3
+                layer = (b1 >> 1) & 0x3
+                bitrate_idx = (b2 >> 4) & 0xf
+                sr_idx = (b2 >> 2) & 0x3
+                padding = (b2 >> 1) & 0x1
+                if version == 3 and layer == 1 and bitrate_idx in bitrates_v1_l3 and sr_idx in sample_rates:
+                    br = bitrates_v1_l3[bitrate_idx] * 1000
+                    sr = sample_rates[sr_idx]
+                    frame_size = 144 * br // sr + padding
+                    if frame_size > 0:
+                        total_duration += 1152 / sr
+                        total_frames += 1
+                        i += frame_size
+                        if total_frames > 200:  # enough sample
+                            break
+                        continue
+            i += 1
+        if total_frames > 0:
+            # Extrapolate from sampled frames
+            file_size = len(data) - offset
+            avg_frame = (i - offset) / total_frames
+            est_frames = file_size / avg_frame if avg_frame > 0 else total_frames
+            return (est_frames / total_frames) * total_duration
+        return None
+    except Exception:
+        return None
 
 # ── Colours for terminal output ───────────────────────────────────────────────
 RED   = "\033[91m"; GREEN = "\033[92m"; YELLOW = "\033[93m"
@@ -34,7 +80,14 @@ def check(html_path):
     # Derive issue number and sound dir
     m = re.search(r'issue-?0*(\d+)', os.path.basename(html_path))
     issue_num = m.group(1).zfill(3) if m else None
-    sound_dir = os.path.join(BASE, "sounds", f"issue{issue_num}") if issue_num else None
+    # Try to find audio base from HTML const BASE declaration
+    base_match = re.search(r"const BASE='([^']+)'", html)
+    if base_match:
+        sound_dir = os.path.join(BASE, base_match.group(1).rstrip('/'))
+    elif issue_num:
+        sound_dir = os.path.join(BASE, "sounds", f"issue{issue_num}")
+    else:
+        sound_dir = None
     img_dir   = os.path.join(BASE, "images")
 
     # ── 1. JS INFRASTRUCTURE ─────────────────────────────────────────────────
@@ -263,6 +316,23 @@ def check(html_path):
         ok(f"{len(present)} audio files present")
         for f in missing:
             err(f"MISSING audio: {f}")
+
+        # ── Audio duration check for answer files ────────────────────────────
+        # Answer confirmations: 2–6 seconds. Too short = garble/empty. Too long = verbose.
+        answer_files = [f for f in all_needed if '-answer.mp3' in f]
+        for af in sorted(answer_files):
+            af_path = os.path.join(sound_dir, af)
+            if not os.path.exists(af_path):
+                continue
+            duration = mp3_duration(af_path)
+            if duration is None:
+                warn(f"Could not read duration: {af}")
+            elif duration < 1.5:
+                err(f"Answer audio too short ({duration:.1f}s) — likely garble: {af}")
+            elif duration > 7.0:
+                warn(f"Answer audio too long ({duration:.1f}s) — may be verbose: {af}")
+            else:
+                ok(f"Answer audio duration OK ({duration:.1f}s): {af}")
 
         # Check feedback-correct-1 — flag if it's the pre-launch artifact from Issue 1
         fc1 = os.path.join(sound_dir, 'feedback-correct-1.mp3')
