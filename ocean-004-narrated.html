@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Blast 🌊 — Ocean Issue 4 (Narrated)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#020d1a; font-family:'Nunito',Arial,sans-serif; color:#fff;
+    background-image:radial-gradient(ellipse at 50% 0%,rgba(0,100,180,0.3) 0%,transparent 70%); min-height:100vh; }
+  .bubblefield { position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .bubble { position:absolute; border-radius:50%; opacity:0.18; animation:rise 10s linear infinite; background:radial-gradient(circle at 30% 30%, rgba(6,182,212,0.8), rgba(6,182,212,0.1)); }
+  @keyframes rise { from{transform:translateY(100vh) scale(1); opacity:0.18} to{transform:translateY(-60px) scale(1.2); opacity:0} }
+  .wrapper { max-width:680px; margin:0 auto; position:relative; z-index:1; padding-bottom:90px; }
+  .title-screen { text-align:center; padding:48px 24px 36px; }
+  .hero-emoji { font-size:72px; display:block; margin-bottom:16px; animation:float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  .title-screen h1 { font-size:46px; font-weight:900; line-height:1.1; text-shadow:0 0 24px rgba(6,182,212,0.8); }
+  .title-screen h1 span { color:#67e8f9; }
+  .issue-label { font-size:13px; font-weight:900; color:#06b6d4; letter-spacing:3px; text-transform:uppercase; margin:10px 0 4px; }
+  .tagline { font-size:16px; color:#a5f3fc; margin-bottom:4px; }
+  .meta { font-size:13px; color:#0e4a5a; margin-bottom:8px; }
+  .narrated-badge { display:inline-block; background:rgba(6,182,212,0.15); border:1px solid #06b6d4; color:#06b6d4;
+    font-size:11px; font-weight:900; padding:4px 14px; border-radius:20px; letter-spacing:2px; text-transform:uppercase; margin-bottom:24px; }
+  .start-btn { display:inline-block; background:linear-gradient(135deg,#0891b2,#06b6d4); color:white;
+    font-size:20px; font-weight:900; padding:18px 48px; border-radius:50px; border:none; cursor:pointer;
+    box-shadow:0 6px 30px rgba(6,182,212,0.5); transition:transform 0.15s; font-family:'Nunito',Arial,sans-serif; }
+  .start-btn:hover { transform:scale(1.05); }
+  .progress-wrap { padding:16px 24px 0; display:none; }
+  .progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .progress-label { font-size:13px; color:#06b6d4; font-weight:700; }
+  .progress-score { font-size:13px; color:#fbbf24; font-weight:900; }
+  .progress-bar { background:#041a2e; border-radius:20px; height:14px; overflow:hidden; }
+  .progress-fill { background:linear-gradient(90deg,#0891b2,#67e8f9); height:100%; border-radius:20px; transition:width 0.5s ease; }
+  .chapter { display:none; padding:20px 20px 0; animation:fadeIn 0.4s ease; }
+  .chapter.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .chapter-badge { display:inline-block; background:linear-gradient(135deg,#0891b2,#06b6d4); color:white;
+    font-size:11px; font-weight:900; padding:5px 16px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; }
+  .chapter h2 { font-size:26px; font-weight:900; margin-bottom:16px; line-height:1.3; }
+  .chapter-img { width:100%; border-radius:16px; display:block; margin-bottom:20px;
+    border:3px solid rgba(6,182,212,0.4); box-shadow:0 8px 30px rgba(0,0,0,0.5); background:#041a2e; min-height:180px; object-fit:cover; }
+  .nar-player { display:flex; align-items:center; gap:12px; background:rgba(6,182,212,0.08);
+    border:2px solid rgba(6,182,212,0.3); border-radius:14px; padding:12px 16px; margin-bottom:16px; }
+  .nar-btn { width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; flex-shrink:0;
+    background:linear-gradient(135deg,#0891b2,#06b6d4); color:white; font-size:18px;
+    display:flex; align-items:center; justify-content:center; transition:transform 0.15s; }
+  .nar-btn:hover { transform:scale(1.1); }
+  .nar-info { flex:1; min-width:0; }
+  .nar-status { font-size:12px; color:#06b6d4; font-weight:700; }
+  .nar-bar { height:4px; background:#041a2e; border-radius:4px; margin-top:5px; overflow:hidden; }
+  .nar-bar-fill { height:100%; background:linear-gradient(90deg,#0891b2,#67e8f9); border-radius:4px; width:0%; transition:width 0.3s; }
+  .story-text { background:rgba(255,255,255,0.04); border-left:4px solid #0891b2;
+    border-radius:0 12px 12px 0; padding:18px 22px; font-size:18px; line-height:1.9; color:#cffafe; margin-bottom:20px;
+    transition:border-color 0.4s, background 0.4s; }
+  .story-text.playing { border-left-color:#67e8f9; background:rgba(6,182,212,0.06); }
+  .story-text.done { border-left-color:#fbbf24; background:rgba(251,191,36,0.04); }
+  .story-text strong { color:#fbbf24; }
+  .story-text em { color:#67e8f9; font-style:normal; font-weight:700; }
+  .blast-from-past { background:rgba(251,191,36,0.06); border:2px solid rgba(251,191,36,0.3);
+    border-radius:14px; padding:16px 20px; margin-bottom:20px; }
+  .blast-from-past h4 { font-size:12px; font-weight:900; color:#fbbf24; text-transform:uppercase; letter-spacing:2px; margin-bottom:8px; }
+  .blast-from-past p { font-size:15px; color:#cffafe; line-height:1.6; }
+  .quiz-lock { text-align:center; padding:16px 20px; background:rgba(6,182,212,0.05);
+    border:2px dashed rgba(6,182,212,0.25); border-radius:16px; margin-bottom:20px;
+    font-size:14px; color:#06b6d4; font-weight:700; }
+  .quiz-box { background:rgba(6,182,212,0.06); border:2px solid rgba(6,182,212,0.3);
+    border-radius:16px; padding:22px; margin-bottom:20px; display:none; animation:fadeIn 0.4s ease; }
+  .quiz-box.show { display:block; }
+  .quiz-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .difficulty { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; }
+  .diff-warmup { background:rgba(100,200,255,0.2); color:#66ddff; border:1px solid #66ddff; }
+  .diff-easy   { background:rgba(134,239,172,0.2); color:#86efac; border:1px solid #86efac; }
+  .diff-medium { background:rgba(255,200,0,0.2);   color:#fbbf24; border:1px solid #fbbf24; }
+  .diff-hard   { background:rgba(255,80,80,0.2);   color:#ff8888; border:1px solid #ff8888; }
+  .diff-boss   { background:rgba(255,0,200,0.2);   color:#ff44ee; border:1px solid #ff44ee; }
+  .acara-tag { display:inline-block; font-size:10px; font-weight:700; padding:3px 10px; border-radius:10px;
+    background:rgba(255,255,255,0.07); color:#a5f3fc; border:1px solid rgba(255,255,255,0.1); text-transform:uppercase; letter-spacing:0.5px; }
+  .quiz-icon { font-size:26px; display:block; margin-bottom:6px; }
+  .quiz-label { font-size:12px; font-weight:900; color:#06b6d4; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+  .yr-badge { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; margin-right:6px; }
+  .yr4 { background:rgba(251,191,36,0.2); color:#fbbf24; border:1px solid #fbbf24; }
+  .question { font-size:20px; font-weight:900; color:#fff; margin-bottom:18px; line-height:1.5; }
+  .question-img { display:block; max-width:300px; width:100%; margin:14px auto 18px; border-radius:8px; border:2px solid rgba(6,182,212,0.3); }
+  .options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .opt-btn { background:rgba(255,255,255,0.06); border:2px solid rgba(255,255,255,0.12); color:#fff;
+    font-family:'Nunito',Arial,sans-serif; font-size:19px; font-weight:700; padding:16px 10px;
+    border-radius:12px; cursor:pointer; transition:all 0.15s; }
+  .opt-btn:hover:not(:disabled) { background:rgba(6,182,212,0.2); border-color:#06b6d4; transform:scale(1.03); }
+  .opt-btn.correct { background:rgba(6,182,212,0.2)!important; border-color:#67e8f9!important; color:#67e8f9!important; }
+  .opt-btn.wrong   { background:rgba(255,50,50,0.2)!important; border-color:#ff3232!important; color:#ff8888!important; animation:shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .feedback { margin-top:16px; padding:14px 18px; border-radius:10px; font-size:15px; font-weight:700; display:none; line-height:1.5; }
+  .feedback.show { display:block; }
+  .feedback.good { background:rgba(6,182,212,0.12); border:2px solid #67e8f9; color:#67e8f9; }
+  .feedback.bad  { background:rgba(255,50,50,0.12); border:2px solid #ff3232; color:#ff9999; }
+  .next-btn { display:none; width:100%; margin-top:16px; background:linear-gradient(135deg,#0891b2,#06b6d4); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px; border-radius:50px;
+    border:none; cursor:pointer; box-shadow:0 4px 20px rgba(6,182,212,0.4); transition:transform 0.15s; }
+  .next-btn:hover { transform:scale(1.03); }
+  .next-btn.show { display:block; }
+  #win-screen { display:none; text-align:center; padding:48px 24px 24px; animation:fadeIn 0.5s ease; }
+  .trophy { font-size:80px; display:block; margin-bottom:16px; animation:bounce 0.8s ease infinite alternate; }
+  @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.15)} }
+  #win-screen h2 { font-size:38px; font-weight:900; color:#fbbf24; margin-bottom:8px; }
+  .win-score { font-size:22px; font-weight:900; color:#67e8f9; margin-bottom:16px; }
+  .win-stars { font-size:36px; margin-bottom:20px; }
+  #win-screen > p { font-size:17px; color:#a5f3fc; line-height:1.75; margin-bottom:20px; }
+  .win-summary { background:rgba(255,255,255,0.04); border-radius:14px; padding:18px 20px; margin-bottom:24px; text-align:left; }
+  .win-summary h3 { font-size:14px; color:#fbbf24; font-weight:900; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .win-summary ul { list-style:none; }
+  .win-summary li { font-size:14px; color:#cffafe; padding:4px 0; }
+  .replay-btn { display:inline-block; background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#020d1a;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900; padding:16px 40px;
+    border-radius:50px; border:none; cursor:pointer; margin-bottom:16px; transition:transform 0.15s; }
+  .replay-btn:hover { transform:scale(1.04); }
+  .next-issue-btn { display:block; background:linear-gradient(135deg,#0891b2,#06b6d4); color:white;
+    font-family:'Nunito',Arial,sans-serif; font-size:16px; font-weight:900; padding:12px 32px;
+    border-radius:50px; border:none; cursor:pointer; text-decoration:none; margin-bottom:12px;
+    box-shadow:0 4px 20px rgba(6,182,212,0.3); transition:transform 0.15s; }
+  .next-issue-btn:hover { transform:scale(1.03); }
+  #ctrl-bar { position:fixed; top:14px; left:14px; display:flex; gap:8px; z-index:999;
+    background:rgba(0,0,0,0.6); padding:6px 10px; border-radius:24px; border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(6px); }
+  .ctrl-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:white;
+    font-family:'Nunito',sans-serif; font-weight:700; font-size:12px; padding:5px 12px; border-radius:16px; cursor:pointer; transition:background 0.15s; }
+  .ctrl-btn:hover { background:rgba(255,255,255,0.18); }
+  .ctrl-btn.muted { background:rgba(255,50,50,0.3); border-color:#ff3232; }
+</style>
+</head>
+<body>
+<div class="bubblefield" id="bubblefield"></div>
+<div class="wrapper">
+
+  <!-- TITLE -->
+  <div id="title-screen" class="title-screen">
+    <span class="hero-emoji">🌊</span>
+    <p class="issue-label">The Ocean Arc · Issue 4</p>
+    <h1>MATH BLAST<br><span>🌊 THE GREAT HUM</span></h1>
+    <p class="tagline">The Resonance Whale. Full reveal. Marina must calculate its pulse pattern to save the Lattice.</p>
+    <p class="meta">5 chapters · 10 challenges · Larger Multiplication · Year 4</p>
+    <div class="narrated-badge">🎙️ Narrated Edition</div><br>
+    <button class="start-btn" onclick="startGame()">🌊 FINAL DIVE</button>
+    <p style="font-size:12px;color:#0e4a5a;margin-top:16px;">Narrated by Eric · Marina voiced by Jessica · Elder Luma voiced by Bill</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label" id="progress-label">Chapter 1 of 5</div>
+      <div class="progress-score" id="progress-score">⭐ 0 / 10</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- ===== CHAPTER 1 ===== -->
+  <div class="chapter" id="chapter-1">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌊 Chapter 1 — The Deep Trench</div>
+      <h2>Below the Lattice, the Ocean Had No Bottom.</h2>
+    </div>
+    <img class="chapter-img" src="images/ocean/issue004/ch1-deep-trench-descent.png" alt="Marina and Flick descending into the Deep Trench" />
+    <div class="nar-player" id="player-ch1">
+      <button class="nar-btn" id="btn-ch1" onclick="togglePlayer('ch1')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch1">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch1"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch1">
+      Marina and Flick descended beyond the Lattice floor, into the deep trench below. The light from Luminos faded. The ocean became a kind of black that felt almost solid. Flick's wing-tips were the only light, pulsing steady cyan in the dark.<br><br>
+      They had been descending for twenty minutes when they saw the first sign. A faint blue-green glow, far below. Arranged in rows. In columns. Like an array but alive, moving slowly, rhythmically. Pulsing. The same pattern Marina had read about in the Archive. The same pattern on the tablet outside the shipwreck window.
+
+      <div class="blast-from-past" style="margin-top:16px;">
+        <h4>💛 Blast from the Past — Issue 3</h4>
+        <p>From Issue 3, you know the Whale's spots are arranged in arrays. The Archive record showed 6 rows of 8 spots. Count the rows: 8, 16, 24, 32, 40, 48. That is 6 rows of 8, which equals 48. That is the Whale's signature pattern.</p>
+      </div>
+    </div>
+    <div id="lock-q1" class="quiz-lock">🔒 Listen to the story first to unlock your challenge!</div>
+    <div class="quiz-box" id="quiz-q1">
+      <div class="quiz-meta"><span class="difficulty diff-warmup">🌱 Warm-Up</span><span class="acara-tag">Multiplication × 6 · Year 4</span></div>
+      <span class="quiz-icon">🐋</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 1 — First Pulse</div>
+      <div class="question">Marina sees the first cluster of the Whale's bioluminescent spots. There are <strong>3 rows</strong> with <strong>6 spots</strong> in each row.<br><br>What is <strong>3 × 6</strong>?</div>
+      <img src="images/ocean/issue004/q1-whale-spots.png" alt="3 rows of 6 whale spots" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q1')">15</button>
+        <button class="opt-btn" onclick="answer(this,true,'q1')">18</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">21</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">24</button>
+      </div>
+      <div class="feedback" id="feedback-q1"></div>
+      <button class="next-btn" id="next-q1" onclick="nextChapter(2)">Chapter 2 ➜</button>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 2 ===== -->
+  <div class="chapter" id="chapter-2">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🐋 Chapter 2 — The Reveal</div>
+      <h2>It Was the Most Beautiful Thing Marina Had Ever Seen.</h2>
+    </div>
+    <img class="chapter-img" src="images/ocean/issue004/ch2-whale-full-reveal.png" alt="Full reveal of the Resonance Whale" />
+    <div class="nar-player" id="player-ch2">
+      <button class="nar-btn" id="btn-ch2" onclick="togglePlayer('ch2')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch2">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch2"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch2">
+      Then the whole Whale came into view.<br><br>
+      It was enormous in a way Marina had never experienced. Not big the way a large ship is big, where you can see the whole of it at once. Big the way a mountain is big, where it keeps going even when you think it should stop. Dark charcoal grey, nearly black, covered from fin-tip to tail in glowing blue-green spots arranged in perfect grids. Its eyes, large as Marina's entire sub, were gentle and violet-dark and looking directly at her.<br><br>
+      Flick did not run. Flick hovered perfectly still, wing-tips glowing at their steadiest, most serene. Marina felt the deep rhythmic pulse of the Whale's bioelectric field through the water. Not threatening. Not angry. Just present. Bewildered. Ancient. Lonely.
+    </div>
+    <div id="lock-q2" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q2">
+      <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Multiplication × 6 · Year 4</span></div>
+      <span class="quiz-icon">🐋</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 2 — Counting the Clusters</div>
+      <div class="question">Marina counts a section of the Whale's spots: <strong>5 rows of 6</strong>.<br><br>What is <strong>5 × 6</strong>?</div>
+      <img src="images/ocean/issue004/q2-whale-spots.png" alt="5 rows of 6 whale spots" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q2')">24</button>
+        <button class="opt-btn" onclick="answer(this,false,'q2')">28</button>
+        <button class="opt-btn" onclick="answer(this,true,'q2')">30</button>
+        <button class="opt-btn" onclick="answer(this,false,'q2')">35</button>
+      </div>
+      <div class="feedback" id="feedback-q2"></div>
+      <button class="next-btn" id="next-q2" onclick="showQ3Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q3" style="display:none">
+      <div class="nar-player" id="player-q3s">
+        <button class="nar-btn" id="btn-q3s" onclick="togglePlayer('q3s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q3s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q3s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q3s">
+        On the Whale's left flank, Marina counts another spot section. This section has <strong>4 rows</strong> with <strong>7 spots</strong> in each row. A new multiplication to calculate.
+      </div>
+      <div id="lock-q3" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q3">
+        <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Multiplication × 7 · Year 4</span></div>
+        <span class="quiz-icon">🐋</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 3 — Four Times Seven</div>
+        <div class="question">How many spots in <strong>4 × 7</strong>?</div>
+        <img src="images/ocean/issue004/q3-whale-spots.png" alt="4 rows of 7 whale spots" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q3')">24</button>
+          <button class="opt-btn" onclick="answer(this,true,'q3')">28</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">32</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">35</button>
+        </div>
+        <div class="feedback" id="feedback-q3"></div>
+        <button class="next-btn" id="next-q3" onclick="nextChapter(3)">Chapter 3 ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 3 ===== -->
+  <div class="chapter" id="chapter-3">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🔬 Chapter 3 — The Pattern</div>
+      <h2>The Whale Was Not Breaking the Lattice. It Was Trying to Talk to It.</h2>
+    </div>
+    <img class="chapter-img" src="images/ocean/issue004/ch3-whale-spots-closeup.png" alt="Close-up of the Whale's grid-pattern spots" />
+    <div class="nar-player" id="player-ch3">
+      <button class="nar-btn" id="btn-ch3" onclick="togglePlayer('ch3')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch3">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch3"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch3">
+      Marina had her datapad out now, recording the pulse pattern. The Whale's bioelectric field was not random. It pulsed in sequences. Groups of six, then seven, then eight. Over and over. The same multiplication pattern cycling through, like a song that kept repeating.<br><br>
+      <em>"It isn't disrupting the Lattice on purpose,"</em> Marina said, keeping her voice low and even. <em>"It woke up and felt the Lattice field, and its own field interacted with it. The Whale doesn't understand why the stones are dark. It's confused and distressed and it keeps sending its own signal louder, trying to get an answer. The Lattice going dark is making the Whale send harder."</em><br><br>
+      Flick drifted toward the Whale, antenna fins up, wing-tips at their gentlest cyan. The Whale's great eye tracked Flick with something that looked very much like curiosity.
+    </div>
+    <div id="lock-q4" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q4">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Multiplication × 7 · Year 4</span></div>
+      <span class="quiz-icon">🐋</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 4 — Six Times Seven</div>
+      <div class="question">Marina identifies the Whale's central pulse cluster: <strong>6 rows of 7 spots</strong>.<br><br>What is <strong>6 × 7</strong>?</div>
+      <img src="images/ocean/issue004/q4-whale-spots.png" alt="6 rows of 7 whale spots" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q4')">35</button>
+        <button class="opt-btn" onclick="answer(this,false,'q4')">40</button>
+        <button class="opt-btn" onclick="answer(this,true,'q4')">42</button>
+        <button class="opt-btn" onclick="answer(this,false,'q4')">48</button>
+      </div>
+      <div class="feedback" id="feedback-q4"></div>
+      <button class="next-btn" id="next-q4" onclick="showQ5Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q5" style="display:none">
+      <div class="nar-player" id="player-q5s">
+        <button class="nar-btn" id="btn-q5s" onclick="togglePlayer('q5s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q5s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q5s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q5s">
+        The pulse shifts to the eight-pattern. Marina sees a section with <strong>3 rows</strong> of <strong>8 spots</strong> each. This section pulses brightest when the Whale seems most distressed.
+      </div>
+      <div id="lock-q5" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q5">
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Multiplication × 8 · Year 4</span></div>
+        <span class="quiz-icon">🐋</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 5 — Three Times Eight</div>
+        <div class="question">How many spots in <strong>3 × 8</strong>?</div>
+        <img src="images/ocean/issue004/q5-whale-spots.png" alt="3 rows of 8 whale spots" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q5')">20</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">22</button>
+          <button class="opt-btn" onclick="answer(this,true,'q5')">24</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">28</button>
+        </div>
+        <div class="feedback" id="feedback-q5"></div>
+        <button class="next-btn" id="next-q5" onclick="nextChapter(4)">Chapter 4 ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 4 ===== -->
+  <div class="chapter" id="chapter-4">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">⚡ Chapter 4 — The Signal</div>
+      <h2>Flick Could Carry the Signal. Marina Just Had to Calculate It.</h2>
+    </div>
+    <img class="chapter-img" src="images/ocean/issue004/ch4-marina-calculating.png" alt="Marina calculating on her wrist datapad" />
+    <div class="nar-player" id="player-ch4">
+      <button class="nar-btn" id="btn-ch4" onclick="togglePlayer('ch4')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch4">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch4"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch4">
+      Marina worked fast. Her datapad captured the Whale's full pulse sequence. Flick, bonded to the datapad, could carry the signal to the right Lattice stones. But first Marina had to calculate exactly which stone groupings needed to light up, and in what sequence. The calculations had to be right. There would be no second chance.<br><br>
+      <em>"Flick,"</em> Marina said quietly, <em>"I need you to be brave. I need you to carry this signal up through the water, to the Lattice field above us, and pulse it to the right stones. In the right pattern. Exactly as I calculate it."</em><br><br>
+      Flick's antenna fins pointed straight up. Wing-tips pulsed cyan once, firmly. Ready.
+    </div>
+    <div id="lock-q6" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q6">
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Multiplication × 8 · Year 4</span></div>
+      <span class="quiz-icon">🐋</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 6 — Signal Strength</div>
+      <div class="question">To recalibrate the Lattice, Marina needs to match the signal to <strong>5 rows of 8 stones</strong> pulsing at once.<br><br>What is <strong>5 × 8</strong>?</div>
+      <img src="images/ocean/issue004/q6-lattice-signal.png" alt="5 rows of 8 lattice stones lit up" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q6')">32</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">35</button>
+        <button class="opt-btn" onclick="answer(this,true,'q6')">40</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">48</button>
+      </div>
+      <div class="feedback" id="feedback-q6"></div>
+      <button class="next-btn" id="next-q6" onclick="showQ7Block()">Next Question ➜</button>
+    </div>
+
+    <div id="block-q7" style="display:none">
+      <div class="nar-player" id="player-q7s">
+        <button class="nar-btn" id="btn-q7s" onclick="togglePlayer('q7s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q7s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q7s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q7s">
+        The second part of the signal sequence: <strong>7 groups of 6 stones</strong> need to activate in the next pulse. Marina writes the calculation quickly.
+      </div>
+      <div id="lock-q7" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q7">
+        <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Multiplication × 6 · Year 4</span></div>
+        <span class="quiz-icon">🐋</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 7 — Seven Times Six</div>
+        <div class="question">What is <strong>7 × 6</strong>?</div>
+        <img src="images/ocean/issue004/q7-lattice-signal.png" alt="7 groups of 6 lattice stones" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q7')">35</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">40</button>
+          <button class="opt-btn" onclick="answer(this,true,'q7')">42</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">48</button>
+        </div>
+        <div class="feedback" id="feedback-q7"></div>
+        <button class="next-btn" id="next-q7" onclick="showQ8Block()">Next Question ➜</button>
+      </div>
+    </div>
+
+    <div id="block-q8" style="display:none">
+      <div class="nar-player" id="player-q8s">
+        <button class="nar-btn" id="btn-q8s" onclick="togglePlayer('q8s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q8s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q8s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q8s">
+        The third part of the signal: <strong>4 groups of 8 stones</strong>. This is the part that matches the Whale's strongest pulse. Marina checks the calculation twice.
+      </div>
+      <div id="lock-q8" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q8">
+        <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Multiplication × 8 · Year 4</span></div>
+        <span class="quiz-icon">🐋</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 8 — Four Times Eight</div>
+        <div class="question">What is <strong>4 × 8</strong>?</div>
+        <img src="images/ocean/issue004/q8-lattice-signal.png" alt="4 groups of 8 lattice stones" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q8')">28</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">30</button>
+          <button class="opt-btn" onclick="answer(this,true,'q8')">32</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">36</button>
+        </div>
+        <div class="feedback" id="feedback-q8"></div>
+        <button class="next-btn" id="next-q8" onclick="nextChapter(5)">Final Chapter ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHAPTER 5 ===== -->
+  <div class="chapter" id="chapter-5">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🎉 Chapter 5 — The Lattice Lights Up</div>
+      <h2>The Hum Softened. The Light Came Back.</h2>
+    </div>
+    <img class="chapter-img" src="images/ocean/issue004/ch5-lattice-lighting.png" alt="Lattice lighting up across the ocean floor" />
+    <div class="nar-player" id="player-ch5">
+      <button class="nar-btn" id="btn-ch5" onclick="togglePlayer('ch5')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch5">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch5"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch5">
+      Flick went. Not fast, not reckless, but with a purpose Marina had never seen in the little manta ray before. Up through the dark water, carrying the calculated signal, wing-tips burning cyan brighter than Marina had ever seen them.<br><br>
+      The Lattice stones began to light up. One section, then the next, then the next, spreading out across the ocean floor in the exact pattern Marina had calculated. And as the Lattice came back to life, its light reached down into the trench below.<br><br>
+      The Whale went still. Its bioelectric pulse slowed. Marina watched its great eye move across the newly glowing Lattice field, reading the pattern Flick had carried up. Then the Whale's spots changed colour. Warmer. Softer. And the deep rhythmic hum faded to silence.
+    </div>
+    <div id="lock-q9" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
+    <div class="quiz-box" id="quiz-q9">
+      <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Multiplication × 6 · Year 4</span></div>
+      <span class="quiz-icon">🐋</span>
+      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 9 — The Lattice Ripple</div>
+      <div class="question">The Lattice reactivation ripple spreads through <strong>6 groups of 6 stones</strong> at a time.<br><br>What is <strong>6 × 6</strong>?</div>
+      <img src="images/ocean/issue004/q9-lattice-signal.png" alt="6 groups of 6 lattice stones" class="question-img" />
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q9')">30</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">32</button>
+        <button class="opt-btn" onclick="answer(this,false,'q9')">40</button>
+        <button class="opt-btn" onclick="answer(this,true,'q9')">36</button>
+      </div>
+      <div class="feedback" id="feedback-q9"></div>
+      <button class="next-btn" id="next-q9" onclick="showQ10Block()">Boss Challenge ➜</button>
+    </div>
+
+    <div id="block-q10" style="display:none">
+      <div class="nar-player" id="player-q10s">
+        <button class="nar-btn" id="btn-q10s" onclick="togglePlayer('q10s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q10s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q10s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q10s">
+        The final pulse of the Whale's signature, the one that signals it is leaving peacefully: <strong>8 groups of 7 spots</strong>. Marina reads it, and smiles.
+      </div>
+      <div id="lock-q10" class="quiz-lock">🔒 Listen to unlock the Boss Challenge!</div>
+      <div class="quiz-box" id="quiz-q10">
+        <div class="quiz-meta"><span class="difficulty diff-boss">👑 Boss Challenge</span><span class="acara-tag">Multiplication × 7 · Year 4</span></div>
+        <span class="quiz-icon">🌊</span>
+        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 10 — BOSS: The Farewell</div>
+        <div class="question">The Whale's farewell pattern: <strong>8 groups of 7 spots</strong>.<br><br>What is <strong>8 × 7</strong>?</div>
+        <img src="images/ocean/issue004/q10-whale-farewell.png" alt="8 groups of 7 whale spots as the Whale departs" class="question-img" />
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q10')">48</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">54</button>
+          <button class="opt-btn" onclick="answer(this,true,'q10')">56</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">63</button>
+        </div>
+        <div class="feedback" id="feedback-q10"></div>
+        <button class="next-btn" id="next-q10" onclick="showFinale()">🌊 The Celebration →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINALE (replaces cliffhanger for Issue 4) -->
+  <div id="cliffhanger-screen" style="display:none; text-align:center; padding:40px 24px; animation:fadeIn 0.5s ease;">
+    <img src="images/ocean/issue004/finale-luminos-celebration.png" style="width:100%;border-radius:16px;margin-bottom:24px;border:3px solid rgba(6,182,212,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.6);" alt="Luminos celebration with Coralfolk cheering and Elder Luma handing Marina the signal stone" />
+    <div class="nar-player" id="player-cf" style="text-align:left;margin-bottom:20px;">
+      <button class="nar-btn" id="btn-cf" onclick="togglePlayer('cf')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-cf">Press ▶ to hear the ending</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-cf"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-cf" style="text-align:left;">
+      When Marina and Flick surfaced back into Luminos, every Lattice stone in the city was glowing at full brightness. The Coralfolk lined the streets, hundreds of them, their shells reflecting amber and teal light in every direction. They did not cheer the way humans cheer. They communicated through the Lattice, rippling bioluminescent patterns from stone to stone, from city to city across the whole of the Luminous Deep. A celebration that could be felt for a thousand tide-lengths in every direction.<br><br>
+      Elder Luma was waiting at the entrance. He held something in one small three-fingered hand. A single signal stone, warm amber, glowing steadily.<br><br>
+      <em>"This stone,"</em> he said, <em>"is tuned to the Lattice of Luminos. When you need us, hold it and send the pattern. We will know it is you. We will know you understand the Ripple."</em><br><br>
+      Marina took the stone carefully. Flick pressed close against her side, antenna fins up, wing-tips pulsing in the steadiest, most contented pattern Marina had ever seen.<br><br>
+      <em>"Thank you, Elder Luma,"</em> she said. <em>"For trusting me."</em><br><br>
+      Elder Luma turned and walked back into the city, staff tapping on the coral floor. Somewhere, far below, the Whale continued its journey into deeper water. Its hum faded to nothing. And the Lattice glowed on, steady and true.
+    </div>
+    <button onclick="showWin()" style="background:linear-gradient(135deg,#0891b2,#06b6d4);color:white;font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;padding:16px 40px;border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(6,182,212,0.4);">🌊 See Your Results →</button>
+  </div>
+
+  <!-- WIN SCREEN -->
+  <div id="win-screen">
+    <span class="trophy">🌊</span>
+    <h2>ARC COMPLETE!</h2>
+    <div class="win-score" id="win-score">You scored 10 / 10!</div>
+    <div class="win-stars" id="win-stars">⭐⭐⭐</div>
+    <p>You helped Marina calculate the Whale's pulse pattern and saved the Lattice. The Luminous Deep is at peace. <strong>And you mastered multiplication from groups of all the way through to times six, seven, and eight.</strong></p>
+    <div class="win-summary">
+      <h3>What You Mastered This Arc 🧠</h3>
+      <ul>
+        <li>✅ <strong>Multiplication as equal groups</strong> — groups of the same size (Issue 1)</li>
+        <li>✅ <strong>Skip counting as multiplication</strong> — × 2, × 5, × 10 (Issue 2)</li>
+        <li>✅ <strong>Arrays and the Mirror Truth</strong> — rows × columns, commutativity (Issue 3)</li>
+        <li>✅ <strong>Larger multiplication</strong> — × 6, × 7, × 8 to solve a real problem (Issue 4)</li>
+      </ul>
+    </div>
+    <p style="font-size:14px;color:#06b6d4;margin-bottom:16px;">The Luminous Deep will remember you. And Elder Luma's signal stone glows on your shelf. 🌊</p>
+    <a href="index.html" class="next-issue-btn">🌊 Back to Math Blast</a>
+    <button class="replay-btn" onclick="location.reload()">🔄 Play Again</button>
+  </div>
+
+</div>
+<div id="ctrl-bar">
+  <button class="ctrl-btn" id="mute-ctrl" onclick="toggleMute()">🔊 Sound On</button>
+  <button class="ctrl-btn" onclick="replayCurrent()">🔁 Replay</button>
+</div>
+
+<script>
+const bf=document.getElementById('bubblefield');
+for(let i=0;i<28;i++){
+  const b=document.createElement('div');b.className='bubble';
+  const sz=4+Math.random()*14;
+  b.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;bottom:${Math.random()*20}%;animation-delay:${Math.random()*10}s;animation-duration:${8+Math.random()*8}s;`;
+  bf.appendChild(b);
+}
+const BASE='audio/ocean/issue004/';
+let muted=false,currentAudio=null,correctVariant=0,activePlayerId=null;
+const playerConfigs={};
+const triedWrong=new Set();
+
+function stopAll(){if(currentAudio){currentAudio.pause();currentAudio=null;}document.querySelectorAll('.nar-btn').forEach(b=>{if(b.textContent!=='✓')b.textContent='▶';});}
+function playFile(file,onEnd){if(muted){if(onEnd)setTimeout(onEnd,100);return null;}if(currentAudio){currentAudio.pause();currentAudio=null;}const a=new Audio(BASE+file);a.volume=1.0;currentAudio=a;a.play().catch(()=>{currentAudio=null;if(onEnd)onEnd();});a.onended=()=>{currentAudio=null;if(onEnd)onEnd();};a.onerror=()=>{currentAudio=null;if(onEnd)onEnd();};return a;}
+function setupPlayer(id,files,labels,storyId,lockId,onDone,unlockAtIndex){playerConfigs[id]={files,labels,storyId,lockId,unlockAtIndex:unlockAtIndex??files.length,active:false};}
+function togglePlayer(id){if(activePlayerId===id&&currentAudio&&!currentAudio.paused){currentAudio.pause();currentAudio=null;document.getElementById('btn-'+id).textContent='▶';document.getElementById('status-'+id).textContent='Paused — press ▶ to resume';activePlayerId=null;return;}stopAll();activePlayerId=id;runPlayer(id);}
+function runPlayer(id){const cfg=playerConfigs[id];if(!cfg)return;cfg.active=true;const btn=document.getElementById('btn-'+id);const statusEl=document.getElementById('status-'+id);const barFill=document.getElementById('bar-'+id);const story=cfg.storyId?document.getElementById(cfg.storyId):null;if(btn)btn.textContent='⏸';if(story)story.classList.add('playing');const totalFiles=cfg.files.length;let fileIdx=0;function playNext(){if(fileIdx>=totalFiles){if(btn)btn.textContent='✓';if(statusEl)statusEl.textContent='✅ Done — solve the puzzle!';if(barFill)barFill.style.width='100%';if(story){story.classList.remove('playing');story.classList.add('done');}if(cfg.lockId){const l=document.getElementById(cfg.lockId);if(l)l.style.display='none';}const qId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(qId){const q=document.getElementById(qId);if(q){q.classList.add('show');setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}cfg.active=false;activePlayerId=null;return;}if(fileIdx===cfg.unlockAtIndex){if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(quizId){const quiz=document.getElementById(quizId);if(quiz&&!quiz.classList.contains('show')){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}}const file=cfg.files[fileIdx];const label=cfg.labels&&cfg.labels[fileIdx]?cfg.labels[fileIdx]:'🎙️ Narrating...';if(statusEl)statusEl.textContent=label;const segStart=(fileIdx/totalFiles)*100,segEnd=((fileIdx+1)/totalFiles)*100;fileIdx++;const audio=playFile(file,playNext);if(audio&&barFill){const tick=setInterval(()=>{if(!audio||audio.paused||audio.ended){clearInterval(tick);return;}const pct=audio.duration?(segStart+(audio.currentTime/audio.duration)*(segEnd-segStart)):segStart;barFill.style.width=pct+'%';},200);}}playNext();}
+
+function initPlayers(){
+  setupPlayer('ch1',
+    ['ch1-intro.mp3','ch1-descent.mp3','ch1-glow.mp3','ch1-q1-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','📖 Eric narrating...','🌊 Challenge time!'],
+    'story-ch1','lock-q1',null,3);
+
+  setupPlayer('ch2',
+    ['ch2-reveal.mp3','ch2-whale.mp3','ch2-flick.mp3','ch2-q2-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','📖 Eric narrating...','🌊 Challenge time!'],
+    'story-ch2','lock-q2',null,3);
+
+  setupPlayer('q3s',
+    ['ch2-q3-setup.mp3','ch2-q3-question.mp3'],
+    ['📖 Eric narrating...','🌊 Challenge time!'],
+    'story-q3s','lock-q3',null,1);
+
+  setupPlayer('ch3',
+    ['ch3-intro.mp3','ch3-marina.mp3','ch3-marina-analysis.mp3','ch3-flick.mp3','ch3-q4-question.mp3'],
+    ['📖 Eric narrating...','🐠 Marina speaking...','🐠 Marina speaking...','📖 Eric narrating...','🌊 Challenge time!'],
+    'story-ch3','lock-q4',null,4);
+
+  setupPlayer('q5s',
+    ['ch3-q5-setup.mp3','ch3-q5-question.mp3'],
+    ['📖 Eric narrating...','🌊 Challenge time!'],
+    'story-q5s','lock-q5',null,1);
+
+  setupPlayer('ch4',
+    ['ch4-intro.mp3','ch4-marina-briefing.mp3','ch4-flick-ready.mp3','ch4-q6-question.mp3'],
+    ['📖 Eric narrating...','🐠 Marina speaking...','📖 Eric narrating...','🌊 Challenge time!'],
+    'story-ch4','lock-q6',null,3);
+
+  setupPlayer('q7s',
+    ['ch4-q7-setup.mp3','ch4-q7-question.mp3'],
+    ['📖 Eric narrating...','🌊 Challenge time!'],
+    'story-q7s','lock-q7',null,1);
+
+  setupPlayer('q8s',
+    ['ch4-q8-setup.mp3','ch4-q8-question.mp3'],
+    ['📖 Eric narrating...','🌊 Challenge time!'],
+    'story-q8s','lock-q8',null,1);
+
+  setupPlayer('ch5',
+    ['ch5-intro.mp3','ch5-flick.mp3','ch5-lattice.mp3','ch5-q9-question.mp3'],
+    ['📖 Eric narrating...','📖 Eric narrating...','📖 Eric narrating...','🌊 Challenge time!'],
+    'story-ch5','lock-q9',null,3);
+
+  setupPlayer('q10s',
+    ['ch5-q10-setup.mp3','ch5-q10-question.mp3'],
+    ['📖 Eric narrating...','🌊 Boss Challenge!'],
+    'story-q10s','lock-q10',null,1);
+
+  setupPlayer('cf',
+    ['ch5-finale-narrate.mp3','ch5-finale-luma.mp3','ch5-finale-narrate2.mp3','ch5-finale-marina.mp3','ch5-finale-outro.mp3'],
+    ['📖 Eric narrating...','👴 Elder Luma speaking...','📖 Eric narrating...','🐠 Marina speaking...','📖 Eric narrating...'],
+    'story-cf',null,null,0);
+}
+
+function showQ3Block(){const b=document.getElementById('block-q3');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q3s'),400);}
+function showQ5Block(){const b=document.getElementById('block-q5');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q5s'),400);}
+function showQ7Block(){const b=document.getElementById('block-q7');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q7s'),400);}
+function showQ8Block(){const b=document.getElementById('block-q8');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q8s'),400);}
+function showQ10Block(){const b=document.getElementById('block-q10');b.style.display='block';setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);setTimeout(()=>togglePlayer('q10s'),400);}
+
+let score=0,questionsAnswered=0;
+const totalQ=10;
+const correctMsg={
+  q1:'🌊 Yes! 3 × 6 = 18. Three rows of six glowing spots. Eighteen in that first cluster!',
+  q2:'🐋 Correct! 5 × 6 = 30. Five rows of six, that is thirty spots in this section.',
+  q3:'🐋 Right! 4 × 7 = 28. Four rows of seven spots on the Whale\'s left flank.',
+  q4:'🐋 Yes! 6 × 7 = 42. Six rows of seven, that is forty-two spots in the central cluster.',
+  q5:'🐋 Correct! 3 × 8 = 24. Three rows of eight, twenty-four spots in the distress section.',
+  q6:'🌊 Yes! 5 × 8 = 40. Forty stones need to pulse at once in the first signal step.',
+  q7:'🌊 Right! 7 × 6 = 42. Forty-two stones in the second part of the signal.',
+  q8:'🌊 Correct! 4 × 8 = 32. Thirty-two stones, the heart of the Whale\'s own pulse pattern.',
+  q9:'🌊 Yes! 6 × 6 = 36. Thirty-six stones lighting up in each ripple as the Lattice wakes up.',
+  q10:'🌊 ARC COMPLETE! 8 × 7 = 56. Fifty-six spots in the Whale\'s farewell pattern. The Lattice is restored!'
+};
+const wrongMsg={
+  q1:'❌ Not quite! 3 × 6. Count in sixes: 6, 12, 18. Three jumps of 6 gets you to 18!',
+  q2:'❌ Try again! 5 × 6. Count in sixes: 6, 12, 18, 24, 30. Five jumps of 6 reaches 30!',
+  q3:'❌ Not quite! 4 × 7. Count in sevens: 7, 14, 21, 28. Four jumps of 7 gets you to 28!',
+  q4:'❌ Try again! 6 × 7. Count in sevens: 7, 14, 21, 28, 35, 42. Six jumps of 7 reaches 42!',
+  q5:'❌ Not quite! 3 × 8. Count in eights: 8, 16, 24. Three jumps of 8 gets you to 24!',
+  q6:'❌ Try again! 5 × 8. Count in eights: 8, 16, 24, 32, 40. Five jumps of 8 reaches 40!',
+  q7:'❌ Not quite! 7 × 6. Count in sixes: 6, 12, 18, 24, 30, 36, 42. Seven jumps of 6 reaches 42!',
+  q8:'❌ Try again! 4 × 8. Count in eights: 8, 16, 24, 32. Four jumps of 8 gets you to 32!',
+  q9:'❌ Not quite! 6 × 6. Count in sixes: 6, 12, 18, 24, 30, 36. Six jumps of 6 reaches 36!',
+  q10:'❌ Try again! 8 × 7. Count in sevens: 7, 14, 21, 28, 35, 42, 49, 56. Eight jumps of 7 reaches 56!'
+};
+const answerAudio={q1:'ch1-q1-answer.mp3',q2:'ch2-q2-answer.mp3',q3:'ch2-q3-answer.mp3',q4:'ch3-q4-answer.mp3',q5:'ch3-q5-answer.mp3',q6:'ch4-q6-answer.mp3',q7:'ch4-q7-answer.mp3',q8:'ch4-q8-answer.mp3',q9:'ch5-q9-answer.mp3',q10:'ch5-q10-answer.mp3'};
+
+function answer(btn,correct,qId){
+  const box=btn.closest('.quiz-box');
+  box.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedback-'+qId);
+  const next=document.getElementById('next-'+qId);
+  if(correct){
+    btn.classList.add('correct');
+    if(!triedWrong.has(qId))score++;
+    questionsAnswered++;
+    fb.className='feedback show good';fb.innerHTML=correctMsg[qId];
+    updateProgress();next.classList.add('show');
+    const qNum=parseInt(qId.replace('q',''));
+    let celebFile;
+    if(qNum===1)celebFile='feedback-correct-1.mp3';
+    else{let v=['feedback-correct-2.mp3','feedback-correct-3.mp3','feedback-correct-4.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];celebFile=v[correctVariant%v.length];correctVariant++;}
+    playFile(celebFile,answerAudio[qId]?()=>playFile(answerAudio[qId],null):null);
+  } else {
+    triedWrong.add(qId);btn.classList.add('wrong');fb.className='feedback show bad';fb.innerHTML=wrongMsg[qId];stopAll();
+    const wrongFile=['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)];
+    const wrongAudio=playFile(wrongFile,null);
+    setTimeout(()=>{box.querySelectorAll('.opt-btn').forEach(b=>{if(!b.classList.contains('correct')){b.disabled=false;b.classList.remove('wrong');}});fb.className='feedback';},wrongAudio?2800:1200);
+  }
+}
+function updateProgress(){document.getElementById('progress-fill').style.width=((questionsAnswered/totalQ)*100)+'%';document.getElementById('progress-score').textContent='⭐ '+score+' / '+totalQ;}
+function shuffleOptions(){document.querySelectorAll('.quiz-box').forEach(box=>{const opts=box.querySelector('.options');if(!opts)return;const btns=[...opts.children];for(let i=btns.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));opts.appendChild(btns[j]);btns.splice(j,1);}});}
+
+function startGame(){document.getElementById('title-screen').style.display='none';document.getElementById('progress-wrap').style.display='block';initPlayers();shuffleOptions();showChapter(1);}
+let currentChapter=0;
+function showChapter(n){stopAll();document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));const ch=document.getElementById('chapter-'+n);if(!ch)return;ch.classList.add('active');currentChapter=n;window.scrollTo({top:0,behavior:'smooth'});const labels=['','Chapter 1 — The Deep Trench 🌊','Chapter 2 — The Reveal 🐋','Chapter 3 — The Pattern 🔬','Chapter 4 — The Signal ⚡','Chapter 5 — The Lattice Lights Up 🎉'];document.getElementById('progress-label').textContent=labels[n]||'';const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};if(playerMap[n])setTimeout(()=>togglePlayer(playerMap[n]),700);}
+function nextChapter(n){showChapter(n);}
+function showFinale(){stopAll();document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));document.getElementById('progress-wrap').style.display='none';const cf=document.getElementById('cliffhanger-screen');cf.style.display='block';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>togglePlayer('cf'),600);}
+function showCliffhanger(){showFinale();}
+function showWin(){stopAll();document.getElementById('cliffhanger-screen').style.display='none';const win=document.getElementById('win-screen');win.style.display='block';document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+' on the first try!';document.getElementById('win-stars').textContent=score===10?'⭐⭐⭐':score>=7?'⭐⭐':score>=4?'⭐':'';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>playFile('win.mp3',null),500);}
+function toggleMute(){muted=!muted;const ctrl=document.getElementById('mute-ctrl');ctrl.textContent=muted?'🔇 Muted':'🔊 Sound On';ctrl.classList.toggle('muted',muted);if(muted)stopAll();}
+function replayCurrent(){const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};const pid=playerMap[currentChapter];if(!pid)return;stopAll();const cfg=playerConfigs[pid];if(cfg)cfg.active=false;const story=cfg&&cfg.storyId?document.getElementById(cfg.storyId):null;if(story)story.classList.remove('playing','done');const barFill=document.getElementById('bar-'+pid);if(barFill)barFill.style.width='0%';const statusEl=document.getElementById('status-'+pid);if(statusEl)statusEl.textContent='Press ▶ to hear the story';const btn=document.getElementById('btn-'+pid);if(btn)btn.textContent='▶';setTimeout(()=>togglePlayer(pid),300);}
+</script>
+</body>
+</html>

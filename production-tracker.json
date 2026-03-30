@@ -1,0 +1,421 @@
+{
+  "meta": {
+    "lastUpdated": "2026-03-30",
+    "notes": "Time in minutes. Costs in AUD. Retrospective estimates marked with 'estimated: true'."
+  },
+  "pricing": {
+    "singleArc": 12.99,
+    "twoArcBundle": 19.99,
+    "founderPass": 44.99,
+    "currency": "AUD"
+  },
+  "apiRates": {
+    "openai_image_gpt1_standard": 0.04,
+    "openai_image_gpt1_hd": 0.08,
+    "elevenlabs_starter_monthly": 7.99,
+    "elevenlabs_chars_per_month": 30000,
+    "claude_input_per_million": 3.0,
+    "claude_output_per_million": 15.0,
+    "claude_model": "claude-sonnet-4-6",
+    "notes": "OpenAI + Claude rates in USD. ElevenLabs Starter flat rate. Amortise EL cost across issues produced that month. Claude estimate: ~40k input tokens + ~8k output tokens per issue session = ~$0.24 USD per issue."
+  },
+  "arcs": [
+    {
+      "id": "space",
+      "name": "Space \u2014 Fractions",
+      "subtitle": "The Galactic Fuel Crisis",
+      "status": "complete",
+      "issueCount": 7,
+      "type": "paid",
+      "pricePoint": "singleArc",
+      "issues": [
+        {
+          "id": "space-001",
+          "title": "The Fuel Depot",
+          "status": "approved",
+          "estimated": true,
+          "time": {
+            "writing": 60,
+            "imageGen": 45,
+            "audioGen": 30,
+            "htmlBuild": 90,
+            "review": 45,
+            "total": 270
+          },
+          "costs": {
+            "images": 0.52,
+            "audio": 1.2,
+            "notes": "~13 images. EL amortised.",
+            "claude": 0.24
+          }
+        },
+        {
+          "id": "space-002",
+          "title": "The Phantom's Trail",
+          "status": "approved",
+          "estimated": true,
+          "time": {
+            "writing": 50,
+            "imageGen": 40,
+            "audioGen": 25,
+            "htmlBuild": 75,
+            "review": 40,
+            "total": 230
+          },
+          "costs": {
+            "images": 0.44,
+            "audio": 1.1,
+            "notes": "~11 images.",
+            "claude": 0.24
+          }
+        },
+        {
+          "id": "space-003",
+          "title": "Equivalent Paths",
+          "status": "approved",
+          "estimated": true,
+          "time": {
+            "writing": 50,
+            "imageGen": 40,
+            "audioGen": 25,
+            "htmlBuild": 70,
+            "review": 35,
+            "total": 220
+          },
+          "costs": {
+            "images": 0.4,
+            "audio": 1.1,
+            "notes": "~10 images.",
+            "claude": 0.24
+          }
+        },
+        {
+          "id": "space-004",
+          "title": "The Fraction Market",
+          "status": "approved",
+          "estimated": true,
+          "time": {
+            "writing": 45,
+            "imageGen": 40,
+            "audioGen": 25,
+            "htmlBuild": 65,
+            "review": 30,
+            "total": 205
+          },
+          "costs": {
+            "images": 0.4,
+            "audio": 1.0,
+            "notes": "~10 images.",
+            "claude": 0.24
+          }
+        },
+        {
+          "id": "space-005",
+          "title": "Who Was Robbed Most?",
+          "status": "approved",
+          "estimated": true,
+          "time": {
+            "writing": 45,
+            "imageGen": 35,
+            "audioGen": 25,
+            "htmlBuild": 65,
+            "review": 30,
+            "total": 200
+          },
+          "costs": {
+            "images": 0.36,
+            "audio": 1.0,
+            "notes": "~9 images.",
+            "claude": 0.24
+          }
+        },
+        {
+          "id": "space-006",
+          "title": "The Black Hole Heist",
+          "status": "approved",
+          "estimated": true,
+          "time": {
+            "writing": 45,
+            "imageGen": 35,
+            "audioGen": 25,
+            "htmlBuild": 60,
+            "review": 30,
+            "total": 195
+          },
+          "costs": {
+            "images": 0.36,
+            "audio": 1.0,
+            "notes": "~9 images.",
+            "claude": 0.24
+          }
+        },
+        {
+          "id": "space-007",
+          "title": "The Phantom's Logic",
+          "status": "approved",
+          "estimated": true,
+          "time": {
+            "writing": 50,
+            "imageGen": 40,
+            "audioGen": 30,
+            "htmlBuild": 70,
+            "review": 35,
+            "total": 225
+          },
+          "costs": {
+            "images": 0.44,
+            "audio": 1.2,
+            "notes": "~11 images. Final issue \u2014 extra polish.",
+            "claude": 0.24
+          }
+        }
+      ]
+    },
+    {
+      "id": "jungle",
+      "name": "Jungle \u2014 Division",
+      "subtitle": "The Vanishing Village",
+      "status": "complete",
+      "issueCount": 7,
+      "type": "paid",
+      "pricePoint": "singleArc",
+      "issues": [
+        {
+          "id": "jungle-001",
+          "title": "Welcome to the Canopy",
+          "status": "approved",
+          "estimated": true,
+          "time": {
+            "writing": 55,
+            "imageGen": 40,
+            "audioGen": 25,
+            "htmlBuild": 80,
+            "review": 30,
+            "total": 230
+          },
+          "costs": {
+            "images": 0.44,
+            "audio": 1.1,
+            "notes": "~11 images. New cast setup.",
+            "claude": 0.24
+          }
+        },
+        {
+          "id": "jungle-002",
+          "title": "The Missing Keeper",
+          "status": "approved",
+          "estimated": true,
+          "time": {
+            "writing": 50,
+            "imageGen": 35,
+            "audioGen": 25,
+            "htmlBuild": 70,
+            "review": 30,
+            "total": 210
+          },
+          "costs": {
+            "images": 0.4,
+            "audio": 1.0,
+            "notes": "~10 images.",
+            "claude": 0.24
+          }
+        },
+        {
+          "id": "jungle-003",
+          "title": "Quotitive Quest",
+          "status": "approved",
+          "estimated": true,
+          "time": {
+            "writing": 50,
+            "imageGen": 35,
+            "audioGen": 25,
+            "htmlBuild": 70,
+            "review": 30,
+            "total": 210
+          },
+          "costs": {
+            "images": 0.4,
+            "audio": 1.0,
+            "notes": "~10 images.",
+            "claude": 0.24
+          }
+        },
+        {
+          "id": "jungle-004",
+          "title": "Remainders in the Rain",
+          "status": "approved",
+          "estimated": false,
+          "time": {
+            "writing": 45,
+            "imageGen": 35,
+            "audioGen": 25,
+            "htmlBuild": 65,
+            "review": 25,
+            "total": 195
+          },
+          "costs": {
+            "images": 0.4,
+            "audio": 1.0,
+            "notes": "~10 images. Process improvements applied.",
+            "claude": 0.24
+          }
+        },
+        {
+          "id": "jungle-005",
+          "title": "Tangle's Trail",
+          "status": "approved",
+          "estimated": false,
+          "time": {
+            "writing": 40,
+            "imageGen": 30,
+            "audioGen": 20,
+            "htmlBuild": 60,
+            "review": 20,
+            "total": 170
+          },
+          "costs": {
+            "images": 0.36,
+            "audio": 0.9,
+            "notes": "~9 images. Parallel pipeline used.",
+            "claude": 0.24
+          }
+        },
+        {
+          "id": "jungle-006",
+          "title": "The Vine Web",
+          "status": "approved",
+          "estimated": false,
+          "time": {
+            "writing": 40,
+            "imageGen": 30,
+            "audioGen": 20,
+            "htmlBuild": 55,
+            "review": 20,
+            "total": 165
+          },
+          "costs": {
+            "images": 0.36,
+            "audio": 0.9,
+            "notes": "~9 images.",
+            "claude": 0.24
+          }
+        },
+        {
+          "id": "jungle-007",
+          "title": "Teaching Tangle",
+          "status": "approved",
+          "estimated": false,
+          "time": {
+            "writing": 40,
+            "imageGen": 30,
+            "audioGen": 20,
+            "htmlBuild": 55,
+            "review": 15,
+            "total": 160
+          },
+          "costs": {
+            "images": 0.32,
+            "audio": 0.9,
+            "notes": "~8 images. Only 2 review fixes \u2014 best yet.",
+            "claude": 0.24
+          }
+        }
+      ]
+    },
+    {
+      "id": "ocean",
+      "name": "Ocean \u2014 Multiplication",
+      "subtitle": "The Sunken Signal",
+      "status": "planned",
+      "issueCount": 4,
+      "type": "referral",
+      "pricePoint": "free",
+      "issues": [
+        {
+          "id": "ocean-001",
+          "title": "Into the Deep",
+          "status": "todo",
+          "estimated": false,
+          "time": {
+            "writing": null,
+            "imageGen": null,
+            "audioGen": null,
+            "htmlBuild": null,
+            "review": null,
+            "total": null
+          },
+          "costs": {
+            "images": null,
+            "audio": null,
+            "notes": "",
+            "claude": null
+          }
+        },
+        {
+          "id": "ocean-002",
+          "title": "The Ripple Pattern",
+          "status": "todo",
+          "estimated": false,
+          "time": {
+            "writing": null,
+            "imageGen": null,
+            "audioGen": null,
+            "htmlBuild": null,
+            "review": null,
+            "total": null
+          },
+          "costs": {
+            "images": null,
+            "audio": null,
+            "notes": "",
+            "claude": null
+          }
+        },
+        {
+          "id": "ocean-003",
+          "title": "Rows and Columns",
+          "status": "todo",
+          "estimated": false,
+          "time": {
+            "writing": null,
+            "imageGen": null,
+            "audioGen": null,
+            "htmlBuild": null,
+            "review": null,
+            "total": null
+          },
+          "costs": {
+            "images": null,
+            "audio": null,
+            "notes": "",
+            "claude": null
+          }
+        },
+        {
+          "id": "ocean-004",
+          "title": "The Great Hum",
+          "status": "todo",
+          "estimated": false,
+          "time": {
+            "writing": null,
+            "imageGen": null,
+            "audioGen": null,
+            "htmlBuild": null,
+            "review": null,
+            "total": null
+          },
+          "costs": {
+            "images": null,
+            "audio": null,
+            "notes": "",
+            "claude": null
+          }
+        }
+      ]
+    }
+  ],
+  "revenue": {
+    "sales": [],
+    "notes": "Add sales entries as { date, arc, tier, qty, revenue } when first sales come in."
+  }
+}
