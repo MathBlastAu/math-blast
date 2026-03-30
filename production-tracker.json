@@ -1,7 +1,7 @@
 {
   "meta": {
     "lastUpdated": "2026-03-30",
-    "notes": "Time in minutes. Costs in AUD. Retrospective estimates marked with 'estimated: true'."
+    "notes": "Time in minutes. Costs in USD. Ocean arc actuals include extended review rounds due to new process learnings."
   },
   "pricing": {
     "singleArc": 12.99,
@@ -326,7 +326,7 @@
       "id": "ocean",
       "name": "Ocean \u2014 Multiplication",
       "subtitle": "The Sunken Signal",
-      "status": "planned",
+      "status": "complete",
       "issueCount": 4,
       "type": "referral",
       "pricePoint": "free",
@@ -334,81 +334,81 @@
         {
           "id": "ocean-001",
           "title": "Into the Deep",
-          "status": "todo",
+          "status": "approved",
           "estimated": false,
           "time": {
-            "writing": null,
-            "imageGen": null,
-            "audioGen": null,
-            "htmlBuild": null,
-            "review": null,
-            "total": null
+            "writing": 45,
+            "imageGen": 120,
+            "audioGen": 60,
+            "htmlBuild": 90,
+            "review": 180,
+            "total": 495
           },
           "costs": {
-            "images": null,
-            "audio": null,
-            "notes": "",
-            "claude": null
+            "images": 1.8,
+            "audio": 1.2,
+            "claude": 0.48,
+            "notes": "~45 images generated (multiple regen rounds). Extended review due to story rewrite and voice fixes."
           }
         },
         {
           "id": "ocean-002",
           "title": "The Ripple Pattern",
-          "status": "todo",
+          "status": "approved",
           "estimated": false,
           "time": {
-            "writing": null,
-            "imageGen": null,
-            "audioGen": null,
-            "htmlBuild": null,
-            "review": null,
-            "total": null
+            "writing": 35,
+            "imageGen": 60,
+            "audioGen": 45,
+            "htmlBuild": 70,
+            "review": 40,
+            "total": 250
           },
           "costs": {
-            "images": null,
-            "audio": null,
-            "notes": "",
-            "claude": null
+            "images": 0.72,
+            "audio": 1.1,
+            "claude": 0.24,
+            "notes": "~18 images. Wren voice fixes, cliffhanger split."
           }
         },
         {
           "id": "ocean-003",
           "title": "Rows and Columns",
-          "status": "todo",
+          "status": "approved",
           "estimated": false,
           "time": {
-            "writing": null,
-            "imageGen": null,
-            "audioGen": null,
-            "htmlBuild": null,
-            "review": null,
-            "total": null
+            "writing": 35,
+            "imageGen": 60,
+            "audioGen": 45,
+            "htmlBuild": 70,
+            "review": 45,
+            "total": 255
           },
           "costs": {
-            "images": null,
-            "audio": null,
-            "notes": "",
-            "claude": null
+            "images": 0.72,
+            "audio": 1.1,
+            "claude": 0.24,
+            "notes": "~19 images. Voice fixes, blast-from-past added, cliffhanger split."
           }
         },
         {
           "id": "ocean-004",
           "title": "The Great Hum",
-          "status": "todo",
+          "status": "approved",
           "estimated": false,
           "time": {
-            "writing": null,
-            "imageGen": null,
-            "audioGen": null,
-            "htmlBuild": null,
-            "review": null,
-            "total": null
+            "writing": 35,
+            "imageGen": 60,
+            "audioGen": 45,
+            "htmlBuild": 70,
+            "review": 35,
+            "total": 245
           },
           "costs": {
-            "images": null,
-            "audio": null,
-            "notes": "",
-            "claude": null
+            "images": 0.72,
+            "audio": 1.1,
+            "claude": 0.24,
+            "notes": "~18 images. Whale spot images regenerated, finale voices split 5 ways."
           }
         }
       ]

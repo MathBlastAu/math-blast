@@ -556,7 +556,7 @@ function runPlayer(id){const cfg=playerConfigs[id];if(!cfg)return;cfg.active=tru
 function initPlayers(){
   setupPlayer('ch1',
     ['ch1-intro.mp3','ch1-outer.mp3','ch1-wren.mp3','ch1-q1-question.mp3'],
-    ['📖 Eric narrating...','📖 Eric narrating...','🦀 Wren speaking...','🌊 Challenge time!'],
+    ['📖 Narrator...','📖 Narrator...','🦀 Wren speaking...','🌊 Challenge time!'],
     'story-ch1','lock-q1',null,3);
 
   setupPlayer('ch2',
@@ -571,7 +571,7 @@ function initPlayers(){
 
   setupPlayer('ch3',
     ['ch3-intro.mp3','ch3-wren.mp3','ch3-marina.mp3','ch3-q4-question.mp3'],
-    ['📖 Eric narrating...','🦀 Wren speaking...','🐠 Marina speaking...','🌊 Challenge time!'],
+    ['📖 Narrator...','🦀 Wren speaking...','📖 Narrator...','🌊 Challenge time!'],
     'story-ch3','lock-q4',null,3);
 
   setupPlayer('q5s',
@@ -619,16 +619,16 @@ function showQ10Block(){const b=document.getElementById('block-q10');b.style.dis
 let score=0,questionsAnswered=0;
 const totalQ=10;
 const correctMsg={
-  q1:'🌊 Yes! Counting by 2s: 2, 4, 6, 8, 10. The pattern goes up by 2 each time!',
-  q2:'🌊 Correct! 5 × 2 = 10. Five jumps of two gets you to ten. Skip counting by 2s five times!',
-  q3:'🌊 Right! Counting by 5s: 5, 10, 15, 20, 25. Each step jumps by five!',
-  q4:'🌊 Yes! 4 × 5 = 20. Four jumps of five: 5, 10, 15, 20. That\'s four groups of five!',
-  q5:'🌊 Correct! Count by 10s: 10, 20, 30, 40, 50. Each jump adds ten!',
-  q6:'💎 Yes! 3 × 10 = 30. Three groups of ten makes thirty stones!',
-  q7:'💎 Right! 6 × 2 = 12. Six groups of two: count in twos six times and you reach twelve!',
-  q8:'💎 Correct! 7 × 5 = 35. Count in fives seven times: 5, 10, 15, 20, 25, 30, 35!',
-  q9:'💎 Yes! 9 × 2 = 18. Nine groups of two. Count in twos: 2, 4, 6, 8, 10, 12, 14, 16, 18!',
-  q10:'🌊 Amazing! 8 × 10 = 80. Eight groups of ten makes eighty stones. Now, what was that shadow?'
+  q1:'🌊 8 and 10! Counting by 2s.',
+  q2:'🌊 5 × 2 = 10!',
+  q3:'🌊 20 and 25! Counting by 5s.',
+  q4:'🌊 4 × 5 = 20!',
+  q5:'🌊 30, 40, 50! Counting by 10s.',
+  q6:'💎 3 × 10 = 30!',
+  q7:'💎 6 × 2 = 12!',
+  q8:'💎 7 × 5 = 35!',
+  q9:'💎 9 × 2 = 18!',
+  q10:'🌊 8 × 10 = 80! Now — what was that shadow?'
 };
 const wrongMsg={
   q1:'❌ Not quite! Counting by 2s means adding 2 each time. After 6, add 2 to get 8. Then add 2 again to get 10.',
