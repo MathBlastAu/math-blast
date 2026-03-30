@@ -606,8 +606,8 @@ function initPlayers(){
     'story-q10s','lock-q10',null,1);
 
   setupPlayer('cf',
-    ['ch5-cf-narrate.mp3','ch5-cf-marina.mp3','ch5-cf-luma.mp3','ch5-cf-outro.mp3'],
-    ['📖 Narrator...','🐠 Marina speaking...','🦀 Elder Luma speaking...','📖 Narrator...'],
+    ['ch5-cf-narrate.mp3','ch5-cf-marina.mp3','ch5-cf-outro.mp3'],
+    ['📖 Narrator...','🐠 Marina speaking...','📖 Narrator...'],
     'story-cf',null,null,0);
 }
 
@@ -679,6 +679,10 @@ function showCliffhanger(){stopAll();document.querySelectorAll('.chapter').forEa
 function showWin(){stopAll();document.getElementById('cliffhanger-screen').style.display='none';const win=document.getElementById('win-screen');win.style.display='block';document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+' on the first try!';document.getElementById('win-stars').textContent=score===10?'⭐⭐⭐':score>=7?'⭐⭐':score>=4?'⭐':'';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>playFile('win.mp3',null),500);}
 function toggleMute(){muted=!muted;const ctrl=document.getElementById('mute-ctrl');ctrl.textContent=muted?'🔇 Muted':'🔊 Sound On';ctrl.classList.toggle('muted',muted);if(muted)stopAll();}
 function replayCurrent(){const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};const pid=playerMap[currentChapter];if(!pid)return;stopAll();const cfg=playerConfigs[pid];if(cfg)cfg.active=false;const story=cfg&&cfg.storyId?document.getElementById(cfg.storyId):null;if(story)story.classList.remove('playing','done');const barFill=document.getElementById('bar-'+pid);if(barFill)barFill.style.width='0%';const statusEl=document.getElementById('status-'+pid);if(statusEl)statusEl.textContent='Press ▶ to hear the story';const btn=document.getElementById('btn-'+pid);if(btn)btn.textContent='▶';setTimeout(()=>togglePlayer(pid),300);}
+</script>
+</body>
+</html>
+yer(pid),300);}
 </script>
 </body>
 </html>
