@@ -556,14 +556,14 @@ function runPlayer(id){const cfg=playerConfigs[id];if(!cfg)return;cfg.active=tru
 
 function initPlayers(){
   setupPlayer('ch1',
-    ['ch1-intro.mp3','ch1-archive.mp3','ch1-luma.mp3','ch1-blast.mp3','ch1-q1-question.mp3'],
-    ['📖 Narrator...','📖 Narrator...','🦀 Elder Luma speaking...','📖 Blast from the Past...','🌊 Challenge time!'],
-    'story-ch1','lock-q1',null,4);
+    ['ch1-intro.mp3','ch1-archive.mp3','ch1-luma.mp3','ch1-marina-stare.mp3','ch1-blast.mp3','ch1-q1-question.mp3'],
+    ['📖 Narrator...','📖 Narrator...','🦀 Elder Luma speaking...','📖 Narrator...','📖 Blast from the Past...','🌊 Challenge time!'],
+    'story-ch1','lock-q1',null,5);
 
   setupPlayer('ch2',
-    ['ch2-narrate.mp3','ch2-marina-explore.mp3','ch2-luma-mirror.mp3','ch2-marina-realise.mp3','ch2-q2-question.mp3'],
-    ['📖 Narrator...','🐠 Marina speaking...','🦀 Elder Luma speaking...','🐠 Marina speaking...','🌊 Challenge time!'],
-    'story-ch2','lock-q2',null,4);
+    ['ch2-narrate.mp3','ch2-luma-mirror.mp3','ch2-marina-realise.mp3','ch2-q2-question.mp3'],
+    ['📖 Narrator...','🦀 Elder Luma speaking...','🐠 Marina speaking...','🌊 Challenge time!'],
+    'story-ch2','lock-q2',null,3);
 
   setupPlayer('q3s',
     ['ch2-q3-setup.mp3','ch2-q3-question.mp3'],
@@ -597,7 +597,7 @@ function initPlayers(){
 
   setupPlayer('ch5',
     ['ch5-intro.mp3','ch5-marina.mp3','ch5-luma.mp3','ch5-q9-question.mp3'],
-    ['📖 Eric narrating...','🐠 Marina speaking...','🦀 Elder Luma speaking...','🌊 Challenge time!'],
+    ['📖 Eric narrating...','🐠 Marina speaking...','📖 Eric narrating...','🌊 Challenge time!'],
     'story-ch5','lock-q9',null,3);
 
   setupPlayer('q10s',
