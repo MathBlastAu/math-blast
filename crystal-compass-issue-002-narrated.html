@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Blast 🧭 — The Crystal Compass · Issue 2: The Forest of Patterns</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background:#050d1a;
+    font-family:'Nunito',Arial,sans-serif;
+    color:#fff;
+    background-image:
+      radial-gradient(ellipse at 50% 0%, rgba(0,180,210,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(120,0,200,0.08) 0%, transparent 50%);
+    min-height:100vh;
+  }
+
+  /* Floating forest particles */
+  .dustfield { position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .dust { position:absolute; border-radius:50%; opacity:0.3; animation:float-dust 8s infinite ease-in-out; }
+  @keyframes float-dust {
+    0%,100% { transform:translateY(0) rotate(0deg); opacity:0.2; }
+    50% { transform:translateY(-30px) rotate(180deg); opacity:0.5; }
+  }
+
+  .wrapper { max-width:680px; margin:0 auto; position:relative; z-index:1; padding-bottom:90px; }
+
+  /* ── TITLE SCREEN ── */
+  .title-screen { text-align:center; padding:48px 24px 36px; }
+  .forest-emoji { font-size:72px; display:block; margin-bottom:16px; animation:pulse-glow 3s ease-in-out infinite; }
+  @keyframes pulse-glow {
+    0%,100% { transform:scale(1); filter:drop-shadow(0 0 8px rgba(0,200,210,0.5)); }
+    50% { transform:scale(1.08); filter:drop-shadow(0 0 20px rgba(0,200,210,0.9)); }
+  }
+  .title-screen h1 { font-size:38px; font-weight:900; line-height:1.1;
+    text-shadow:0 0 24px rgba(0,200,210,0.8); color:#88ffee; }
+  .title-screen h1 span { color:#cc88ff; }
+  .arc-label { font-size:12px; font-weight:900; color:#0090a0; letter-spacing:3px;
+    text-transform:uppercase; margin:10px 0 4px; }
+  .tagline { font-size:16px; color:#60c0c8; margin-bottom:4px; }
+  .meta { font-size:13px; color:#2a5560; margin-bottom:8px; }
+  .narrated-badge { display:inline-block; background:rgba(0,200,210,0.12); border:1px solid #00c8d4;
+    color:#00e5ff; font-size:11px; font-weight:900; padding:4px 14px; border-radius:20px;
+    letter-spacing:2px; text-transform:uppercase; margin-bottom:24px; }
+  .start-btn { display:inline-block;
+    background:linear-gradient(135deg,#008890,#00c8d4);
+    color:#001820; font-size:20px; font-weight:900; padding:18px 48px; border-radius:50px;
+    border:none; cursor:pointer; box-shadow:0 6px 30px rgba(0,180,200,0.5);
+    transition:transform 0.15s; font-family:'Nunito',Arial,sans-serif; }
+  .start-btn:hover { transform:scale(1.05); }
+  .voice-credits { font-size:12px; color:#1a4050; margin-top:16px; line-height:1.6; }
+
+  /* ── PROGRESS ── */
+  .progress-wrap { padding:16px 24px 0; display:none; }
+  .progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .progress-label { font-size:13px; color:#40a0b0; font-weight:700; }
+  .progress-score { font-size:13px; color:#88ffee; font-weight:900; }
+  .progress-bar { background:#050d1a; border-radius:20px; height:14px; overflow:hidden; border:1px solid rgba(0,200,210,0.2); }
+  .progress-fill { background:linear-gradient(90deg,#00a8b8,#cc88ff); height:100%;
+    border-radius:20px; transition:width 0.5s ease; }
+
+  /* ── CHAPTER ── */
+  .chapter { display:none; padding:20px 20px 0; animation:fadeIn 0.4s ease; }
+  .chapter.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .chapter-badge { display:inline-block;
+    background:linear-gradient(135deg,#006870,#00c8d4);
+    color:#001820; font-size:11px; font-weight:900; padding:5px 16px;
+    border-radius:20px; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; }
+  .chapter h2 { font-size:24px; font-weight:900; margin-bottom:16px; line-height:1.3; color:#88ffee; }
+  .chapter-img { width:100%; border-radius:16px; display:block; margin-bottom:20px;
+    border:3px solid rgba(0,200,210,0.4);
+    box-shadow:0 8px 30px rgba(0,0,0,0.6), 0 0 40px rgba(0,200,210,0.1);
+    background:#050d1a; min-height:180px; object-fit:cover; }
+
+  /* ── NARRATION PLAYER ── */
+  .nar-player { display:flex; align-items:center; gap:12px;
+    background:rgba(0,180,200,0.10); border:2px solid rgba(0,180,200,0.30);
+    border-radius:14px; padding:12px 16px; margin-bottom:16px; }
+  .nar-btn { width:44px; height:44px; border-radius:50%; border:none; cursor:pointer;
+    flex-shrink:0; background:linear-gradient(135deg,#006870,#00c8d4);
+    color:#001820; font-size:18px; display:flex; align-items:center;
+    justify-content:center; transition:transform 0.15s; font-weight:900; }
+  .nar-btn:hover { transform:scale(1.1); }
+  .nar-info { flex:1; min-width:0; }
+  .nar-status { font-size:12px; color:#40a8b8; font-weight:700; }
+  .nar-bar { height:4px; background:#050d1a; border-radius:4px; margin-top:5px; overflow:hidden; }
+  .nar-bar-fill { height:100%; background:linear-gradient(90deg,#00c8d4,#cc88ff);
+    border-radius:4px; width:0%; transition:width 0.3s; }
+
+  /* ── STORY TEXT ── */
+  .story-text { background:rgba(255,255,255,0.04); border-left:4px solid #00a8b8;
+    border-radius:0 12px 12px 0; padding:18px 22px; font-size:19px;
+    line-height:2.0; color:#88ccdd; margin-bottom:20px;
+    transition:border-color 0.4s, background 0.4s; }
+  .story-text.playing { border-left-color:#cc88ff; background:rgba(180,0,255,0.05); }
+  .story-text.done { border-left-color:#44dd88; background:rgba(0,180,80,0.04); }
+  .story-text strong { color:#88ffee; }
+  .story-text em { color:#cc88ff; font-style:normal; font-weight:700; }
+  .story-text p { margin-bottom:12px; }
+  .story-text p:last-child { margin-bottom:0; }
+
+  /* ── QUIZ LOCK ── */
+  .quiz-lock { text-align:center; padding:16px 20px;
+    background:rgba(0,180,200,0.06); border:2px dashed rgba(0,180,200,0.25);
+    border-radius:16px; margin-bottom:20px; font-size:14px; color:#2a7080; font-weight:700; }
+
+  /* ── SEQUENCE CARD (replaces pillow diagram) ── */
+  .sequence-card {
+    background:rgba(0,180,200,0.12); border:2px solid rgba(0,200,210,0.35);
+    border-radius:16px; padding:18px 22px; margin:14px 0 18px;
+    text-align:center; font-size:28px; font-weight:900; color:#fff;
+    letter-spacing:4px; font-family:'Nunito',Arial,sans-serif;
+  }
+  .sequence-card .blank { color:#cc88ff; background:rgba(180,100,255,0.2);
+    padding:2px 10px; border-radius:8px; border:2px solid rgba(180,100,255,0.5); }
+
+  /* ── QUIZ BOX ── */
+  .quiz-box { background:rgba(0,180,200,0.08); border:2px solid rgba(0,180,200,0.30);
+    border-radius:16px; padding:22px; margin-bottom:20px; display:none;
+    animation:fadeIn 0.4s ease; }
+  .quiz-box.show { display:block; }
+  .quiz-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .difficulty { display:inline-block; font-size:11px; font-weight:900; padding:3px 10px;
+    border-radius:10px; text-transform:uppercase; letter-spacing:1px; }
+  .diff-warmup { background:rgba(100,200,255,0.2); color:#66ddff; border:1px solid #66ddff; }
+  .diff-easy   { background:rgba(0,220,100,0.2);   color:#00dc64; border:1px solid #00dc64; }
+  .diff-medium { background:rgba(255,200,0,0.2);   color:#ffcc00; border:1px solid #ffcc00; }
+  .diff-hard   { background:rgba(255,80,80,0.2);   color:#ff8888; border:1px solid #ff8888; }
+  .acara-tag { display:inline-block; font-size:10px; font-weight:700; padding:3px 10px;
+    border-radius:10px; background:rgba(255,255,255,0.08); color:#9988cc;
+    border:1px solid rgba(255,255,255,0.12); text-transform:uppercase; letter-spacing:0.5px; }
+  .quiz-icon { font-size:26px; display:block; margin-bottom:6px; }
+  .quiz-label { font-size:12px; font-weight:900; color:#00c8d4; text-transform:uppercase;
+    letter-spacing:2px; margin-bottom:10px; }
+  .question { font-size:20px; font-weight:900; color:#fff; margin-bottom:18px; line-height:1.6; }
+  .options { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .opt-btn { background:rgba(255,255,255,0.07); border:2px solid rgba(0,200,210,0.2);
+    color:#fff; font-family:'Nunito',Arial,sans-serif; font-size:22px; font-weight:700;
+    padding:16px 10px; border-radius:12px; cursor:pointer; transition:all 0.15s; }
+  .opt-btn:hover:not(:disabled) { background:rgba(0,180,200,0.25); border-color:#00c8d4;
+    transform:scale(1.03); }
+  .opt-btn.correct { background:rgba(0,220,100,0.2)!important; border-color:#00dc64!important;
+    color:#00ff88!important; }
+  .opt-btn.wrong   { background:rgba(255,50,50,0.2)!important; border-color:#ff3232!important;
+    color:#ff8888!important; animation:shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .opt-btn.reveal  { background:rgba(0,200,210,0.2)!important; border-color:#00c8d4!important;
+    color:#00e5ff!important; }
+  .feedback { margin-top:16px; padding:14px 18px; border-radius:10px; font-size:15px;
+    font-weight:700; display:none; line-height:1.5; }
+  .feedback.show { display:block; }
+  .feedback.good { background:rgba(0,220,100,0.15); border:2px solid #00dc64; color:#00ff88; }
+  .feedback.bad  { background:rgba(255,50,50,0.15); border:2px solid #ff3232; color:#ff9999; }
+  .next-btn { display:none; width:100%; margin-top:16px;
+    background:linear-gradient(135deg,#006870,#00c8d4); color:#001820;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900;
+    padding:16px; border-radius:50px; border:none; cursor:pointer;
+    box-shadow:0 4px 20px rgba(0,180,200,0.4); transition:transform 0.15s; }
+  .next-btn:hover { transform:scale(1.03); }
+  .next-btn.show { display:block; }
+
+  /* ── WATER RISE EFFECT ── */
+  .water-bg {
+    position:fixed; bottom:0; left:0; right:0; pointer-events:none; z-index:2;
+    opacity:0; transition:opacity 0.5s;
+  }
+  .water-bg.active { opacity:1; }
+  .water-surface {
+    height:60px;
+    background:linear-gradient(180deg, rgba(0,100,200,0) 0%, rgba(0,140,255,0.3) 40%, rgba(0,100,200,0.6) 100%);
+    animation:wave 1.5s ease-in-out infinite;
+    position:relative; overflow:hidden;
+  }
+  .water-surface::before {
+    content:'';
+    position:absolute; top:-10px; left:-50%; width:200%;
+    height:20px;
+    background:rgba(0,160,255,0.4);
+    border-radius:50%;
+    animation:wave-top 2s ease-in-out infinite;
+  }
+  @keyframes wave {
+    0%,100% { transform:translateX(0); }
+    50% { transform:translateX(-10px); }
+  }
+  @keyframes wave-top {
+    0%,100% { transform:translateX(0) scaleY(1); }
+    50% { transform:translateX(30px) scaleY(1.2); }
+  }
+  .water-fill {
+    background:linear-gradient(0deg, rgba(0,80,180,0.7) 0%, rgba(0,120,220,0.4) 100%);
+    transition:height 0.5s linear;
+  }
+
+  /* ── SPEED ROUND ── */
+  #speed-round-screen {
+    display:none; position:relative; overflow:hidden;
+    border-radius:20px; padding:28px 24px;
+    background:linear-gradient(135deg,#000a1a,#001030);
+    border:3px solid #0066ff;
+    box-shadow:0 0 60px rgba(0,100,255,0.5), inset 0 0 40px rgba(0,100,255,0.1);
+    margin:0 20px 20px;
+    animation:pulse-water 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-water {
+    0%,100% { box-shadow:0 0 40px rgba(0,80,220,0.4), inset 0 0 30px rgba(0,80,220,0.08); }
+    50% { box-shadow:0 0 80px rgba(0,140,255,0.7), inset 0 0 50px rgba(0,140,255,0.15); }
+  }
+
+  /* Rising water visual in speed round */
+  .water-level-wrap {
+    position:relative; height:12px; background:rgba(0,50,100,0.5);
+    border-radius:6px; overflow:hidden; margin-bottom:14px;
+    border:1px solid rgba(0,150,255,0.4);
+  }
+  .water-level-fill {
+    position:absolute; bottom:0; left:0; right:0;
+    background:linear-gradient(0deg, #0060d0 0%, #00aaff 50%, rgba(0,180,255,0.6) 100%);
+    height:0%;
+    transition:height 0.5s linear;
+  }
+  .water-level-label { font-size:11px; color:#0088dd; font-weight:700; margin-bottom:4px;
+    display:flex; justify-content:space-between; }
+  .water-icon { font-size:24px; margin-bottom:8px; }
+
+  .speed-header { text-align:center; margin-bottom:16px; }
+  .speed-header h2 { font-size:28px; font-weight:900; color:#00aaff;
+    text-shadow:0 0 20px rgba(0,140,255,0.8); animation:flicker 0.5s ease infinite alternate; }
+  @keyframes flicker { from{opacity:1} to{opacity:0.85} }
+  .speed-subtitle { font-size:14px; color:#6699ff; margin-top:4px; }
+  .speed-q-display { background:rgba(0,0,0,0.4); border-radius:14px; padding:20px;
+    margin-bottom:16px; text-align:center; }
+  .speed-q-num { font-size:11px; font-weight:900; color:#0088dd; letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:8px; }
+  .speed-question { font-size:22px; font-weight:900; color:#fff; line-height:1.5; }
+  .speed-timer-wrap { margin-bottom:12px; }
+  .speed-timer-label { font-size:11px; color:#6699ff; font-weight:700; margin-bottom:5px;
+    display:flex; justify-content:space-between; }
+  .speed-timer-bar { height:10px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; }
+  .speed-timer-fill { height:100%; border-radius:10px; width:100%;
+    background:linear-gradient(90deg,#0044ff,#00aaff);
+    transition:width 0.1s linear; }
+  .speed-options { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .speed-opt { background:rgba(0,80,200,0.15); border:2px solid rgba(0,100,255,0.3);
+    color:#fff; font-family:'Nunito',Arial,sans-serif; font-size:22px; font-weight:900;
+    padding:16px 10px; border-radius:12px; cursor:pointer; transition:all 0.12s; }
+  .speed-opt:hover:not(:disabled) { background:rgba(0,100,255,0.3); border-color:#0088ff; transform:scale(1.04); }
+  .speed-opt.speed-correct { background:rgba(0,220,100,0.25)!important;
+    border-color:#00dc64!important; color:#00ff88!important; animation:speed-pop 0.3s ease; }
+  .speed-opt.speed-wrong { background:rgba(255,50,50,0.25)!important;
+    border-color:#ff3232!important; color:#ff8888!important; animation:shake 0.4s; }
+  .speed-opt.speed-reveal { background:rgba(0,200,210,0.25)!important;
+    border-color:#00c8d4!important; color:#00e5ff!important; }
+  @keyframes speed-pop {
+    0% { transform:scale(1); } 50% { transform:scale(1.12); } 100% { transform:scale(1); }
+  }
+  .speed-flash { position:absolute; top:0; left:0; right:0; bottom:0; border-radius:17px;
+    pointer-events:none; opacity:0; transition:opacity 0.1s; }
+  .speed-flash.green { background:rgba(0,255,100,0.2); }
+  .speed-flash.red   { background:rgba(255,50,0,0.25); }
+  .speed-flash.show  { opacity:1; }
+  #speed-score-screen { display:none; text-align:center; padding:32px 24px;
+    animation:fadeIn 0.4s ease; }
+  .speed-score-icon { font-size:60px; display:block; margin-bottom:12px; }
+  #speed-score-screen h3 { font-size:24px; font-weight:900; color:#88ffee; margin-bottom:8px; }
+  #speed-score-screen p { font-size:16px; color:#60c8d8; margin-bottom:20px; }
+  .continue-btn { background:linear-gradient(135deg,#006870,#00c8d4); color:#001820;
+    font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900;
+    padding:16px 36px; border-radius:50px; border:none; cursor:pointer;
+    box-shadow:0 4px 20px rgba(0,180,200,0.4); transition:transform 0.15s; }
+  .continue-btn:hover { transform:scale(1.04); }
+
+  /* ── CLIFFHANGER ── */
+  #cliffhanger-screen { display:none; text-align:center; padding:40px 24px;
+    animation:fadeIn 0.5s ease; }
+  #cliffhanger-screen .nar-player { text-align:left; }
+
+  /* ── WIN SCREEN ── */
+  #win-screen { display:none; text-align:center; padding:48px 24px 24px;
+    animation:fadeIn 0.5s ease; }
+  .trophy { font-size:80px; display:block; margin-bottom:16px;
+    animation:bounce 0.8s ease infinite alternate; }
+  @keyframes bounce { from{transform:scale(1)} to{transform:scale(1.15)} }
+  #win-screen h2 { font-size:36px; font-weight:900; color:#88ffee; margin-bottom:8px; }
+  .win-score { font-size:22px; font-weight:900; color:#00e5ff; margin-bottom:8px; }
+  .win-speed-score { font-size:18px; font-weight:900; color:#cc88ff; margin-bottom:16px; }
+  .win-stars { font-size:36px; margin-bottom:20px; }
+  #win-screen > p { font-size:17px; color:#608898; line-height:1.75; margin-bottom:20px; }
+  .win-summary { background:rgba(255,255,255,0.04); border-radius:14px;
+    padding:18px 20px; margin-bottom:24px; text-align:left; }
+  .win-summary h3 { font-size:14px; color:#88ffee; font-weight:900; text-transform:uppercase;
+    letter-spacing:1px; margin-bottom:12px; }
+  .win-summary ul { list-style:none; }
+  .win-summary li { font-size:14px; color:#608898; padding:4px 0; }
+  .replay-btn { display:inline-block;
+    background:linear-gradient(135deg,#00c8d4,#cc88ff);
+    color:#001020; font-family:'Nunito',Arial,sans-serif; font-size:18px; font-weight:900;
+    padding:16px 40px; border-radius:50px; border:none; cursor:pointer;
+    margin-bottom:12px; transition:transform 0.15s; }
+  .replay-btn:hover { transform:scale(1.04); }
+  .parent-guide { background:rgba(0,200,210,0.06); border:1px solid rgba(0,200,210,0.2);
+    border-radius:14px; padding:18px 20px; margin:20px 0; text-align:left;
+    font-size:14px; color:#60a0a8; line-height:1.75; }
+  .parent-guide h4 { font-size:14px; font-weight:900; color:#00c8d4;
+    text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; }
+  .win-img { width:100%; border-radius:16px; margin-bottom:24px;
+    border:3px solid rgba(0,200,210,0.5); box-shadow:0 8px 30px rgba(0,200,210,0.3); }
+
+  /* ── CONTROLS ── */
+  #ctrl-bar { position:fixed; top:14px; left:14px; display:flex; gap:8px; z-index:999;
+    background:rgba(0,0,0,0.7); padding:6px 10px; border-radius:24px;
+    border:1px solid rgba(0,200,210,0.2); backdrop-filter:blur(6px); }
+  .ctrl-btn { background:rgba(0,200,210,0.08); border:1px solid rgba(0,200,210,0.2);
+    color:#60c8d8; font-family:'Nunito',sans-serif; font-weight:700; font-size:12px;
+    padding:5px 12px; border-radius:16px; cursor:pointer; }
+  .ctrl-btn:hover { background:rgba(0,200,210,0.2); }
+  .ctrl-btn.muted { background:rgba(255,50,50,0.3); border-color:#ff3232; }
+</style>
+</head>
+<body>
+
+<!-- Forest particles -->
+<div class="dustfield" id="dustfield"></div>
+
+<div class="wrapper">
+
+  <!-- ══ TITLE SCREEN ══ -->
+  <div id="title-screen" class="title-screen">
+    <span class="forest-emoji">🌿</span>
+    <p class="arc-label">The Crystal Compass · Issue 2</p>
+    <h1>THE FOREST<br><span>OF PATTERNS</span></h1>
+    <p class="tagline">Glowing trees, jumping numbers, and a door underwater!</p>
+    <p class="meta">5 chapters · 8 challenges + ⚡ Speed Round · Skip Counting · Year 2</p>
+    <div class="narrated-badge">🎙️ Narrated Edition</div><br>
+    <button class="start-btn" onclick="startGame()">🌿 Enter the Forest</button>
+    <p class="voice-credits">Narrated by Alice · Priya voiced by CC-Priya<br>
+    Isla voiced by CC-Isla · Zoe voiced by CC-Zoe · Amara voiced by CC-Amara</p>
+  </div>
+
+  <!-- ══ PROGRESS BAR ══ -->
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label" id="progress-label">Chapter 1 of 5</div>
+      <div class="progress-score" id="progress-score">🌿 0 / 8</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       CHAPTER 1 — INTO THE FOREST
+  ══════════════════════════════════════════════ -->
+  <div class="chapter" id="chapter-1">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌿 Chapter 1 — Into the Forest</div>
+      <h2>The Trees Are Glowing. The Lights Have a Pattern!</h2>
+    </div>
+    <img class="chapter-img"
+      src="images/crystal-compass/issue-002/ch1-forest-entrance.png"
+      alt="The four girls step into the glowing magical forest" />
+    <div class="nar-player" id="player-ch1">
+      <button class="nar-btn" id="btn-ch1" onclick="togglePlayer('ch1')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch1">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch1"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch1">
+      <p>The girls stepped through the door. The library disappeared behind them. All around them, glowing trees and floating lights filled the air.</p>
+      <p><em>"It is beautiful,"</em> whispered Amara.</p>
+      <p>Priya stared at the lights. Something about them felt familiar. The compass hummed softly in Zoe's hand. It was pointing deeper into the forest.</p>
+    </div>
+    <div id="lock-q1" class="quiz-lock">🔒 Listen to the story first to unlock your puzzle!</div>
+    <div class="quiz-box" id="quiz-q1">
+      <div class="quiz-meta">
+        <span class="difficulty diff-warmup">🌟 Warm-Up</span>
+        <span class="acara-tag">Skip Counting · Year 2</span>
+      </div>
+      <span class="quiz-icon">✨</span>
+      <div class="quiz-label">Question 1 — Count by 2s</div>
+      <div class="question">
+        The lights flash in a pattern.<br>
+        <strong>2, 4, 6, 8, ___</strong><br><br>
+        What comes next?
+      </div>
+      <div class="sequence-card">2 · 4 · 6 · 8 · <span class="blank">?</span></div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q1')">9</button>
+        <button class="opt-btn" onclick="answer(this,true,'q1')">10</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">12</button>
+        <button class="opt-btn" onclick="answer(this,false,'q1')">11</button>
+      </div>
+      <div class="feedback" id="feedback-q1"></div>
+      <button class="next-btn" id="next-q1" onclick="nextChapter(2)">Chapter 2 ➜</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       CHAPTER 2 — PRIYA SEES IT
+  ══════════════════════════════════════════════ -->
+  <div class="chapter" id="chapter-2">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">💡 Chapter 2 — Priya Sees It</div>
+      <h2>The Lights Are Counting! Priya Figures It Out!</h2>
+    </div>
+    <img class="chapter-img"
+      src="images/crystal-compass/issue-002/ch2-priya-pattern.png"
+      alt="Priya points excitedly at pulsing pattern lights in the trees" />
+    <div class="nar-player" id="player-ch2">
+      <button class="nar-btn" id="btn-ch2" onclick="togglePlayer('ch2')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch2">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch2"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch2">
+      <p>Priya grabbed Isla's arm. <em>"Stop. Look at the lights."</em></p>
+      <p>They pulsed in groups. Two at a time. Then five at a time.</p>
+      <p><em>"It is a pattern!"</em> Priya said. <em>"They are counting!"</em></p>
+      <p><em>"Counting what?"</em> Isla squinted.</p>
+      <p><em>"I do not know yet,"</em> said Priya. <em>"But if we follow the pattern, maybe we find out."</em></p>
+      <p>She started counting along with the lights. The compass needle twitched. It was responding.</p>
+    </div>
+    <div id="lock-q2" class="quiz-lock">🔒 Listen to the story to unlock this puzzle!</div>
+    <div class="quiz-box" id="quiz-q2">
+      <div class="quiz-meta">
+        <span class="difficulty diff-easy">⭐ Easy</span>
+        <span class="acara-tag">Skip Counting · Year 2</span>
+      </div>
+      <span class="quiz-icon">🔢</span>
+      <div class="quiz-label">Question 2 — Missing Number, 2s</div>
+      <div class="question">
+        The lights flash again.<br>
+        <strong>10, 12, 14, ___, 18</strong><br><br>
+        What is missing?
+      </div>
+      <div class="sequence-card">10 · 12 · 14 · <span class="blank">?</span> · 18</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q2')">15</button>
+        <button class="opt-btn" onclick="answer(this,true,'q2')">16</button>
+        <button class="opt-btn" onclick="answer(this,false,'q2')">17</button>
+        <button class="opt-btn" onclick="answer(this,false,'q2')">13</button>
+      </div>
+      <div class="feedback" id="feedback-q2"></div>
+      <button class="next-btn" id="next-q2" onclick="showQ3Block()">Next Challenge ➜</button>
+    </div>
+
+    <!-- Q3 block -->
+    <div id="block-q3" style="display:none">
+      <div class="nar-player" id="player-q3s">
+        <button class="nar-btn" id="btn-q3s" onclick="togglePlayer('q3s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q3s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q3s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q3s">
+        <p>Now the lights change. They pulse in a new pattern, five at a time.</p>
+      </div>
+      <div id="lock-q3" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q3">
+        <div class="quiz-meta">
+          <span class="difficulty diff-easy">⭐ Easy</span>
+          <span class="acara-tag">Skip Counting · Year 2</span>
+        </div>
+        <span class="quiz-icon">5️⃣</span>
+        <div class="quiz-label">Question 3 — Missing Number, 5s</div>
+        <div class="question">
+          Now counting by fives!<br>
+          <strong>5, 10, 15, ___, 25</strong><br><br>
+          What is missing?
+        </div>
+        <div class="sequence-card">5 · 10 · 15 · <span class="blank">?</span> · 25</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q3')">18</button>
+          <button class="opt-btn" onclick="answer(this,true,'q3')">20</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">22</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">16</button>
+        </div>
+        <div class="feedback" id="feedback-q3"></div>
+        <button class="next-btn" id="next-q3" onclick="showQ4Block()">Next Challenge ➜</button>
+      </div>
+    </div>
+
+    <!-- Q4 block -->
+    <div id="block-q4" style="display:none">
+      <div class="nar-player" id="player-q4s">
+        <button class="nar-btn" id="btn-q4s" onclick="togglePlayer('q4s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q4s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q4s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q4s">
+        <p>Another group of lights begins to pulse. The compass glows brighter. They are on the right track.</p>
+      </div>
+      <div id="lock-q4" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q4">
+        <div class="quiz-meta">
+          <span class="difficulty diff-medium">⭐⭐ Medium</span>
+          <span class="acara-tag">Skip Counting · Year 2</span>
+        </div>
+        <span class="quiz-icon">🔢</span>
+        <div class="quiz-label">Question 4 — Missing in the Middle, 5s</div>
+        <div class="question">
+          The lights count by fives again.<br>
+          <strong>30, 35, ___, 45, 50</strong><br><br>
+          What is missing?
+        </div>
+        <div class="sequence-card">30 · 35 · <span class="blank">?</span> · 45 · 50</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q4')">38</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">42</button>
+          <button class="opt-btn" onclick="answer(this,true,'q4')">40</button>
+          <button class="opt-btn" onclick="answer(this,false,'q4')">36</button>
+        </div>
+        <div class="feedback" id="feedback-q4"></div>
+        <button class="next-btn" id="next-q4" onclick="nextChapter(3)">Chapter 3 ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       CHAPTER 3 — THE RIVER
+  ══════════════════════════════════════════════ -->
+  <div class="chapter" id="chapter-3">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">🌊 Chapter 3 — The River</div>
+      <h2>Step on the Right Stone — the Water Is Glowing Red!</h2>
+    </div>
+    <img class="chapter-img"
+      src="images/crystal-compass/issue-002/ch3-river-stones.png"
+      alt="The girls at the glowing river with numbered stepping stones" />
+    <div class="nar-player" id="player-ch3">
+      <button class="nar-btn" id="btn-ch3" onclick="togglePlayer('ch3')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch3">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch3"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch3">
+      <p>The path ended at a glowing river. Stepping stones crossed to the other side. Each stone had a number on it. But some numbers were missing.</p>
+      <p><em>"We have to step on the right stones,"</em> said Zoe. <em>"In the right order."</em></p>
+      <p><em>"Or what?"</em> asked Isla.</p>
+      <p>The water glowed an ominous red below the wrong stones.</p>
+      <p><em>"Let us not find out,"</em> said Amara.</p>
+    </div>
+    <div id="lock-q5" class="quiz-lock">🔒 Listen to the story to unlock this puzzle!</div>
+    <div class="quiz-box" id="quiz-q5">
+      <div class="quiz-meta">
+        <span class="difficulty diff-easy">⭐ Easy</span>
+        <span class="acara-tag">Skip Counting · Year 2</span>
+      </div>
+      <span class="quiz-icon">🪨</span>
+      <div class="quiz-label">Question 5 — Stepping Stones, 10s</div>
+      <div class="question">
+        The stones count by tens.<br>
+        <strong>10, 20, ___, 40, 50</strong><br><br>
+        Which stone is missing?
+      </div>
+      <div class="sequence-card">10 · 20 · <span class="blank">?</span> · 40 · 50</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q5')">25</button>
+        <button class="opt-btn" onclick="answer(this,true,'q5')">30</button>
+        <button class="opt-btn" onclick="answer(this,false,'q5')">35</button>
+        <button class="opt-btn" onclick="answer(this,false,'q5')">20</button>
+      </div>
+      <div class="feedback" id="feedback-q5"></div>
+      <button class="next-btn" id="next-q5" onclick="showQ6Block()">Next Challenge ➜</button>
+    </div>
+
+    <!-- Q6 block -->
+    <div id="block-q6" style="display:none">
+      <div class="nar-player" id="player-q6s">
+        <button class="nar-btn" id="btn-q6s" onclick="togglePlayer('q6s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q6s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q6s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q6s">
+        <p>They cross the first row safely. A second row of stones stretches ahead. More numbers to figure out.</p>
+      </div>
+      <div id="lock-q6" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q6">
+        <div class="quiz-meta">
+          <span class="difficulty diff-medium">⭐⭐ Medium</span>
+          <span class="acara-tag">Skip Counting · Year 2</span>
+        </div>
+        <span class="quiz-icon">🪨</span>
+        <div class="quiz-label">Question 6 — Stepping Stones, 10s</div>
+        <div class="question">
+          The next row counts by tens too.<br>
+          <strong>40, 50, 60, ___, 80</strong><br><br>
+          Which stone is missing?
+        </div>
+        <div class="sequence-card">40 · 50 · 60 · <span class="blank">?</span> · 80</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q6')">65</button>
+          <button class="opt-btn" onclick="answer(this,false,'q6')">75</button>
+          <button class="opt-btn" onclick="answer(this,true,'q6')">70</button>
+          <button class="opt-btn" onclick="answer(this,false,'q6')">68</button>
+        </div>
+        <div class="feedback" id="feedback-q6"></div>
+        <button class="next-btn" id="next-q6" onclick="showQ7Block()">Next Challenge ➜</button>
+      </div>
+    </div>
+
+    <!-- Q7 block -->
+    <div id="block-q7" style="display:none">
+      <div class="nar-player" id="player-q7s">
+        <button class="nar-btn" id="btn-q7s" onclick="togglePlayer('q7s')">▶</button>
+        <div class="nar-info">
+          <div class="nar-status" id="status-q7s">Press ▶ to continue</div>
+          <div class="nar-bar"><div class="nar-bar-fill" id="bar-q7s"></div></div>
+        </div>
+      </div>
+      <div class="story-text" id="story-q7s">
+        <p>One last row stands between them and the other side. These stones count by twos.</p>
+      </div>
+      <div id="lock-q7" class="quiz-lock">🔒 Listen to unlock!</div>
+      <div class="quiz-box" id="quiz-q7">
+        <div class="quiz-meta">
+          <span class="difficulty diff-medium">⭐⭐ Medium</span>
+          <span class="acara-tag">Skip Counting · Year 2</span>
+        </div>
+        <span class="quiz-icon">🪨</span>
+        <div class="quiz-label">Question 7 — Final Row, 2s</div>
+        <div class="question">
+          The last row counts by twos.<br>
+          <strong>22, 24, 26, ___, 30</strong><br><br>
+          Which stone is missing?
+        </div>
+        <div class="sequence-card">22 · 24 · 26 · <span class="blank">?</span> · 30</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(this,false,'q7')">27</button>
+          <button class="opt-btn" onclick="answer(this,true,'q7')">28</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">29</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">25</button>
+        </div>
+        <div class="feedback" id="feedback-q7"></div>
+        <button class="next-btn" id="next-q7" onclick="nextChapter(4)">Chapter 4 ➜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       CHAPTER 4 — THE PATTERN LOCK (SPEED ROUND)
+  ══════════════════════════════════════════════ -->
+  <div class="chapter" id="chapter-4">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">💧 Chapter 4 — The Pattern Lock</div>
+      <h2>The Water Is Rising — Answer Fast!</h2>
+    </div>
+    <img class="chapter-img"
+      src="images/crystal-compass/issue-002/ch4-door-water.png"
+      alt="Priya frantically traces patterns on the stone door as water rises" />
+    <div class="nar-player" id="player-ch4">
+      <button class="nar-btn" id="btn-ch4" onclick="togglePlayer('ch4')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch4">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch4"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch4">
+      <p>They made it across. The path led to a huge stone door. Carved into it was a row of circles, like a number line. Isla tried to push the door. It did not move.</p>
+      <p>Then, a rumble. The river behind them was rising. Water crept up the bank toward their feet.</p>
+      <p><em>"The door needs patterns!"</em> shouted Priya. <em>"Fast! The river is rising!"</em></p>
+    </div>
+  </div>
+
+  <!-- ══ SPEED ROUND SCREEN ══ -->
+  <div id="speed-round-screen">
+    <div class="speed-flash" id="speed-flash"></div>
+    <div class="speed-header">
+      <div class="water-icon">💧</div>
+      <h2>💧 THE WATER IS RISING!</h2>
+      <p class="speed-subtitle">Solve the patterns fast — 8 seconds each!</p>
+    </div>
+    <div class="water-level-label">
+      <span>Water level</span>
+      <span id="sr-water-pct">0%</span>
+    </div>
+    <div class="water-level-wrap">
+      <div class="water-level-fill" id="sr-water-fill"></div>
+    </div>
+    <div class="speed-q-display">
+      <div class="speed-q-num" id="sr-q-num">Question 1 of 5</div>
+      <div class="speed-question" id="sr-question">Loading...</div>
+    </div>
+    <div class="speed-timer-wrap">
+      <div class="speed-timer-label">
+        <span>Time left</span>
+        <span id="sr-time-left">8s</span>
+      </div>
+      <div class="speed-timer-bar"><div class="speed-timer-fill" id="sr-timer-fill"></div></div>
+    </div>
+    <div class="speed-options" id="sr-options"></div>
+  </div>
+
+  <!-- ══ SPEED ROUND SCORE SCREEN ══ -->
+  <div id="speed-score-screen">
+    <span class="speed-score-icon" id="speed-score-icon">💧</span>
+    <h3 id="speed-score-heading">The door is open!</h3>
+    <p id="speed-score-msg">You answered 0 out of 5 before the water reached you!</p>
+    <button class="continue-btn" onclick="continueAfterSpeed()">Chapter 5 ➜</button>
+  </div>
+
+  <!-- ══ CHAPTER 4 ENDING ══ (shown after speed score) -->
+  <div id="ch4-ending" style="display:none; padding:0 20px 20px;">
+    <div class="nar-player" id="player-ch4end">
+      <button class="nar-btn" id="btn-ch4end" onclick="togglePlayer('ch4end')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch4end">Press ▶ to hear what happened</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch4end"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch4end">
+      <p>The door rumbled and swung open just in time. They tumbled through, laughing and breathless.</p>
+    </div>
+    <button onclick="nextChapter(5)"
+      style="width:100%;background:linear-gradient(135deg,#006870,#00c8d4);color:#001820;
+      font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;padding:16px;
+      border-radius:50px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(0,180,200,0.4);">
+      Chapter 5 ➜
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       CHAPTER 5 — THROUGH THE DOOR
+  ══════════════════════════════════════════════ -->
+  <div class="chapter" id="chapter-5">
+    <div style="padding:20px 0 0">
+      <div class="chapter-badge">⛰️ Chapter 5 — Through the Door</div>
+      <h2>A Glowing Mountain — and Isla Is Already Climbing!</h2>
+    </div>
+    <img class="chapter-img"
+      src="images/crystal-compass/issue-002/ch5-mountain-base.png"
+      alt="The girls at the base of the glowing mountain, Isla already on the first step" />
+    <div class="nar-player" id="player-ch5">
+      <button class="nar-btn" id="btn-ch5" onclick="togglePlayer('ch5')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-ch5">Press ▶ to hear the story</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-ch5"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-ch5">
+      <p>Cool mountain air rushed in. The compass spun and pointed upward. They looked up. The mountain was enormous.</p>
+      <p>Stone steps wound all the way to the top. Each step had a number carved into it, glowing faintly.</p>
+      <p><em>"We have to climb,"</em> said Isla. She was already moving.</p>
+      <p><em>"Of course she is,"</em> said Amara, laughing.</p>
+    </div>
+    <div id="lock-q8" class="quiz-lock">🔒 Listen to the story to unlock this puzzle!</div>
+    <div class="quiz-box" id="quiz-q8">
+      <div class="quiz-meta">
+        <span class="difficulty diff-hard">⭐⭐⭐ Final Challenge</span>
+        <span class="acara-tag">Skip Counting · Year 2</span>
+      </div>
+      <span class="quiz-icon">🏔️</span>
+      <div class="quiz-label">Question 8 — Count the Jumps!</div>
+      <div class="question">
+        Count by 2s.<br>
+        Start at <strong>0</strong>, finish at <strong>20</strong>.<br><br>
+        How many <strong>jumps</strong> is that?
+      </div>
+      <div class="sequence-card">0 · 2 · 4 · 6 · 8 · 10 · 12 · 14 · 16 · 18 · 20</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,false,'q8')">20</button>
+        <button class="opt-btn" onclick="answer(this,true,'q8')">10</button>
+        <button class="opt-btn" onclick="answer(this,false,'q8')">11</button>
+        <button class="opt-btn" onclick="answer(this,false,'q8')">9</button>
+      </div>
+      <div class="feedback" id="feedback-q8"></div>
+      <button class="next-btn" id="next-q8" onclick="showCliffhanger()">🌟 See What Happens Next →</button>
+    </div>
+  </div>
+
+  <!-- ══ CLIFFHANGER ══ -->
+  <div id="cliffhanger-screen">
+    <img src="images/crystal-compass/issue-002/ch5-mountain-base.png"
+         style="width:100%;border-radius:16px;margin-bottom:24px;
+         border:3px solid rgba(0,200,210,0.5);
+         box-shadow:0 8px 30px rgba(0,200,210,0.3);" alt="The girls at the base of the glowing mountain" />
+    <div class="nar-player" id="player-cf">
+      <button class="nar-btn" id="btn-cf" onclick="togglePlayer('cf')">▶</button>
+      <div class="nar-info">
+        <div class="nar-status" id="status-cf">Press ▶ to hear what happens next</div>
+        <div class="nar-bar"><div class="nar-bar-fill" id="bar-cf"></div></div>
+      </div>
+    </div>
+    <div class="story-text" id="story-cf" style="text-align:left;">
+      <p>The door swung shut behind them. The mountain loomed above.</p>
+      <p>Each step glowed with a number. The compass pointed straight up. And Isla was already climbing.</p>
+      <p>To reach the crystal at the top, they would have to count every step. The adventure of <strong>The Crystal Compass</strong> was only getting bigger.</p>
+    </div>
+    <button onclick="showWin()"
+      style="background:linear-gradient(135deg,#006870,#00c8d4);color:#001820;
+      font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;
+      padding:16px 40px;border-radius:50px;border:none;cursor:pointer;
+      box-shadow:0 4px 20px rgba(0,180,200,0.4);">
+      🌿 See Your Results →
+    </button>
+  </div>
+
+  <!-- ══ WIN SCREEN ══ -->
+  <div id="win-screen">
+    <span class="trophy">🏆</span>
+    <h2>ADVENTURE COMPLETE!</h2>
+    <img class="win-img"
+      src="images/crystal-compass/issue-002/win-screen.png"
+      alt="The four girls celebrate in the glowing forest" />
+    <div class="win-score" id="win-score">Main quiz: 8 / 8 on the first try!</div>
+    <div class="win-speed-score" id="win-speed-score">Speed round: 5 / 5 💧</div>
+    <div class="win-stars" id="win-stars">⭐⭐⭐</div>
+    <p>You helped the girls cross the glowing forest, unlock the stone door, and reach the mountain!</p>
+    <div class="win-summary">
+      <h3>What You Mastered Today 🧠</h3>
+      <ul>
+        <li>✅ <strong>Skip counting by 2s</strong> — jumping forward in twos all the way to 30!</li>
+        <li>✅ <strong>Skip counting by 5s</strong> — five at a time, spotting the pattern</li>
+        <li>✅ <strong>Skip counting by 10s</strong> — the fastest way to count big numbers</li>
+        <li>✅ <strong>Missing numbers</strong> — finding the gap in the middle of a sequence</li>
+        <li>✅ <strong>Counting jumps</strong> — how many steps to get from 0 to 20 by 2s</li>
+      </ul>
+    </div>
+    <div class="parent-guide">
+      <h4>🏠 Parent Guide</h4>
+      <p><strong>What your child learned:</strong> Skip counting — jumping forward by the same number each time. Counting by 2s, 5s, and 10s is a key building block for multiplication later on.</p>
+      <p style="margin-top:10px;"><strong>Try this at home:</strong> Clap and count together by 2s to 20. Then try 5s to 50. Ask: "What pattern do you notice in the ones digit when we count by 5s?"</p>
+    </div>
+    <p style="font-size:14px;color:#2a5560;margin-bottom:16px;">Join us for Issue 3 — when the girls climb the <strong>Glowing Mountain</strong>! ⛰️</p>
+    <button class="replay-btn" onclick="location.reload()">🔄 Play Again</button>
+  </div>
+
+</div><!-- /wrapper -->
+
+<!-- Controls bar -->
+<div id="ctrl-bar">
+  <button class="ctrl-btn" id="mute-ctrl" onclick="toggleMute()">🔊 Sound On</button>
+  <button class="ctrl-btn" onclick="replayCurrent()">🔁 Replay</button>
+</div>
+
+<script>
+// ── FOREST PARTICLES ──────────────────────────────────────────
+const df = document.getElementById('dustfield');
+const dustColors = ['rgba(0,200,210,0.4)','rgba(150,80,255,0.3)','rgba(0,255,220,0.2)','rgba(80,120,255,0.3)'];
+for(let i=0;i<50;i++){
+  const d=document.createElement('div'); d.className='dust';
+  d.style.left=Math.random()*100+'%'; d.style.top=Math.random()*100+'%';
+  const sz=(2+Math.random()*5)+'px';
+  d.style.width=sz; d.style.height=sz;
+  d.style.background=dustColors[Math.floor(Math.random()*dustColors.length)];
+  d.style.animationDelay=(Math.random()*8)+'s';
+  d.style.animationDuration=(5+Math.random()*6)+'s';
+  df.appendChild(d);
+}
+
+// ── AUDIO ENGINE ────────────────────────────────────────────
+const AUDIO_BASE = 'audio/crystal-compass/issue-002/';
+let muted=false, currentAudio=null, activePlayerId=null, correctVariant=0;
+const playerConfigs = {};
+const triedWrong = new Set();
+
+function stopAll(){
+  if(currentAudio){currentAudio.pause();currentAudio=null;}
+  document.querySelectorAll('.nar-btn').forEach(b=>{if(b.textContent!=='✓')b.textContent='▶';});
+}
+
+function playFile(file, onEnd){
+  if(muted){if(onEnd)setTimeout(onEnd,100);return null;}
+  if(currentAudio){currentAudio.pause();currentAudio=null;}
+  const a=new Audio(AUDIO_BASE+file);
+  a.volume=1.0; currentAudio=a;
+  a.play().catch(()=>{currentAudio=null;if(onEnd)onEnd();});
+  a.onended=()=>{currentAudio=null;if(onEnd)onEnd();};
+  a.onerror=()=>{currentAudio=null;if(onEnd)onEnd();};
+  return a;
+}
+
+function setupPlayer(id, files, labels, storyId, lockId, unlockAtIndex){
+  playerConfigs[id]={files,labels,storyId,lockId,unlockAtIndex:unlockAtIndex??files.length,active:false};
+}
+
+function togglePlayer(id){
+  if(activePlayerId===id&&currentAudio&&!currentAudio.paused){
+    currentAudio.pause();currentAudio=null;
+    const btn=document.getElementById('btn-'+id);
+    if(btn)btn.textContent='▶';
+    const statusEl=document.getElementById('status-'+id);
+    if(statusEl)statusEl.textContent='Paused — press ▶ to resume';
+    activePlayerId=null;return;
+  }
+  stopAll();activePlayerId=id;runPlayer(id);
+}
+
+function runPlayer(id){
+  const cfg=playerConfigs[id];if(!cfg)return;
+  cfg.active=true;
+  const btn=document.getElementById('btn-'+id);
+  const statusEl=document.getElementById('status-'+id);
+  const barFill=document.getElementById('bar-'+id);
+  const story=cfg.storyId?document.getElementById(cfg.storyId):null;
+  if(btn)btn.textContent='⏸';
+  if(story)story.classList.add('playing');
+  let fileIdx=0;
+  function playNext(){
+    if(fileIdx>=cfg.files.length){
+      if(btn)btn.textContent='✓';
+      if(statusEl)statusEl.textContent='✅ Done — solve the puzzle!';
+      if(barFill)barFill.style.width='100%';
+      if(story){story.classList.remove('playing');story.classList.add('done');}
+      if(cfg.lockId){const l=document.getElementById(cfg.lockId);if(l)l.style.display='none';}
+      const qId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;
+      if(qId){const q=document.getElementById(qId);if(q){q.classList.add('show');setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}
+      cfg.active=false;activePlayerId=null;return;
+    }
+    // Unlock at index: unlock quiz when question audio STARTS
+    if(fileIdx===cfg.unlockAtIndex){
+      if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}
+      const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;
+      if(quizId){const quiz=document.getElementById(quizId);if(quiz&&!quiz.classList.contains('show')){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}
+    }
+    const file=cfg.files[fileIdx];
+    const label=cfg.labels&&cfg.labels[fileIdx]?cfg.labels[fileIdx]:'🎙️ Narrating...';
+    if(statusEl)statusEl.textContent=label;
+    const s=fileIdx/cfg.files.length*100, e=(fileIdx+1)/cfg.files.length*100;
+    fileIdx++;
+    const audio=playFile(file, playNext);
+    if(audio&&barFill){
+      const tick=setInterval(()=>{
+        if(!audio||audio.paused||audio.ended){clearInterval(tick);return;}
+        const p=audio.duration?(s+(audio.currentTime/audio.duration)*(e-s)):s;
+        barFill.style.width=p+'%';
+      },200);
+    }
+  }
+  playNext();
+}
+
+// ── PLAYER DEFINITIONS ──────────────────────────────────────
+function initPlayers(){
+  // CHAPTER 1
+  setupPlayer('ch1',
+    ['ch1-intro.mp3','ch1-amara-beautiful.mp3','ch1-priya-stares.mp3','ch1-q1-question.mp3'],
+    ['📖 Narrator...','🌟 Amara...','📖 Narrator...','🎯 Puzzle time!'],
+    'story-ch1','lock-q1', 3);
+
+  // CHAPTER 2
+  setupPlayer('ch2',
+    ['ch2-priya-stop.mp3','ch2-groups.mp3','ch2-priya-pattern.mp3','ch2-isla-what.mp3',
+     'ch2-priya-follow.mp3','ch2-compass-twitch.mp3','ch2-q2-question.mp3'],
+    ['🔵 Priya...','📖 Narrator...','🔵 Priya...','🔴 Isla...',
+     '🔵 Priya...','📖 Narrator...','🎯 Puzzle time!'],
+    'story-ch2','lock-q2', 6);
+
+  // Q3 bridge
+  setupPlayer('q3s',
+    ['ch2-q3-intro.mp3','ch2-q3-question.mp3'],
+    ['📖 Narrator...','🎯 Puzzle time!'],
+    'story-q3s','lock-q3', 1);
+
+  // Q4 bridge
+  setupPlayer('q4s',
+    ['ch2-q4-intro.mp3','ch2-q4-question.mp3'],
+    ['📖 Narrator...','🎯 Puzzle time!'],
+    'story-q4s','lock-q4', 1);
+
+  // CHAPTER 3
+  setupPlayer('ch3',
+    ['ch3-intro.mp3','ch3-zoe-step.mp3','ch3-isla-or-what.mp3',
+     'ch3-red-water.mp3','ch3-amara-nope.mp3','ch3-q5-question.mp3'],
+    ['📖 Narrator...','🟢 Zoe...','🔴 Isla...',
+     '📖 Narrator...','🌟 Amara...','🎯 Puzzle time!'],
+    'story-ch3','lock-q5', 5);
+
+  // Q6 bridge
+  setupPlayer('q6s',
+    ['ch3-q6-intro.mp3','ch3-q6-question.mp3'],
+    ['📖 Narrator...','🎯 Puzzle time!'],
+    'story-q6s','lock-q6', 1);
+
+  // Q7 bridge
+  setupPlayer('q7s',
+    ['ch3-q7-intro.mp3','ch3-q7-question.mp3'],
+    ['📖 Narrator...','🎯 Puzzle time!'],
+    'story-q7s','lock-q7', 1);
+
+  // CHAPTER 4 (story before speed round)
+  setupPlayer('ch4',
+    ['ch4-intro.mp3','ch4-rumble.mp3','ch4-priya-fast.mp3'],
+    ['📖 Narrator...','📖 Narrator...','🔵 Priya...'],
+    'story-ch4', null);
+
+  // CHAPTER 4 ENDING (after speed round)
+  setupPlayer('ch4end',
+    ['ch4-door-opens.mp3'],
+    ['📖 Narrator...'],
+    'story-ch4end', null);
+
+  // CHAPTER 5
+  setupPlayer('ch5',
+    ['ch5-intro.mp3','ch5-steps.mp3','ch5-isla-climb.mp3','ch5-amara-laugh.mp3','ch5-q8-intro.mp3','ch5-q8-question.mp3'],
+    ['📖 Narrator...','📖 Narrator...','🔴 Isla...','🌟 Amara...','📖 Narrator...','🎯 Puzzle time!'],
+    'story-ch5','lock-q8', 5);
+
+  // CLIFFHANGER
+  setupPlayer('cf',
+    ['cliffhanger.mp3'],
+    ['📖 Narrator...'],
+    'story-cf', null);
+}
+
+// ── SECONDARY BLOCK REVEALS ─────────────────────────────────
+function showQ3Block(){
+  const b=document.getElementById('block-q3');
+  b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q3s'),500);
+}
+function showQ4Block(){
+  const b=document.getElementById('block-q4');
+  b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q4s'),500);
+}
+function showQ6Block(){
+  const b=document.getElementById('block-q6');
+  b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q6s'),500);
+}
+function showQ7Block(){
+  const b=document.getElementById('block-q7');
+  b.style.display='block';
+  setTimeout(()=>b.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>togglePlayer('q7s'),500);
+}
+
+// ── SPEED ROUND ENGINE ──────────────────────────────────────
+let speedScore=0;
+let srCurrentQ=0;
+let srTimer=null;
+let srTimeLeft=8;
+let waterLevel=0; // 0-100%
+
+const speedQuestions=[
+  {
+    q:"0, 10, 20, ___, 40",
+    sub:"What is missing?",
+    audio:"sr-q1-question.mp3",
+    options:["25","30","35","20"],
+    correct:1
+  },
+  {
+    q:"15, 20, 25, ___",
+    sub:"What comes next?",
+    audio:"sr-q2-question.mp3",
+    options:["28","29","30","35"],
+    correct:2
+  },
+  {
+    q:"6, 8, 10, ___",
+    sub:"What comes next?",
+    audio:"sr-q3-question.mp3",
+    options:["11","13","14","12"],
+    correct:3
+  },
+  {
+    q:"50, 60, ___, 80",
+    sub:"What is missing?",
+    audio:"sr-q4-question.mp3",
+    options:["65","75","70","68"],
+    correct:2
+  },
+  {
+    q:"35, 40, ___, 50",
+    sub:"What is missing?",
+    audio:"sr-q5-question.mp3",
+    options:["42","43","46","45"],
+    correct:3
+  }
+];
+
+function startSpeedRound(){
+  speedScore=0; srCurrentQ=0; waterLevel=0;
+  document.getElementById('speed-round-screen').style.display='block';
+  document.getElementById('speed-score-screen').style.display='none';
+  document.getElementById('ch4-ending').style.display='none';
+  updateWaterLevel(0);
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>loadSpeedQuestion(0),600);
+}
+
+function updateWaterLevel(pct){
+  waterLevel=pct;
+  const fill=document.getElementById('sr-water-fill');
+  const label=document.getElementById('sr-water-pct');
+  if(fill)fill.style.height=pct+'%';
+  if(label)label.textContent=Math.round(pct)+'%';
+}
+
+function loadSpeedQuestion(idx){
+  if(idx>=speedQuestions.length){
+    endSpeedRound();return;
+  }
+  srCurrentQ=idx;
+  const q=speedQuestions[idx];
+  document.getElementById('sr-q-num').textContent=`Question ${idx+1} of ${speedQuestions.length}`;
+  document.getElementById('sr-question').innerHTML=`<strong>${q.q}</strong><br><span style="color:#88ccff;font-size:22px;">${q.sub}</span>`;
+
+  const optContainer=document.getElementById('sr-options');
+  optContainer.innerHTML='';
+  q.options.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='speed-opt';
+    btn.textContent=opt;
+    btn.onclick=()=>handleSpeedAnswer(i,q.correct,btn);
+    optContainer.appendChild(btn);
+  });
+
+  srTimeLeft=8;
+  document.getElementById('sr-time-left').textContent='8s';
+  document.getElementById('sr-timer-fill').style.width='100%';
+
+  stopAll();
+  playFile(q.audio, null);
+
+  if(srTimer)clearInterval(srTimer);
+  srTimer=setInterval(()=>tickSpeedTimer(q.correct),100);
+}
+
+function tickSpeedTimer(correctIdx){
+  srTimeLeft-=0.1;
+  if(srTimeLeft<0)srTimeLeft=0;
+  const pct=(srTimeLeft/8)*100;
+  document.getElementById('sr-timer-fill').style.width=pct+'%';
+  document.getElementById('sr-time-left').textContent=Math.ceil(srTimeLeft)+'s';
+  // Water rises as time ticks (20% per question)
+  const baseWater=srCurrentQ*20;
+  const timerProg=(1-(srTimeLeft/8))*20;
+  updateWaterLevel(baseWater+timerProg);
+  if(srTimeLeft<=0){
+    clearInterval(srTimer);srTimer=null;
+    timeOut(correctIdx);
+  }
+}
+
+function timeOut(correctIdx){
+  stopAll();
+  const opts=document.getElementById('sr-options').children;
+  for(let b of opts)b.disabled=true;
+  opts[correctIdx].classList.add('speed-reveal');
+  flashScreen('red');
+  playFile('feedback-speed-wrong.mp3',null);
+  updateWaterLevel((srCurrentQ+1)*20);
+  setTimeout(()=>loadSpeedQuestion(srCurrentQ+1),2000);
+}
+
+function handleSpeedAnswer(chosenIdx, correctIdx, btn){
+  if(srTimer){clearInterval(srTimer);srTimer=null;}
+  stopAll();
+  const opts=document.getElementById('sr-options').children;
+  for(let b of opts)b.disabled=true;
+  if(chosenIdx===correctIdx){
+    speedScore++;
+    btn.classList.add('speed-correct');
+    flashScreen('green');
+    playFile('feedback-speed-correct.mp3',null);
+  } else {
+    btn.classList.add('speed-wrong');
+    opts[correctIdx].classList.add('speed-reveal');
+    flashScreen('red');
+    playFile('feedback-speed-wrong.mp3',null);
+  }
+  updateWaterLevel((srCurrentQ+1)*20);
+  setTimeout(()=>loadSpeedQuestion(srCurrentQ+1),1800);
+}
+
+function flashScreen(colour){
+  const flash=document.getElementById('speed-flash');
+  flash.className='speed-flash '+colour+' show';
+  setTimeout(()=>flash.classList.remove('show'),500);
+}
+
+function endSpeedRound(){
+  if(srTimer){clearInterval(srTimer);srTimer=null;}
+  stopAll();
+  document.getElementById('speed-round-screen').style.display='none';
+  const scoreScreen=document.getElementById('speed-score-screen');
+  scoreScreen.style.display='block';
+  const icons=['🌊','💧','💧','🌟','🌟','🏆'];
+  document.getElementById('speed-score-icon').textContent=icons[Math.min(speedScore,5)]||'💧';
+  document.getElementById('speed-score-heading').textContent=
+    speedScore>=4?'Amazing! The door flew open! 🏆':speedScore>=2?'You fought the water! 💪':'The water almost had you!';
+  document.getElementById('speed-score-msg').textContent=
+    `You answered ${speedScore} out of ${speedQuestions.length} before the water reached you!`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function continueAfterSpeed(){
+  document.getElementById('speed-score-screen').style.display='none';
+  const ending=document.getElementById('ch4-ending');
+  ending.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>togglePlayer('ch4end'),700);
+}
+
+// ── SCORING ─────────────────────────────────────────────────
+let score=0, questionsAnswered=0;
+const totalQ=8;
+
+const correctMsg={
+  q1: '✨ Yes! Two, four, six, eight, ten. You added two each time. The lights glow brighter!',
+  q2: '✨ That is right! Ten, twelve, fourteen, sixteen, eighteen. Counting by twos. The missing one was sixteen!',
+  q3: '✨ Perfect! Five, ten, fifteen, twenty, twenty-five. Counting by fives. The missing number was twenty!',
+  q4: '✨ Excellent! Thirty, thirty-five, forty, forty-five, fifty. The missing number was forty. Counting by fives!',
+  q5: '🪨 Well done! Ten, twenty, thirty, forty, fifty. Counting by tens. The missing stone was thirty!',
+  q6: '🪨 Great job! Forty, fifty, sixty, seventy, eighty. Counting by tens. The missing stone was seventy!',
+  q7: '🪨 Brilliant! Twenty-two, twenty-four, twenty-six, twenty-eight, thirty. Counting by twos. The missing stone was twenty-eight!',
+  q8: '🏔️ Amazing! From zero to twenty by twos takes exactly ten jumps. Zero, two, four... all the way to twenty. That is ten steps!'
+};
+const wrongMsg={
+  q1: '❌ Not quite! The lights count up by two each time. Two, four, six, eight. What is two more than eight? Try again!',
+  q2: '❌ Look carefully! Ten, twelve, fourteen. Each number goes up by two. What comes after fourteen plus two? Try again!',
+  q3: '❌ Think about fives! Five, ten, fifteen. Each jump is five more. What is fifteen plus five? Try again!',
+  q4: '❌ Counting by fives! Thirty, thirty-five. Each number adds five. What is thirty-five plus five? Try again!',
+  q5: '❌ Try again! These stones count by tens. Ten, twenty. Each jump is ten more. What comes after twenty plus ten?',
+  q6: '❌ Nearly there! Forty, fifty, sixty. Each stone adds ten. What comes after sixty plus ten? Try again!',
+  q7: '❌ This row counts by twos. Twenty-two, twenty-four, twenty-six. Add two each time. What is twenty-six plus two? Try again!',
+  q8: '❌ Count the jumps carefully! Zero, two, four, six, eight, ten, twelve, fourteen, sixteen, eighteen, twenty. Count each arrow. How many are there?'
+};
+
+function answer(btn, correct, qId){
+  const box=btn.closest('.quiz-box');
+  box.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedback-'+qId);
+  const next=document.getElementById('next-'+qId);
+  if(correct){
+    btn.classList.add('correct');
+    if(!triedWrong.has(qId))score++;
+    questionsAnswered++;
+    fb.className='feedback show good';
+    fb.innerHTML=correctMsg[qId]||'✨ Well done!';
+    updateProgress();
+    next.classList.add('show');
+    const variants=['feedback-correct-1.mp3','feedback-correct-2.mp3','feedback-correct-3.mp3',
+                    'feedback-correct-4.mp3','feedback-correct-5.mp3','feedback-correct-6.mp3'];
+    playFile(variants[correctVariant%variants.length], ()=>{
+      playFile(qId+'-correct.mp3', null);
+    });
+    correctVariant++;
+  } else {
+    triedWrong.add(qId);
+    btn.classList.add('wrong');
+    fb.className='feedback show bad';
+    fb.innerHTML=wrongMsg[qId]||'❌ Not quite. Try again!';
+    stopAll();
+    const wrongFile=['feedback-wrong-1.mp3','feedback-wrong-2.mp3'][Math.floor(Math.random()*2)];
+    const wrongAudio=playFile(wrongFile,null);
+    const resetDelay=wrongAudio?2800:1200;
+    setTimeout(()=>{
+      box.querySelectorAll('.opt-btn').forEach(b=>{
+        if(!b.classList.contains('correct')){b.disabled=false;b.classList.remove('wrong');}
+      });
+      fb.className='feedback';
+    },resetDelay);
+  }
+}
+
+function updateProgress(){
+  document.getElementById('progress-fill').style.width=((questionsAnswered/totalQ)*100)+'%';
+  document.getElementById('progress-score').textContent='🌿 '+score+' / '+totalQ;
+}
+
+// ── GAME NAVIGATION ─────────────────────────────────────────
+let currentChapter=0;
+
+function startGame(){
+  document.getElementById('title-screen').style.display='none';
+  document.getElementById('progress-wrap').style.display='block';
+  initPlayers();
+  showChapter(1);
+}
+
+function showChapter(n){
+  stopAll();
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
+  document.getElementById('speed-round-screen').style.display='none';
+  document.getElementById('speed-score-screen').style.display='none';
+  document.getElementById('ch4-ending').style.display='none';
+  const ch=document.getElementById('chapter-'+n);
+  if(!ch)return;
+  ch.classList.add('active');
+  currentChapter=n;
+  window.scrollTo({top:0,behavior:'smooth'});
+  const labels={
+    1:'Chapter 1 — Into the Forest',
+    2:'Chapter 2 — Priya Sees It',
+    3:'Chapter 3 — The River',
+    4:'Chapter 4 — The Pattern Lock 💧',
+    5:'Chapter 5 — Through the Door ⛰️'
+  };
+  document.getElementById('progress-label').textContent=labels[n]||'';
+  const playerMap={1:'ch1',2:'ch2',3:'ch3',5:'ch5'};
+  if(playerMap[n]){
+    setTimeout(()=>togglePlayer(playerMap[n]),700);
+  } else if(n===4){
+    setTimeout(()=>{
+      togglePlayer('ch4');
+      waitForPlayerDone('ch4', ()=>{
+        setTimeout(startSpeedRound, 1200);
+      });
+    },700);
+  }
+}
+
+function waitForPlayerDone(playerId, callback){
+  const check=setInterval(()=>{
+    const cfg=playerConfigs[playerId];
+    if(cfg&&!cfg.active&&activePlayerId!==playerId){
+      clearInterval(check);
+      callback();
+    }
+  },500);
+}
+
+function nextChapter(n){ showChapter(n); }
+
+function showCliffhanger(){
+  stopAll();
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
+  document.getElementById('progress-wrap').style.display='none';
+  const cf=document.getElementById('cliffhanger-screen');
+  cf.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>togglePlayer('cf'),700);
+}
+
+function showWin(){
+  stopAll();
+  document.getElementById('cliffhanger-screen').style.display='none';
+  const win=document.getElementById('win-screen');
+  win.style.display='block';
+  document.getElementById('win-score').textContent=
+    'Main quiz: '+score+' / '+totalQ+(triedWrong.size===0?' — first try! 🌟':'');
+  document.getElementById('win-speed-score').textContent=
+    'Speed round: '+speedScore+' / '+speedQuestions.length+' 💧';
+  const stars=score===totalQ?'⭐⭐⭐':score>=6?'⭐⭐':score>=4?'⭐':'';
+  document.getElementById('win-stars').textContent=stars;
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>playFile('win.mp3',null),600);
+}
+
+// ── CONTROLS ─────────────────────────────────────────────────
+function toggleMute(){
+  muted=!muted;
+  const ctrl=document.getElementById('mute-ctrl');
+  ctrl.textContent=muted?'🔇 Muted':'🔊 Sound On';
+  ctrl.classList.toggle('muted',muted);
+  if(muted)stopAll();
+}
+
+function replayCurrent(){
+  const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};
+  const pid=playerMap[currentChapter];if(!pid)return;
+  stopAll();
+  const cfg=playerConfigs[pid];if(cfg)cfg.active=false;
+  const story=cfg&&cfg.storyId?document.getElementById(cfg.storyId):null;
+  if(story)story.classList.remove('playing','done');
+  const barFill=document.getElementById('bar-'+pid);if(barFill)barFill.style.width='0%';
+  const statusEl=document.getElementById('status-'+pid);if(statusEl)statusEl.textContent='Press ▶ to hear the story';
+  const btn=document.getElementById('btn-'+pid);if(btn)btn.textContent='▶';
+  setTimeout(()=>togglePlayer(pid),300);
+}
+</script>
+</body>
+</html>
