@@ -665,7 +665,7 @@
     <div class="speed-flash" id="speed-flash"></div>
     <div class="speed-header">
       <h2>⚡ SPEED ROUND!</h2>
-      <p class="speed-subtitle">Answer before the light fades — 8 seconds each!</p>
+      <p class="speed-subtitle">Answer before the light fades — 10 seconds each!</p>
     </div>
     <div class="speed-q-display">
       <div class="speed-q-num" id="sr-q-num">Question 1 of 5</div>
@@ -1051,7 +1051,7 @@ function showQ10Block(){
 let speedScore=0;
 let srCurrentQ=0;
 let srTimer=null;
-let srTimeLeft=8;
+let srTimeLeft=10;
 
 const speedQuestions=[
   {
@@ -1120,7 +1120,7 @@ function loadSpeedQuestion(idx){
   });
 
   // Reset timer
-  srTimeLeft=8;
+  srTimeLeft=10;
   document.getElementById('sr-time-left').textContent='8s';
   document.getElementById('sr-timer-fill').style.width='100%';
 
@@ -1136,7 +1136,7 @@ function loadSpeedQuestion(idx){
 function tickSpeedTimer(correctIdx){
   srTimeLeft-=0.1;
   if(srTimeLeft<0)srTimeLeft=0;
-  const pct=(srTimeLeft/8)*100;
+  const pct=(srTimeLeft/10)*100;
   document.getElementById('sr-timer-fill').style.width=pct+'%';
   document.getElementById('sr-time-left').textContent=Math.ceil(srTimeLeft)+'s';
   if(srTimeLeft<=0){
