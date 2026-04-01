@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ocean Arc — Math Blast</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #050e1f;
+      color: #e0f4ff;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated ocean background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(0, 80, 160, 0.3) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(0, 180, 220, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(0, 50, 120, 0.4) 0%, transparent 60%);
+      animation: oceanPulse 8s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+
+    @keyframes oceanPulse {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .logo {
+      font-size: 14px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #00d4ff;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .welcome-generic {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .welcome-personalised {
+      display: none;
+    }
+
+    .welcome-personalised .gifter-name {
+      color: #00d4ff;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #7ab8d4;
+      line-height: 1.5;
+      margin-top: 12px;
+    }
+
+    .wave-divider {
+      text-align: center;
+      font-size: 32px;
+      margin: 32px 0;
+      letter-spacing: 8px;
+    }
+
+    /* Issue cards */
+    .issues-title {
+      text-align: center;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #00d4ff;
+      margin-bottom: 24px;
+      opacity: 0.8;
+    }
+
+    .issues-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .issue-card {
+      background: rgba(13, 31, 60, 0.8);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .issue-card:hover {
+      border-color: #00d4ff;
+      background: rgba(0, 212, 255, 0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2);
+    }
+
+    .issue-emoji {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .issue-number {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #00d4ff;
+      margin-bottom: 6px;
+      opacity: 0.7;
+    }
+
+    .issue-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .issue-desc {
+      font-size: 13px;
+      color: #7ab8d4;
+      line-height: 1.4;
+    }
+
+    .issue-cta {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 8px 20px;
+      background: rgba(0, 212, 255, 0.15);
+      border: 1px solid rgba(0, 212, 255, 0.4);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #00d4ff;
+      transition: all 0.2s;
+    }
+
+    .issue-card:hover .issue-cta {
+      background: #00d4ff;
+      color: #050e1f;
+    }
+
+    /* No signup badge */
+    .no-signup {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(0, 212, 255, 0.15);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 24px;
+      padding: 10px 24px;
+      font-size: 14px;
+      color: #00d4ff;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .footer-brand {
+      font-size: 20px;
+      font-weight: 800;
+      color: #00d4ff;
+      margin-bottom: 8px;
+    }
+
+    .footer-tagline {
+      font-size: 13px;
+      color: #4a7fa0;
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(0, 212, 255, 0.2);
+      border-top-color: #00d4ff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      .welcome-generic, .welcome-personalised {
+        font-size: 24px;
+      }
+      .issues-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .issue-emoji { font-size: 36px; }
+      .issue-title { font-size: 14px; }
+      .issue-desc { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Loading state (briefly shown) -->
+    <div class="loading" id="loading">
+      <div class="loading-spinner"></div>
+      <p style="color:#7ab8d4">Loading your adventure...</p>
+    </div>
+
+    <!-- Main content (shown after load) -->
+    <div id="main-content" style="display:none">
+      <div class="header">
+        <div class="logo">🌊 Math Blast</div>
+
+        <!-- Generic welcome (shown when no valid token) -->
+        <div class="welcome-generic" id="welcome-generic">
+          Welcome to the Ocean Arc
+        </div>
+
+        <!-- Personalised welcome (shown when token resolved) -->
+        <div class="welcome-personalised" id="welcome-personalised">
+          <div class="welcome-generic">
+            <span class="gifter-name" id="gifter-name">Someone</span>'s child is loving Math Blast
+          </div>
+          <div style="font-size:20px;color:#7ab8d4;margin-top:8px;">— and they wanted to share it with you! 🎁</div>
+        </div>
+
+        <p class="subtitle">
+          4 issues of underwater maths adventure.<br>
+          No signup. No cost. Just dive in.
+        </p>
+      </div>
+
+      <div class="wave-divider">🐠 🐙 🦈 🐋</div>
+
+      <p class="issues-title">Choose your adventure</p>
+
+      <div class="issues-grid">
+        <a href="https://www.math-blast.com.au/ocean-001-narrated.html" class="issue-card">
+          <div class="issue-emoji">🐠</div>
+          <div class="issue-number">Issue 1</div>
+          <div class="issue-title">Into the Deep</div>
+          <div class="issue-desc">The adventure begins beneath the waves</div>
+          <span class="issue-cta">Start reading →</span>
+        </a>
+
+        <a href="https://www.math-blast.com.au/ocean-002-narrated.html" class="issue-card">
+          <div class="issue-emoji">🐙</div>
+          <div class="issue-number">Issue 2</div>
+          <div class="issue-title">The Coral Maze</div>
+          <div class="issue-desc">Navigate the labyrinth of the reef</div>
+          <span class="issue-cta">Start reading →</span>
+        </a>
+
+        <a href="https://www.math-blast.com.au/ocean-003-narrated.html" class="issue-card">
+          <div class="issue-emoji">🦈</div>
+          <div class="issue-number">Issue 3</div>
+          <div class="issue-title">Shark Territory</div>
+          <div class="issue-desc">Brave the depths with new friends</div>
+          <span class="issue-cta">Start reading →</span>
+        </a>
+
+        <a href="https://www.math-blast.com.au/ocean-004-narrated.html" class="issue-card">
+          <div class="issue-emoji">🐋</div>
+          <div class="issue-number">Issue 4</div>
+          <div class="issue-title">The Great Migration</div>
+          <div class="issue-desc">An epic journey to the open ocean</div>
+          <span class="issue-cta">Start reading →</span>
+        </a>
+      </div>
+
+      <div class="no-signup">
+        <span class="badge">✅ No signup needed — click any issue to start instantly</span>
+      </div>
+
+      <div class="footer">
+        <div class="footer-brand">Math Blast 🚀</div>
+        <div class="footer-tagline">Maths adventures for curious kids</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const WORKER_URL = 'https://mathblast-gift.leohiem2026.workers.dev';
+
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get('ref');
+
+      if (ref) {
+        try {
+          const res = await fetch(`${WORKER_URL}/api/check-gift?token=${encodeURIComponent(ref)}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.buyerName) {
+              // Show personalised welcome
+              document.getElementById('welcome-generic').style.display = 'none';
+              document.getElementById('gifter-name').textContent = data.buyerName;
+              const personalised = document.getElementById('welcome-personalised');
+              personalised.style.display = 'block';
+            }
+          }
+        } catch (e) {
+          // Silently fall back to generic welcome
+          console.log('Could not load gift info:', e.message);
+        }
+      }
+
+      // Show content
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+    }
+
+    init();
+  </script>
+</body>
+</html>
