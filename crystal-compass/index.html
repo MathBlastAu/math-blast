@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Crystal Compass — Math Blast</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d0a1a;
+      color: #f0e8d0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse at 20% 40%, rgba(120, 60, 200, 0.25) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 20%, rgba(0, 200, 220, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 85%, rgba(200, 140, 20, 0.2) 0%, transparent 55%);
+      animation: compassPulse 8s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+
+    @keyframes compassPulse {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .header { text-align: center; margin-bottom: 48px; }
+
+    .logo {
+      font-size: 14px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #7ec8e3;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .title {
+      font-size: 42px;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 8px;
+      line-height: 1.1;
+    }
+
+    .title span { color: #f0c040; }
+
+    .subtitle {
+      font-size: 18px;
+      color: #a0b8c8;
+      line-height: 1.5;
+      margin-top: 12px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .compass-divider {
+      text-align: center;
+      font-size: 28px;
+      margin: 32px 0;
+      letter-spacing: 8px;
+    }
+
+    /* Value badges */
+    .values-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 24px 0 40px;
+    }
+
+    .value-badge {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .badge-integrity { background: rgba(0,200,220,0.15); color: #00d4cc; border: 1px solid rgba(0,200,220,0.3); }
+    .badge-wonder    { background: rgba(120,60,200,0.15); color: #b090f0; border: 1px solid rgba(120,60,200,0.3); }
+    .badge-courage   { background: rgba(230,80,60,0.15);  color: #f08060; border: 1px solid rgba(230,80,60,0.3); }
+    .badge-humanity  { background: rgba(240,180,20,0.15); color: #f0c040; border: 1px solid rgba(240,180,20,0.3); }
+
+    /* Issue cards */
+    .issues-title {
+      text-align: center;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #7ec8e3;
+      margin-bottom: 24px;
+      opacity: 0.8;
+    }
+
+    .issues-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .issue-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .issue-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(240,192,64,0.4);
+    }
+
+    .issue-card .thumb {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    .issue-card .card-body { padding: 16px; }
+
+    .issue-card .issue-num {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: 0.5;
+      margin-bottom: 4px;
+    }
+
+    .issue-card h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .issue-card .topic {
+      font-size: 13px;
+      color: #7ec8e3;
+      margin-bottom: 4px;
+    }
+
+    .issue-card .value-tag {
+      font-size: 11px;
+      opacity: 0.6;
+    }
+
+    .issue-card.locked {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .issue-card.locked .card-body::after {
+      content: '🔒 Coming Soon';
+      display: block;
+      margin-top: 8px;
+      font-size: 12px;
+      color: #7ec8e3;
+      opacity: 0.7;
+    }
+
+    /* Characters strip */
+    .characters-section {
+      margin-bottom: 48px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #7ec8e3;
+      margin-bottom: 24px;
+      opacity: 0.8;
+    }
+
+    .characters-grid {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .char-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      width: 140px;
+    }
+
+    .char-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .char-card .char-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .char-card .char-value {
+      font-size: 11px;
+      opacity: 0.6;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Info box */
+    .info-box {
+      background: rgba(0,200,220,0.06);
+      border: 1px solid rgba(0,200,220,0.15);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .info-box h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #7ec8e3;
+      margin-bottom: 12px;
+    }
+
+    .info-box p {
+      font-size: 15px;
+      color: #a0b8c8;
+      line-height: 1.7;
+    }
+
+    .info-box .highlight { color: #f0c040; font-weight: 700; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 32px 0 16px;
+      font-size: 13px;
+      color: #a0b8c8;
+      opacity: 0.6;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">⚡ Math Blast · Year 2</div>
+    <div class="title">🧭 The <span>Crystal Compass</span></div>
+    <div class="subtitle">Four girls. One magical compass. And a world full of maths puzzles to solve — together.</div>
+  </div>
+
+  <!-- MLC Values -->
+  <div class="values-row">
+    <span class="value-badge badge-integrity">Integrity</span>
+    <span class="value-badge badge-wonder">Wonder</span>
+    <span class="value-badge badge-courage">Courage</span>
+    <span class="value-badge badge-humanity">Humanity</span>
+  </div>
+
+  <!-- Issues -->
+  <div class="issues-title">✨ The Adventures</div>
+  <div class="issues-grid">
+
+    <a class="issue-card" href="../crystal-compass-issue-001-narrated.html">
+      <img class="thumb" src="../images/crystal-compass/issue-001/ch1-compass-found.png" alt="Issue 1">
+      <div class="card-body">
+        <div class="issue-num">Issue 1</div>
+        <h3>The Compass Wakes</h3>
+        <div class="topic">📐 Place Value</div>
+        <div class="value-tag">🟢 Integrity · Zoe leads</div>
+      </div>
+    </a>
+
+    <div class="issue-card locked">
+      <img class="thumb" src="../images/crystal-compass/world/forest-reference.png" alt="Issue 2">
+      <div class="card-body">
+        <div class="issue-num">Issue 2</div>
+        <h3>The Forest of Patterns</h3>
+        <div class="topic">🔢 Skip Counting</div>
+        <div class="value-tag">🔵 Wonder · Priya leads</div>
+      </div>
+    </div>
+
+    <div class="issue-card locked">
+      <img class="thumb" src="../images/crystal-compass/world/mountain-reference.png" alt="Issue 3">
+      <div class="card-body">
+        <div class="issue-num">Issue 3</div>
+        <h3>The Courage Climb</h3>
+        <div class="topic">➕ Add &amp; Subtract</div>
+        <div class="value-tag">🔴 Courage · Isla leads</div>
+      </div>
+    </div>
+
+    <div class="issue-card locked">
+      <img class="thumb" src="../images/crystal-compass/world/village-reference.png" alt="Issue 4">
+      <div class="card-body">
+        <div class="issue-num">Issue 4</div>
+        <h3>The Village Needs Help</h3>
+        <div class="topic">📏 Measurement</div>
+        <div class="value-tag">🟡 Humanity · Amara leads</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Characters -->
+  <div class="characters-section">
+    <div class="section-title">Meet the Team</div>
+    <div class="characters-grid">
+      <div class="char-card">
+        <img src="../images/crystal-compass/characters/isla-reference.png" alt="Isla">
+        <div class="char-name">Isla</div>
+        <div class="char-value">🔴 Courage</div>
+      </div>
+      <div class="char-card">
+        <img src="../images/crystal-compass/characters/priya-reference.png" alt="Priya">
+        <div class="char-name">Priya</div>
+        <div class="char-value">🔵 Wonder</div>
+      </div>
+      <div class="char-card">
+        <img src="../images/crystal-compass/characters/zoe-reference.png" alt="Zoe">
+        <div class="char-name">Zoe</div>
+        <div class="char-value">🟢 Integrity</div>
+      </div>
+      <div class="char-card">
+        <img src="../images/crystal-compass/characters/amara-reference.png" alt="Amara">
+        <div class="char-name">Amara</div>
+        <div class="char-value">🟡 Humanity</div>
+      </div>
+      <div class="char-card">
+        <img src="../images/crystal-compass/characters/miss-zara-reference.png" alt="Miss Zara">
+        <div class="char-name">Miss Zara</div>
+        <div class="char-value">🍎 Guide</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info box -->
+  <div class="info-box">
+    <h3>🏫 Designed for the Classroom</h3>
+    <p>
+      Each issue is built for <span class="highlight">Year 2</span> — short sentences, clear maths, and a story that makes kids want to keep going.
+      <br><br>
+      Play together on the board, or let students explore on their own devices.
+      Every issue includes a <span class="highlight">⚡ Speed Round</span> — a timed maths challenge built right into the story.
+      <br><br>
+      Aligned with <span class="highlight">Methodist Ladies' College values</span>: Integrity · Wonder · Courage · Humanity.
+    </p>
+  </div>
+
+  <div class="footer">
+    Math Blast · The Crystal Compass · Year 2 · MLC Perth
+  </div>
+
+</div>
+</body>
+</html>
