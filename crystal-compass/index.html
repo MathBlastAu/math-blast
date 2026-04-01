@@ -185,6 +185,28 @@
       opacity: 0.7;
     }
 
+    /* Izzy stamp */
+    .issue-card { position: relative; }
+    .izzy-stamp {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 220, 40, 0.92);
+      color: #3a1f00;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: 2px solid rgba(255,180,0,0.8);
+      box-shadow: 0 2px 8px rgba(255,180,0,0.4);
+      transform: rotate(3deg);
+      pointer-events: none;
+      line-height: 1.3;
+      text-align: center;
+    }
+
     /* Characters strip */
     .characters-section {
       margin-bottom: 48px;
@@ -295,6 +317,7 @@
   <div class="issues-grid">
 
     <a class="issue-card" href="../crystal-compass-issue-001-narrated.html">
+      <span class="izzy-stamp">⭐ Tested<br>by Izzy</span>
       <img class="thumb" src="../images/crystal-compass/issue-001/ch1-compass-found.png" alt="Issue 1">
       <div class="card-body">
         <div class="issue-num">Issue 1</div>
@@ -304,15 +327,16 @@
       </div>
     </a>
 
-    <div class="issue-card locked">
-      <img class="thumb" src="../images/crystal-compass/world/forest-reference.png" alt="Issue 2">
+    <a class="issue-card" href="../crystal-compass-issue-002-narrated.html">
+      <span class="izzy-stamp">⭐ Tested<br>by Izzy</span>
+      <img class="thumb" src="../images/crystal-compass/issue-002/ch1-forest-entrance.png" alt="Issue 2">
       <div class="card-body">
         <div class="issue-num">Issue 2</div>
         <h3>The Forest of Patterns</h3>
         <div class="topic">🔢 Skip Counting</div>
         <div class="value-tag">🔵 Wonder · Priya leads</div>
       </div>
-    </div>
+    </a>
 
     <div class="issue-card locked">
       <img class="thumb" src="../images/crystal-compass/world/mountain-reference.png" alt="Issue 3">
