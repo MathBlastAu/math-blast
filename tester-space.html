@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Blast — Space Arc Tester Page</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0e1a;
+      color: #e0e8ff;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px 60px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    header h1 span {
+      color: #4fc3f7;
+    }
+
+    header p {
+      margin-top: 10px;
+      color: #7b93c8;
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 14px;
+      background: #1a2340;
+      border: 1px solid #2a3a60;
+      color: #4fc3f7;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #111827;
+      border: 1px solid #1e2d4a;
+      border-radius: 14px;
+      overflow: hidden;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #4fc3f7;
+    }
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      background: #0d1526;
+    }
+
+    .card-body {
+      padding: 16px 18px 18px;
+    }
+
+    .issue-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #4fc3f7;
+      margin-bottom: 5px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .card-desc {
+      font-size: 0.82rem;
+      color: #7b93c8;
+      line-height: 1.5;
+    }
+
+    .play-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 14px;
+      background: #4fc3f7;
+      color: #0a0e1a;
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .play-btn:hover {
+      background: #81d4fa;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 56px;
+      color: #3a4f7a;
+      font-size: 0.78rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Math Blast <span>Space Arc</span></h1>
+    <p>All 7 issues — Kepler Station &amp; the Fraction Phantom</p>
+    <div class="badge">🚀 Tester Access</div>
+  </header>
+
+  <div class="grid">
+
+    <a class="card" href="https://www.math-blast.com.au/issue-001-narrated.html" target="_blank">
+      <img class="card-img" src="images/ch1-kepler-docking.png" alt="Issue 1">
+      <div class="card-body">
+        <div class="issue-label">Issue 1</div>
+        <div class="card-title">Arrival at Kepler Station</div>
+        <div class="card-desc">Jake docks at the station and encounters his first fraction challenge.</div>
+        <span class="play-btn">▶ Play</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://www.math-blast.com.au/issue-002-narrated.html" target="_blank">
+      <img class="card-img" src="images/ch1-issue002.png" alt="Issue 2">
+      <div class="card-body">
+        <div class="issue-label">Issue 2</div>
+        <div class="card-title">The Fuel Divide</div>
+        <div class="card-desc">Fractions on the fuel deck — and something strange in the vents.</div>
+        <span class="play-btn">▶ Play</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://www.math-blast.com.au/issue-003-narrated.html" target="_blank">
+      <img class="card-img" src="images/ch1-issue003.png" alt="Issue 3">
+      <div class="card-body">
+        <div class="issue-label">Issue 3</div>
+        <div class="card-title">The Robot Factory</div>
+        <div class="card-desc">Equivalent fractions power the assembly line — get them wrong and the bots go haywire.</div>
+        <span class="play-btn">▶ Play</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://www.math-blast.com.au/issue-004-narrated.html" target="_blank">
+      <img class="card-img" src="images/ch1-issue004.png" alt="Issue 4">
+      <div class="card-body">
+        <div class="issue-label">Issue 4</div>
+        <div class="card-title">Phantom Signal</div>
+        <div class="card-desc">The Fraction Phantom makes its move. Jake must compare fractions to decode the threat.</div>
+        <span class="play-btn">▶ Play</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://www.math-blast.com.au/issue-005-narrated.html" target="_blank">
+      <img class="card-img" src="images/ch1-issue005.png" alt="Issue 5">
+      <div class="card-body">
+        <div class="issue-label">Issue 5</div>
+        <div class="card-title">Into the Void</div>
+        <div class="card-desc">Adding fractions with like denominators — in a zero-gravity chase.</div>
+        <span class="play-btn">▶ Play</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://www.math-blast.com.au/issue-006-narrated.html" target="_blank">
+      <img class="card-img" src="images/ch1-issue006.png" alt="Issue 6">
+      <div class="card-body">
+        <div class="issue-label">Issue 6</div>
+        <div class="card-title">Phantom's Trap</div>
+        <div class="card-desc">Subtracting fractions to break free. The Phantom is closer than ever.</div>
+        <span class="play-btn">▶ Play</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://www.math-blast.com.au/issue-007-narrated.html" target="_blank">
+      <img class="card-img" src="images/ch1-issue007.png" alt="Issue 7">
+      <div class="card-body">
+        <div class="issue-label">Issue 7</div>
+        <div class="card-title">Showdown</div>
+        <div class="card-desc">The final confrontation. Every fraction skill Jake has learned — tested at once.</div>
+        <span class="play-btn">▶ Play</span>
+      </div>
+    </a>
+
+  </div>
+
+  <footer>
+    Math Blast · Tester build · Not for public distribution
+  </footer>
+
+</body>
+</html>
