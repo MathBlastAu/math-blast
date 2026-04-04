@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Blast — Jungle Arc | Tester Access</title>
+  <style>
+    :root {
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --dark: #0a1a0a;
+      --card-bg: rgba(15,30,15,0.9);
+      --border: rgba(34,197,94,0.25);
+      --text: #e8f5e8;
+      --muted: #6b8f6b;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--dark);
+      background-image:
+        radial-gradient(ellipse at 30% 0%, rgba(34,197,94,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 80%, rgba(245,158,11,0.08) 0%, transparent 50%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* Firefly field */
+    .firefly-field {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .firefly {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(34,197,94,0.8);
+      box-shadow: 0 0 6px rgba(34,197,94,0.6);
+      animation: firefly-rise linear infinite;
+    }
+    @keyframes firefly-rise {
+      0%   { transform: translateY(0) scale(1); opacity: 0; }
+      20%  { opacity: 1; }
+      50%  { opacity: 0.6; transform: translateY(-40vh) scale(1.2) translateX(10px); }
+      80%  { opacity: 0.3; }
+      100% { transform: translateY(-100vh) scale(0.8); opacity: 0; }
+    }
+
+    /* Layout */
+    .wrapper {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Tester banner */
+    .tester-banner {
+      background: rgba(245,158,11,0.15);
+      border: 1px solid rgba(245,158,11,0.4);
+      border-radius: 12px;
+      padding: 12px 20px;
+      text-align: center;
+      margin: 20px 0;
+      font-size: 14px;
+      color: #f59e0b;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 48px 0 32px;
+    }
+    .hero-emoji {
+      font-size: 72px;
+      display: block;
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+    .hero h1 {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--green);
+      margin-bottom: 8px;
+      line-height: 1.1;
+    }
+    .hero .sub {
+      font-size: 20px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .hero .tagline {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .char-badges {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .char-badge {
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 14px;
+      color: var(--green);
+    }
+
+    /* Learn row */
+    .learn-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .learn-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 0;
+    }
+    .learn-chip {
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(34,197,94,0.1);
+      margin: 40px 0 0;
+    }
+
+    /* Issues section */
+    .issues-section {
+      margin: 32px 0;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+
+    /* Issue card */
+    .issue-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .issue-card:hover {
+      border-color: rgba(34,197,94,0.5);
+      box-shadow: 0 8px 32px rgba(34,197,94,0.15);
+    }
+    .issue-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .issue-num {
+      background: var(--green);
+      color: #0a1a0a;
+      font-size: 12px;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .issue-meta {
+      flex: 1;
+    }
+    .issue-world {
+      font-size: 13px;
+      color: var(--amber);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .issue-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .chapter-list {
+      margin: 0 0 14px;
+      padding: 0;
+      list-style: none;
+    }
+    .chapter-list li {
+      font-size: 14px;
+      color: var(--muted);
+      padding: 4px 0;
+      padding-left: 16px;
+      position: relative;
+    }
+    .chapter-list li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      opacity: 0.6;
+    }
+    .issue-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .math-focus {
+      font-size: 12px;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.2);
+      color: var(--green);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .read-btn {
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: #0a1a0a;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 10px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      display: inline-block;
+    }
+    .read-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(34,197,94,0.4);
+    }
+
+    /* Features */
+    .features {
+      background: rgba(15,30,15,0.6);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .features .section-title {
+      margin-bottom: 20px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .feature-item span.check {
+      color: var(--green);
+      font-size: 16px;
+    }
+
+    /* Footer note */
+    .footer-note {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(34,197,94,0.08);
+    }
+    .footer-note a {
+      color: var(--green);
+      text-decoration: none;
+    }
+    .footer-note a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 36px; }
+      .hero .sub { font-size: 17px; }
+      .hero-emoji { font-size: 56px; }
+      .issue-title { font-size: 17px; }
+      .issue-footer { flex-direction: column; align-items: flex-start; }
+      .read-btn { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Firefly particle field -->
+  <div class="firefly-field" id="firefly-field"></div>
+
+  <div class="wrapper">
+
+    <!-- Tester banner -->
+    <div class="tester-banner">
+      🌿 <strong>Tester Access</strong> — Thanks for trying Math Blast Jungle! Your feedback helps us improve. All 7 issues are unlocked.
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+      <span class="hero-emoji">🌿</span>
+      <h1>Math Blast 🌿</h1>
+      <p class="sub">The Jungle Arc — Blaze &amp; Doz and the Tangle Mystery</p>
+      <p class="tagline">7 interactive adventures. Division from the ground up.</p>
+
+      <div class="char-badges">
+        <div class="char-badge">🌿 Blaze</div>
+        <div class="char-badge">🦎 Doz</div>
+        <div class="char-badge">🌿 Tangle</div>
+        <div class="char-badge">🧙 Chief Pip</div>
+        <div class="char-badge">🌱 Keeper Moss</div>
+      </div>
+
+      <p class="learn-label">What your child will learn</p>
+      <div class="learn-row">
+        <div class="learn-chip">Grouping</div>
+        <div class="learn-chip">Sharing</div>
+        <div class="learn-chip">Arrays</div>
+        <div class="learn-chip">Remainders</div>
+        <div class="learn-chip">Word problems</div>
+        <div class="learn-chip">Division fluency</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Issue cards -->
+    <div class="issues-section">
+      <div class="section-title">7 Issues — All Unlocked</div>
+
+      <!-- Issue 1 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-num">ISSUE 1</div>
+          <div class="issue-meta">
+            <div class="issue-world">🌿 The Jungle</div>
+            <div class="issue-title">Blaze Lands in the Wrong Basket!</div>
+          </div>
+        </div>
+        <ul class="chapter-list">
+          <li>Blaze Lands in the Wrong Basket!</li>
+          <li>Time to Divide the Feast!</li>
+          <li>Doz Found Something Strange in the Trees!</li>
+          <li>The Biggest Division Problems Yet!</li>
+        </ul>
+        <div class="issue-footer">
+          <div class="math-focus">📐 Introduction to Division — equal groups</div>
+          <a href="jungle-001-narrated.html" class="read-btn">Read Now →</a>
+        </div>
+      </div>
+
+      <!-- Issue 2 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-num">ISSUE 2</div>
+          <div class="issue-meta">
+            <div class="issue-world">🍄 The Fernmoss Muddle</div>
+            <div class="issue-title">The Wrong Numbers!</div>
+          </div>
+        </div>
+        <ul class="chapter-list">
+          <li>The Wrong Numbers!</li>
+          <li>Everything's Been Divided by the Wrong Amount!</li>
+          <li>Everything Needs Recalculating!</li>
+          <li>Something Is Taking the Vines on Purpose!</li>
+        </ul>
+        <div class="issue-footer">
+          <div class="math-focus">🔧 Division errors &amp; correction</div>
+          <a href="jungle-002-narrated.html" class="read-btn">Read Now →</a>
+        </div>
+      </div>
+
+      <!-- Issue 3 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-num">ISSUE 3</div>
+          <div class="issue-meta">
+            <div class="issue-world">💧 Grouping at the Waterfall</div>
+            <div class="issue-title">Everything Must Be Grouped — Not Shared!</div>
+          </div>
+        </div>
+        <ul class="chapter-list">
+          <li>Everything Must Be Grouped — Not Shared!</li>
+          <li>More Festival Items to Group!</li>
+          <li>Someone Has Been Here Before Us...</li>
+          <li>The Elder Sets the Ultimate Test!</li>
+        </ul>
+        <div class="issue-footer">
+          <div class="math-focus">🪣 Grouping vs sharing</div>
+          <a href="jungle-003-narrated.html" class="read-btn">Read Now →</a>
+        </div>
+      </div>
+
+      <!-- Issue 4 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-num">ISSUE 4</div>
+          <div class="issue-meta">
+            <div class="issue-world">🌳 The Array Forest</div>
+            <div class="issue-title">The Trail of Clues Leads Here...</div>
+          </div>
+        </div>
+        <ul class="chapter-list">
+          <li>The Trail of Clues Leads Here...</li>
+          <li>Twelve Again. Always Twelve.</li>
+          <li>The Oldest Arrays in the Forest!</li>
+          <li>This Wasn't Damage. This Was Creation.</li>
+        </ul>
+        <div class="issue-footer">
+          <div class="math-focus">🔢 Arrays &amp; multiplication-division link</div>
+          <a href="jungle-004-narrated.html" class="read-btn">Read Now →</a>
+        </div>
+      </div>
+
+      <!-- Issue 5 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-num">ISSUE 5</div>
+          <div class="issue-meta">
+            <div class="issue-world">🪨 Split Ridge</div>
+            <div class="issue-title">Tangle Looked Back. Now What?</div>
+          </div>
+        </div>
+        <ul class="chapter-list">
+          <li>Tangle Looked Back. Now What?</li>
+          <li>On the Ridge, Leftovers Mean Arguments.</li>
+          <li>It Followed Her All the Way Here.</li>
+          <li>Not Enough Planks. Almost Enough.</li>
+        </ul>
+        <div class="issue-footer">
+          <div class="math-focus">➗ Remainders</div>
+          <a href="jungle-005-narrated.html" class="read-btn">Read Now →</a>
+        </div>
+      </div>
+
+      <!-- Issue 6 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-num">ISSUE 6</div>
+          <div class="issue-meta">
+            <div class="issue-world">🌑 The Deep Root</div>
+            <div class="issue-title">Tangle Led Her All the Way Here.</div>
+          </div>
+        </div>
+        <ul class="chapter-list">
+          <li>Tangle Led Her All the Way Here.</li>
+          <li>They'd Followed the Sculptures Deeper and Deeper.</li>
+          <li>It Made Art. It Just Didn't Know About Sharing.</li>
+          <li>Smaller Groups Mean More Groups.</li>
+        </ul>
+        <div class="issue-footer">
+          <div class="math-focus">⚡ Division fluency &amp; word problems</div>
+          <a href="jungle-006-narrated.html" class="read-btn">Read Now →</a>
+        </div>
+      </div>
+
+      <!-- Issue 7 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-num">ISSUE 7</div>
+          <div class="issue-meta">
+            <div class="issue-world">🌏 The Great Sharing</div>
+            <div class="issue-title">One Hundred and Twenty Sprockets. All Five Villages.</div>
+          </div>
+        </div>
+        <ul class="chapter-list">
+          <li>One Hundred and Twenty Sprockets. All Five Villages.</li>
+          <li>Fair Doesn't Always Mean Equal Numbers.</li>
+          <li>The Best Use of a Gift Is for Others.</li>
+          <li>The Hardest Division of All.</li>
+        </ul>
+        <div class="issue-footer">
+          <div class="math-focus">🏆 Multi-step division &amp; sharing fairly</div>
+          <a href="jungle-007-narrated.html" class="read-btn">Read Now →</a>
+        </div>
+      </div>
+
+    </div><!-- /issues-section -->
+
+    <!-- What's included -->
+    <div class="features">
+      <div class="section-title">What's Included</div>
+      <div class="features-grid">
+        <div class="feature-item"><span class="check">✅</span> Audio narrated</div>
+        <div class="feature-item"><span class="check">✅</span> Interactive quizzes</div>
+        <div class="feature-item"><span class="check">✅</span> AI-generated illustrations</div>
+        <div class="feature-item"><span class="check">✅</span> Works on any device</div>
+        <div class="feature-item"><span class="check">✅</span> No app required</div>
+        <div class="feature-item"><span class="check">✅</span> 7 complete issues</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-note">
+      <p>Math Blast — Jungle Arc &nbsp;·&nbsp; Tester Preview</p>
+      <p style="margin-top:6px;">Built with 🌿 by the Math Blast team. Feedback? Reply to your invite email.</p>
+    </div>
+
+  </div><!-- /wrapper -->
+
+  <script>
+    function createFireflies() {
+      const field = document.getElementById('firefly-field');
+      for (let i = 0; i < 30; i++) {
+        const f = document.createElement('div');
+        f.className = 'firefly';
+        f.style.cssText = `
+          left: ${Math.random() * 100}%;
+          bottom: ${Math.random() * 100}%;
+          animation-delay: ${Math.random() * 6}s;
+          animation-duration: ${4 + Math.random() * 4}s;
+          width: ${3 + Math.random() * 4}px;
+          height: ${3 + Math.random() * 4}px;
+        `;
+        field.appendChild(f);
+      }
+    }
+    createFireflies();
+  </script>
+
+</body>
+</html>
