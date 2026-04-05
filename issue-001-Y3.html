@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math Blast 🚀 — Space Issue 1 (Engagement Test)</title>
+<title>Math Blast 🚀 — Space Issue 1 · Year 3</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -138,21 +138,13 @@
     box-shadow:0 4px 20px rgba(123,47,255,0.3); transition:transform 0.15s; }
   .next-issue-btn:hover { transform:scale(1.03); }
 
-  /* CONTROLS — bottom centre */
+  /* CONTROLS */
   #ctrl-bar { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:999;
     background:rgba(0,0,0,0.75); padding:8px 16px; border-radius:30px; border:1px solid rgba(255,255,255,0.15); backdrop-filter:blur(8px); }
   .ctrl-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:white;
     font-family:'Nunito',sans-serif; font-weight:700; font-size:12px; padding:6px 14px; border-radius:16px; cursor:pointer; }
   .ctrl-btn:hover { background:rgba(255,255,255,0.18); }
   .ctrl-btn.muted { background:rgba(255,50,50,0.3); border-color:#ff3232; }
-
-  /* YEAR SELECTOR */
-  .yr-sel-btn { background:rgba(123,47,255,0.15); border:2px solid rgba(123,47,255,0.4); color:#c0a0ff;
-    font-family:'Nunito',sans-serif; font-size:17px; font-weight:900; padding:14px 32px;
-    border-radius:50px; cursor:pointer; transition:all 0.15s; }
-  .yr-sel-btn:hover { background:rgba(123,47,255,0.35); border-color:#7b2fff; color:#fff; transform:scale(1.05); }
-  .yr-sel-btn.selected { background:linear-gradient(135deg,#7b2fff,#ff2fff); border-color:#ff2fff; color:#fff;
-    box-shadow:0 4px 20px rgba(123,47,255,0.5); transform:scale(1.08); }
 
   /* SCORE BADGE */
   #score-badge {
@@ -213,6 +205,10 @@
     font-family:'Nunito',Arial,sans-serif; font-size:17px; font-weight:900; padding:15px;
     border-radius:50px; border:none; cursor:pointer; box-shadow:0 4px 20px rgba(123,47,255,0.4); }
   .tc-next-btn.show { display:block; animation:fadeIn 0.3s ease; }
+
+  /* SVG QUESTION IMAGES */
+  .question-img-svg { display:block; max-width:320px; width:100%; margin:14px auto 18px; }
+  .question-img-svg svg { width:100%; height:auto; border-radius:8px; border:2px solid rgba(123,47,255,0.3); display:block; }
 </style>
 </head>
 <body>
@@ -224,22 +220,13 @@
   <!-- TITLE -->
   <div id="title-screen" class="title-screen">
     <span class="rocket-emoji">🚀</span>
-    <p class="issue-label">The Space Arc · Issue 1</p>
+    <p class="issue-label">The Space Arc · Issue 1 · Year 3</p>
     <h1>MATH BLAST<br><span>🚀 THE MISSING QUARTER</span></h1>
-    <p class="tagline">Jake arrives at Kepler Station — and the fuel readings make no sense!</p>
+    <span style="background:rgba(0,180,80,0.2);border:1px solid #00cc60;color:#00cc60;font-size:13px;font-weight:900;padding:4px 14px;border-radius:20px;letter-spacing:1px;margin-left:8px;">YEAR 3</span>
+    <p class="tagline" style="margin-top:12px;">Jake arrives at Kepler Station — and the fuel readings make no sense!</p>
     <p class="meta">5 chapters · 10 challenges · Fractions · Year 3</p>
-    <div class="narrated-badge">🎙️ Narrated Edition</div><br>
-    <!-- YEAR GROUP SELECTOR -->
-    <div id="year-selector" style="margin:24px 0 20px;">
-      <p style="font-size:14px;color:#aa88cc;font-weight:700;margin-bottom:14px;">Select your year level to get the right questions:</p>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        <button class="yr-sel-btn" id="sel-Y3" onclick="selectYear('Y3')">Year 3</button>
-        <button class="yr-sel-btn" id="sel-Y4" onclick="selectYear('Y4')">Year 4</button>
-        <button class="yr-sel-btn" id="sel-Y5" onclick="selectYear('Y5')">Year 5</button>
-      </div>
-      <p id="yr-desc" style="font-size:13px;color:#7755aa;margin-top:12px;min-height:18px;"></p>
-    </div>
-    <button class="start-btn" id="start-btn-main" onclick="startGame()" style="display:none;">🚀 START MISSION</button>
+    <div class="narrated-badge">🎙️ Narrated · Year 3 Edition</div><br>
+    <button class="start-btn" onclick="startGame()">🚀 START MISSION</button>
     <p style="font-size:12px;color:#443366;margin-top:16px;">Narrated by George · Jake voiced by Andrew · Fuel Officer Priya &amp; The Phantom voiced by River</p>
   </div>
 
@@ -276,9 +263,33 @@
     <div class="quiz-box" id="quiz-q1">
       <div class="quiz-meta"><span class="difficulty diff-warmup">🔁 Warm-Up</span><span class="acara-tag">Fractions · Year 3</span></div>
       <span class="quiz-icon">⛽</span>
-      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 1 — Unit Fractions</div>
-      <div class="question">Jake's fuel tank is divided into <strong>4 equal sections</strong>.<br>Exactly <strong>1 section</strong> is full.<br><br>What fraction of the tank is full?</div>
-      <img src="images/q1-issue001.png" alt="Fuel tank gauge" class="question-img" />
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 1 — What Fraction Is Full?</div>
+      <div class="question">Jake's fuel tank is divided into <strong>4 equal sections</strong>. Exactly <strong>1 section</strong> is full.<br><br>What fraction of the tank is full?</div>
+      <!-- Q1 SVG: 4-section bar, 1 filled -->
+      <div class="question-img-svg">
+        <svg viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg">
+          <rect width="280" height="60" rx="8" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+          <!-- Section 1 - filled cyan -->
+          <rect x="2" y="2" width="68" height="56" rx="6" fill="#00e5ff"/>
+          <!-- Section 2 - empty -->
+          <rect x="72" y="2" width="68" height="56" rx="0" fill="#2a1a50"/>
+          <!-- Section 3 - empty -->
+          <rect x="142" y="2" width="68" height="56" rx="0" fill="#2a1a50"/>
+          <!-- Section 4 - empty -->
+          <rect x="212" y="2" width="66" height="56" rx="6" fill="#2a1a50"/>
+          <!-- Dividers -->
+          <line x1="70" y1="2" x2="70" y2="58" stroke="#7b2fff" stroke-width="2"/>
+          <line x1="140" y1="2" x2="140" y2="58" stroke="#7b2fff" stroke-width="2"/>
+          <line x1="210" y1="2" x2="210" y2="58" stroke="#7b2fff" stroke-width="2"/>
+          <!-- Section labels -->
+          <text x="36" y="72" text-anchor="middle" fill="#aa88cc" font-size="10" font-family="sans-serif">1</text>
+          <text x="106" y="72" text-anchor="middle" fill="#aa88cc" font-size="10" font-family="sans-serif">2</text>
+          <text x="176" y="72" text-anchor="middle" fill="#aa88cc" font-size="10" font-family="sans-serif">3</text>
+          <text x="246" y="72" text-anchor="middle" fill="#aa88cc" font-size="10" font-family="sans-serif">4</text>
+          <!-- Label -->
+          
+        </svg>
+      </div>
       <div class="options">
         <button class="opt-btn" onclick="answer(this,false,'q1')">1/2</button>
         <button class="opt-btn" onclick="answer(this,true,'q1')">1/4</button>
@@ -295,7 +306,7 @@
         <h3>⚡ Speed Challenge!</h3>
         <p>Answer fast — the fuel tanks won't wait!</p>
       </div>
-      <div class="tc-question" id="tc-q-1">Jake's ship has <span>3 equal sections</span>.<br>1 section is full. What fraction?</div>
+      <div class="tc-question" id="tc-q-1">A tank has <span>3 equal sections</span>.<br>1 section is full. What fraction?</div>
       <div class="tc-timer-wrap">
         <div class="tc-timer-row"><span>Time remaining</span><span id="tc-time-1">8s</span></div>
         <div class="tc-timer-bar"><div class="tc-timer-fill" id="tc-fill-1"></div></div>
@@ -335,9 +346,25 @@
     <div class="quiz-box" id="quiz-q2">
       <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Fractions · Year 3</span></div>
       <span class="quiz-icon">🔋</span>
-      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 2 — Halves</div>
-      <div class="question"><strong>Tank A</strong> is divided into <strong>2 equal parts</strong>.<br>One part is full.<br><br>What fraction is Tank A?</div>
-      <img src="images/q2-issue001.png" alt="Tank A gauge" class="question-img" />
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 2 — Half Full</div>
+      <div class="question"><strong>Tank A</strong> is divided into <strong>2 equal parts</strong>. One part is full.<br><br>What fraction is Tank A?</div>
+      <!-- Q2 SVG: 2 sections, 1 filled -->
+      <div class="question-img-svg">
+        <svg viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg">
+          <rect width="280" height="60" rx="8" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+          <!-- Section 1 - filled cyan -->
+          <rect x="2" y="2" width="136" height="56" rx="6" fill="#00e5ff"/>
+          <!-- Section 2 - empty -->
+          <rect x="140" y="2" width="138" height="56" rx="6" fill="#2a1a50"/>
+          <!-- Divider -->
+          <line x1="139" y1="2" x2="139" y2="58" stroke="#7b2fff" stroke-width="2"/>
+          <!-- Section labels -->
+          <text x="70" y="72" text-anchor="middle" fill="#aa88cc" font-size="10" font-family="sans-serif">1</text>
+          <text x="210" y="72" text-anchor="middle" fill="#aa88cc" font-size="10" font-family="sans-serif">2</text>
+          <!-- Label -->
+          
+        </svg>
+      </div>
       <div class="options">
         <button class="opt-btn" onclick="answer(this,false,'q2')">1/4</button>
         <button class="opt-btn" onclick="answer(this,true,'q2')">1/2</button>
@@ -357,21 +384,42 @@
         </div>
       </div>
       <div class="story-text" id="story-q3s">
-        Jake moved to Tank B — larger than Tank A, with a display showing eight sections. Three of them glowed green.<br><br>
-        <em>"Tank B is divided into 8 equal sections. Three sections are full,"</em> Jake said, opening his notebook. <em>"What fraction is that? And — is it more or less than half?"</em>
+        Jake moved to Tank B — larger than Tank A, with four sections clearly visible. Three of them glowed green.<br><br>
+        <em>"Tank B is divided into 4 equal sections. Three sections are full,"</em> Jake said, opening his notebook. <em>"What fraction is that?"</em>
       </div>
       <div id="lock-q3" class="quiz-lock">🔒 Listen to unlock!</div>
       <div class="quiz-box" id="quiz-q3">
         <div class="quiz-meta"><span class="difficulty diff-easy">⭐ Easy</span><span class="acara-tag">Fractions · Year 3</span></div>
         <span class="quiz-icon">🔋</span>
-        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 3 — Eighths (is it more or less than ½?)</div>
-        <div class="question"><strong>Tank B</strong> has <strong>8 equal sections</strong>.<br><strong>3 sections</strong> are full.<br><br>What fraction is Tank B? Is it more or less than half?</div>
-        <img src="images/q3-issue001.png" alt="Tank B gauge" class="question-img" />
+        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 3 — Reading Quarters</div>
+        <div class="question"><strong>Tank B</strong> is divided into <strong>4 equal sections</strong>. <strong>3 sections</strong> are full.<br><br>What fraction is Tank B?</div>
+        <!-- Q3 SVG: 4 sections, 3 filled -->
+        <div class="question-img-svg">
+          <svg viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg">
+            <rect width="280" height="60" rx="8" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+            <!-- Sections 1-3 filled cyan -->
+            <rect x="2" y="2" width="68" height="56" rx="6" fill="#00e5ff"/>
+            <rect x="72" y="2" width="68" height="56" rx="0" fill="#00e5ff"/>
+            <rect x="142" y="2" width="68" height="56" rx="0" fill="#00e5ff"/>
+            <!-- Section 4 empty -->
+            <rect x="212" y="2" width="66" height="56" rx="6" fill="#2a1a50"/>
+            <!-- Dividers -->
+            <line x1="70" y1="2" x2="70" y2="58" stroke="#7b2fff" stroke-width="2"/>
+            <line x1="140" y1="2" x2="140" y2="58" stroke="#7b2fff" stroke-width="2"/>
+            <line x1="210" y1="2" x2="210" y2="58" stroke="#7b2fff" stroke-width="2"/>
+            <!-- Section labels -->
+            <text x="36" y="72" text-anchor="middle" fill="#aa88cc" font-size="10" font-family="sans-serif">1</text>
+            <text x="106" y="72" text-anchor="middle" fill="#aa88cc" font-size="10" font-family="sans-serif">2</text>
+            <text x="176" y="72" text-anchor="middle" fill="#aa88cc" font-size="10" font-family="sans-serif">3</text>
+            <text x="246" y="72" text-anchor="middle" fill="#aa88cc" font-size="10" font-family="sans-serif">4</text>
+            
+          </svg>
+        </div>
         <div class="options">
-          <button class="opt-btn" onclick="answer(this,false,'q3')">3/8 — more than ½</button>
-          <button class="opt-btn" onclick="answer(this,true,'q3')">3/8 — less than ½</button>
-          <button class="opt-btn" onclick="answer(this,false,'q3')">5/8 — more than ½</button>
-          <button class="opt-btn" onclick="answer(this,false,'q3')">3/4 — more than ½</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">1/4</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">2/4</button>
+          <button class="opt-btn" onclick="answer(this,true,'q3')">3/4</button>
+          <button class="opt-btn" onclick="answer(this,false,'q3')">4/4</button>
         </div>
         <div class="feedback" id="feedback-q3"></div>
         <button class="next-btn" id="next-q3" onclick="startTC(2)">⚡ Speed Challenge before Chapter 3!</button>
@@ -384,15 +432,15 @@
         <h3>⚡ Speed Challenge!</h3>
         <p>Priya is watching — think fast!</p>
       </div>
-      <div class="tc-question" id="tc-q-2">A tank has <span>8 equal parts</span>.<br>4 parts are full. What fraction?</div>
+      <div class="tc-question" id="tc-q-2">A tank has <span>4 sections</span>.<br>2 are full. What fraction?</div>
       <div class="tc-timer-wrap">
         <div class="tc-timer-row"><span>Time remaining</span><span id="tc-time-2">8s</span></div>
         <div class="tc-timer-bar"><div class="tc-timer-fill" id="tc-fill-2"></div></div>
       </div>
       <div class="tc-options" id="tc-opts-2">
-        <button class="tc-btn" onclick="tcAnswer(2,this,false)">3/8</button>
-        <button class="tc-btn" onclick="tcAnswer(2,this,true)">4/8</button>
-        <button class="tc-btn" onclick="tcAnswer(2,this,false)">5/8</button>
+        <button class="tc-btn" onclick="tcAnswer(2,this,false)">1/4</button>
+        <button class="tc-btn" onclick="tcAnswer(2,this,true)">2/4</button>
+        <button class="tc-btn" onclick="tcAnswer(2,this,false)">3/4</button>
         <button class="tc-btn" onclick="tcAnswer(2,this,false)">4/4</button>
       </div>
       <div class="tc-result" id="tc-result-2"></div>
@@ -424,9 +472,41 @@
     <div class="quiz-box" id="quiz-q4">
       <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Fractions · Year 3</span></div>
       <span class="quiz-icon">🔍</span>
-      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 4 — What Was Taken?</div>
-      <div class="question"><strong>Tank C</strong> was completely full — all <strong>4 sections</strong> filled.<br>Now it shows only <strong>3 sections</strong> full.<br><br>What fraction was taken?</div>
-      <img src="images/q4-issue001.png" alt="Tank C before and after" class="question-img" />
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 4 — What Went Missing?</div>
+      <div class="question"><strong>Tank C</strong> was completely full — all <strong>4 sections</strong> filled. Now it shows only <strong>3 sections</strong> full.<br><br>What fraction was taken?</div>
+      <!-- Q4 SVG: before and after bars -->
+      <div class="question-img-svg">
+        <svg viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
+          <!-- BEFORE label -->
+          <text x="10" y="15" fill="#aaaaaa" font-size="11" font-weight="bold" font-family="sans-serif">BEFORE (4/4 full)</text>
+          <!-- Before bar - all 4 filled -->
+          <rect width="276" height="40" x="2" y="18" rx="6" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+          <rect x="3" y="19" width="67" height="38" rx="5" fill="#00e5ff"/>
+          <rect x="72" y="19" width="66" height="38" rx="0" fill="#00e5ff"/>
+          <rect x="140" y="19" width="66" height="38" rx="0" fill="#00e5ff"/>
+          <rect x="208" y="19" width="68" height="38" rx="5" fill="#00e5ff"/>
+          <line x1="70" y1="19" x2="70" y2="57" stroke="#7b2fff" stroke-width="2"/>
+          <line x1="139" y1="19" x2="139" y2="57" stroke="#7b2fff" stroke-width="2"/>
+          <line x1="207" y1="19" x2="207" y2="57" stroke="#7b2fff" stroke-width="2"/>
+          <!-- Arrow down -->
+          <text x="130" y="78" fill="#ff4444" font-size="18" font-family="sans-serif">↓</text>
+          
+          <!-- AFTER label -->
+          <text x="10" y="95" fill="#aaaaaa" font-size="11" font-family="sans-serif">AFTER</text>
+          <!-- After bar - 3 filled, 1 with X -->
+          <rect width="276" height="40" x="2" y="98" rx="6" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+          <rect x="3" y="99" width="67" height="38" rx="5" fill="#00e5ff"/>
+          <rect x="72" y="99" width="66" height="38" rx="0" fill="#00e5ff"/>
+          <rect x="140" y="99" width="66" height="38" rx="0" fill="#00e5ff"/>
+          <rect x="208" y="99" width="68" height="38" rx="5" fill="#3a0a0a"/>
+          <line x1="70" y1="99" x2="70" y2="137" stroke="#7b2fff" stroke-width="2"/>
+          <line x1="139" y1="99" x2="139" y2="137" stroke="#7b2fff" stroke-width="2"/>
+          <line x1="207" y1="99" x2="207" y2="137" stroke="#7b2fff" stroke-width="2"/>
+          <!-- X mark on last section -->
+          <line x1="215" y1="106" x2="268" y2="130" stroke="#ff4444" stroke-width="3"/>
+          <line x1="268" y1="106" x2="215" y2="130" stroke="#ff4444" stroke-width="3"/>
+        </svg>
+      </div>
       <div class="options">
         <button class="opt-btn" onclick="answer(this,false,'q4')">1/2</button>
         <button class="opt-btn" onclick="answer(this,false,'q4')">3/4</button>
@@ -446,21 +526,48 @@
         </div>
       </div>
       <div class="story-text" id="story-q5s">
-        Jake checked Tank D. It had only been half full before the transfer — and now showed just one quarter remaining.<br><br>
-        <em>"Here's where it gets interesting,"</em> Jake murmured. <em>"Tank D was half full before — two out of four sections. Now it shows one quarter. What fraction was taken? And think carefully — it's the same fraction as Tank C, but Tank D was only half full to start with."</em>
+        Jake checked two smaller backup tanks. They had very different amounts of fuel in them — and he needed to know which one had more.<br><br>
+        <em>"Tank X is half full — one out of two sections. Tank Y is only a quarter full — one out of four sections. Which tank has more fuel?"</em>
       </div>
       <div id="lock-q5" class="quiz-lock">🔒 Listen to unlock!</div>
       <div class="quiz-box" id="quiz-q5">
-        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Fractions · Year 3–4</span></div>
+        <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Comparing Fractions · Year 3</span></div>
         <span class="quiz-icon">💡</span>
-        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 5 — Same Fraction, Different Amounts!</div>
-        <div class="question"><strong>Tank D</strong> was <strong>half full</strong> (2 out of 4 sections).<br>After the transfer it shows <strong>1 out of 4</strong> sections.<br><br>What fraction was taken from Tank D?</div>
-        <img src="images/q5-issue001.png" alt="Tank D before and after" class="question-img" />
+        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 5 — Which Is Bigger?</div>
+        <div class="question">Jake has two smaller tanks.<br><strong>Tank X</strong> is <strong>1/2 full</strong>. <strong>Tank Y</strong> is <strong>1/4 full</strong>.<br><br>Which tank has more fuel?</div>
+        <!-- Q5 SVG: two bars side by side -->
+        <div class="question-img-svg">
+          <svg viewBox="0 0 280 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Tank X label -->
+            <text x="65" y="12" text-anchor="middle" fill="#ffdd00" font-size="11" font-weight="bold" font-family="sans-serif">Tank X</text>
+            <!-- Tank X bar: 2 sections, 1 filled -->
+            <rect x="2" y="16" width="126" height="40" rx="6" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+            <rect x="3" y="17" width="61" height="38" rx="5" fill="#00e5ff"/>
+            <rect x="66" y="17" width="60" height="38" rx="5" fill="#2a1a50"/>
+            <line x1="65" y1="17" x2="65" y2="55" stroke="#7b2fff" stroke-width="2"/>
+            <text x="65" y="68" text-anchor="middle" fill="#aaaaaa" font-size="10" font-family="sans-serif">1 out of 2</text>
+
+            <!-- Tank Y label -->
+            <text x="210" y="12" text-anchor="middle" fill="#ffdd00" font-size="11" font-weight="bold" font-family="sans-serif">Tank Y</text>
+            <!-- Tank Y bar: 4 sections, 1 filled -->
+            <rect x="148" y="16" width="130" height="40" rx="6" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+            <rect x="149" y="17" width="30" height="38" rx="5" fill="#00e5ff"/>
+            <rect x="181" y="17" width="30" height="38" rx="0" fill="#2a1a50"/>
+            <rect x="213" y="17" width="30" height="38" rx="0" fill="#2a1a50"/>
+            <rect x="245" y="17" width="31" height="38" rx="5" fill="#2a1a50"/>
+            <line x1="180" y1="17" x2="180" y2="55" stroke="#7b2fff" stroke-width="2"/>
+            <line x1="212" y1="17" x2="212" y2="55" stroke="#7b2fff" stroke-width="2"/>
+            <line x1="244" y1="17" x2="244" y2="55" stroke="#7b2fff" stroke-width="2"/>
+            <text x="213" y="68" text-anchor="middle" fill="#aaaaaa" font-size="10" font-family="sans-serif">1 out of 4</text>
+
+            <text x="140" y="90" text-anchor="middle" fill="#00cc60" font-size="12" font-weight="bold" font-family="sans-serif">1/2 vs 1/4 — which is more?</text>
+          </svg>
+        </div>
         <div class="options">
-          <button class="opt-btn" onclick="answer(this,false,'q5')">1/2</button>
-          <button class="opt-btn" onclick="answer(this,true,'q5')">1/4</button>
-          <button class="opt-btn" onclick="answer(this,false,'q5')">3/4</button>
-          <button class="opt-btn" onclick="answer(this,false,'q5')">2/4</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">Tank Y (1/4)</button>
+          <button class="opt-btn" onclick="answer(this,true,'q5')">Tank X (1/2)</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">They are equal</button>
+          <button class="opt-btn" onclick="answer(this,false,'q5')">Can't tell</button>
         </div>
         <div class="feedback" id="feedback-q5"></div>
         <button class="next-btn" id="next-q5" onclick="startTC(3)">⚡ Speed Challenge before Chapter 4!</button>
@@ -473,15 +580,15 @@
         <h3>⚡ Speed Challenge!</h3>
         <p>The Phantom is watching — answer before time runs out!</p>
       </div>
-      <div class="tc-question" id="tc-q-3">A tank was <span>full (4/4)</span>.<br>1/4 was stolen. What's left?</div>
+      <div class="tc-question" id="tc-q-3">Tank was <span>full (4/4)</span>.<br>Now shows 3/4. What fraction was taken?</div>
       <div class="tc-timer-wrap">
         <div class="tc-timer-row"><span>Time remaining</span><span id="tc-time-3">8s</span></div>
         <div class="tc-timer-bar"><div class="tc-timer-fill" id="tc-fill-3"></div></div>
       </div>
       <div class="tc-options" id="tc-opts-3">
-        <button class="tc-btn" onclick="tcAnswer(3,this,false)">1/4</button>
+        <button class="tc-btn" onclick="tcAnswer(3,this,true)">1/4</button>
         <button class="tc-btn" onclick="tcAnswer(3,this,false)">2/4</button>
-        <button class="tc-btn" onclick="tcAnswer(3,this,true)">3/4</button>
+        <button class="tc-btn" onclick="tcAnswer(3,this,false)">3/4</button>
         <button class="tc-btn" onclick="tcAnswer(3,this,false)">4/4</button>
       </div>
       <div class="tc-result" id="tc-result-3"></div>
@@ -510,16 +617,34 @@
     </div>
     <div id="lock-q6" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
     <div class="quiz-box" id="quiz-q6">
-      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Fractions · Year 3–4</span></div>
+      <div class="quiz-meta"><span class="difficulty diff-medium">⭐⭐ Medium</span><span class="acara-tag">Fractions · Year 3</span></div>
       <span class="quiz-icon">🚀</span>
-      <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 6 — Adding Fractions</div>
-      <div class="question">Ship Orion needs a <strong>full tank (4/4)</strong>.<br>Tank A has <strong>1/2</strong>. Tank C has <strong>3/4</strong>.<br><br>If we combine Tank A and Tank C, is there enough for Orion?</div>
-      <img src="images/q6-issue001.png" alt="Combining tanks for Orion" class="question-img" />
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 6 — Sharing the Pods</div>
+      <div class="question">There are <strong>6 fuel pods</strong> to share equally between <strong>2 ships</strong>.<br><br>What fraction of the pods does each ship get?</div>
+      <!-- Q6 SVG: 6 circles split into 2 groups -->
+      <div class="question-img-svg">
+        <svg viewBox="0 0 280 90" xmlns="http://www.w3.org/2000/svg">
+          <rect width="280" height="70" rx="8" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+          <!-- 6 circles: first 3 gold, last 3 purple -->
+          <circle cx="28" cy="30" r="16" fill="#ffcc00" stroke="#ffaa00" stroke-width="2"/>
+          <circle cx="68" cy="30" r="16" fill="#ffcc00" stroke="#ffaa00" stroke-width="2"/>
+          <circle cx="108" cy="30" r="16" fill="#ffcc00" stroke="#ffaa00" stroke-width="2"/>
+          <!-- Dashed divider -->
+          <line x1="140" y1="5" x2="140" y2="65" stroke="#ffffff" stroke-width="2" stroke-dasharray="5,4"/>
+          <circle cx="172" cy="30" r="16" fill="#9933ff" stroke="#7700cc" stroke-width="2"/>
+          <circle cx="212" cy="30" r="16" fill="#9933ff" stroke="#7700cc" stroke-width="2"/>
+          <circle cx="252" cy="30" r="16" fill="#9933ff" stroke="#7700cc" stroke-width="2"/>
+          <!-- Labels -->
+          <text x="68" y="60" text-anchor="middle" fill="#ffcc00" font-size="10" font-weight="bold" font-family="sans-serif">Ship 1 gets 3</text>
+          <text x="212" y="60" text-anchor="middle" fill="#cc88ff" font-size="10" font-weight="bold" font-family="sans-serif">Ship 2 gets 3</text>
+          <text x="140" y="83" text-anchor="middle" fill="#00cc60" font-size="12" font-weight="bold" font-family="sans-serif"></text>
+        </svg>
+      </div>
       <div class="options">
-        <button class="opt-btn" onclick="answer(this,false,'q6')">No — they only have 4/6</button>
-        <button class="opt-btn" onclick="answer(this,false,'q6')">No — they only have 4/8</button>
-        <button class="opt-btn" onclick="answer(this,true,'q6')">Yes — they have 5/4 (more than 1 full tank)</button>
-        <button class="opt-btn" onclick="answer(this,false,'q6')">Yes — they have exactly 4/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">1/3</button>
+        <button class="opt-btn" onclick="answer(this,true,'q6')">1/2</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">1/4</button>
+        <button class="opt-btn" onclick="answer(this,false,'q6')">2/3</button>
       </div>
       <div class="feedback" id="feedback-q6"></div>
       <button class="next-btn" id="next-q6" onclick="showQ7Block()">Next Question ➜</button>
@@ -534,21 +659,51 @@
         </div>
       </div>
       <div class="story-text" id="story-q7s">
-        Jake turned to Tank B. Ship Lyra only needed half a tank — but did Tank B have enough?<br><br>
-        <em>"Tank B has three eighths. Lyra needs half. Is three eighths more or less than one half?"</em> Jake tapped his notebook. <em>"This is the trap — larger denominator doesn't mean larger fraction."</em>
+        Jake turned to compare two tanks. One tank was three quarters full, and another was one half full. He needed to know which was bigger.<br><br>
+        <em>"Is 3/4 more or less than 1/2? Hint — what does one half look like in quarters?"</em> Jake tapped his notebook. <em>"Convert first, then compare."</em>
       </div>
       <div id="lock-q7" class="quiz-lock">🔒 Listen to unlock!</div>
       <div class="quiz-box" id="quiz-q7">
-        <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Comparing Fractions · Year 3–4</span></div>
+        <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Comparing Fractions · Year 3</span></div>
         <span class="quiz-icon">⚖️</span>
-        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 7 — Comparing Fractions</div>
-        <div class="question">Ship Lyra needs <strong>1/2</strong> a tank.<br>Tank B has <strong>3/8</strong>.<br><br>Is 3/8 more or less than 1/2? Does Lyra have enough?</div>
-        <img src="images/q7-issue001.png" alt="Comparing 3/8 and 1/2" class="question-img" />
+        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 7 — More or Less?</div>
+        <div class="question">Is <strong>3/4</strong> more than or less than <strong>1/2</strong>?<br><br>Hint: what is 1/2 in quarters?</div>
+        <!-- Q7 SVG: two comparison bars -->
+        <div class="question-img-svg">
+          <svg viewBox="0 0 280 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Top bar label: neutral -->
+            <text x="6" y="14" fill="#aa88cc" font-size="11" font-family="sans-serif">Bar A (4 sections)</text>
+            <!-- Top bar: 4 sections, 3 cyan -->
+            <rect x="2" y="18" width="240" height="30" rx="6" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+            <rect x="3" y="19" width="57" height="28" rx="5" fill="#00e5ff"/>
+            <rect x="62" y="19" width="58" height="28" rx="0" fill="#00e5ff"/>
+            <rect x="122" y="19" width="58" height="28" rx="0" fill="#00e5ff"/>
+            <rect x="182" y="19" width="58" height="28" rx="5" fill="#2a1a50"/>
+            <line x1="61" y1="19" x2="61" y2="47" stroke="#7b2fff" stroke-width="2"/>
+            <line x1="121" y1="19" x2="121" y2="47" stroke="#7b2fff" stroke-width="2"/>
+            <line x1="181" y1="19" x2="181" y2="47" stroke="#7b2fff" stroke-width="2"/>
+
+            <!-- Bottom bar label: neutral -->
+            <text x="6" y="66" fill="#aa88cc" font-size="11" font-family="sans-serif">Bar B (4 sections)</text>
+            <!-- Bottom bar: 4 sections, 2 cyan -->
+            <rect x="2" y="70" width="240" height="30" rx="6" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+            <rect x="3" y="71" width="57" height="28" rx="5" fill="#00e5ff"/>
+            <rect x="62" y="71" width="58" height="28" rx="0" fill="#00e5ff"/>
+            <rect x="122" y="71" width="58" height="28" rx="5" fill="#2a1a50"/>
+            <rect x="182" y="71" width="58" height="28" rx="5" fill="#2a1a50"/>
+            <line x1="61" y1="71" x2="61" y2="99" stroke="#7b2fff" stroke-width="2"/>
+            <line x1="121" y1="71" x2="121" y2="99" stroke="#7b2fff" stroke-width="2"/>
+            <line x1="181" y1="71" x2="181" y2="99" stroke="#7b2fff" stroke-width="2"/>
+
+            <!-- Right side: question mark only -->
+            <text x="252" y="65" fill="#ffdd00" font-size="20" font-weight="bold" font-family="sans-serif">?</text>
+          </svg>
+        </div>
         <div class="options">
-          <button class="opt-btn" onclick="answer(this,false,'q7')">3/8 &gt; 1/2 — yes, enough</button>
-          <button class="opt-btn" onclick="answer(this,true,'q7')">3/8 &lt; 1/2 — not enough</button>
-          <button class="opt-btn" onclick="answer(this,false,'q7')">3/8 = 1/2 — exactly enough</button>
-          <button class="opt-btn" onclick="answer(this,false,'q7')">Can't compare — different denominators</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">3/4 is less than 1/2</button>
+          <button class="opt-btn" onclick="answer(this,true,'q7')">3/4 is more than 1/2</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">They are equal</button>
+          <button class="opt-btn" onclick="answer(this,false,'q7')">Can't compare</button>
         </div>
         <div class="feedback" id="feedback-q7"></div>
         <button class="next-btn" id="next-q7" onclick="showQ8Block()">Next Question ➜</button>
@@ -564,21 +719,42 @@
         </div>
       </div>
       <div class="story-text" id="story-q8s">
-        In the emergency store, there were 6 fuel pods. Two ships still needed fuel and the pods had to be shared equally between them.<br><br>
-        <em>"Six pods, two ships,"</em> Jake said. <em>"What fraction of the store does each ship get?"</em>
+        In the docking bay, 8 ships were lined up at the station. Jake was told that 4 of them had already been refuelled.<br><br>
+        <em>"Eight ships total, 4 already done,"</em> Jake said. <em>"What fraction of the fleet has been refuelled?"</em>
       </div>
       <div id="lock-q8" class="quiz-lock">🔒 Listen to unlock!</div>
       <div class="quiz-box" id="quiz-q8">
         <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Fractions · Year 3</span></div>
         <span class="quiz-icon">📦</span>
-        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 8 — Fractions of a Collection</div>
-        <div class="question">There are <strong>6 fuel pods</strong> to share equally between <strong>2 ships</strong>.<br><br>What fraction of the store does each ship get?</div>
-        <img src="images/q8-issue001.png" alt="Sharing 6 fuel pods" class="question-img" />
+        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 8 — Fraction of the Fleet</div>
+        <div class="question">There are <strong>8 ships</strong> at the station. <strong>4 ships</strong> have been refuelled.<br><br>What fraction of the fleet has been refuelled?</div>
+        <!-- Q8 SVG: 8 rocket icons -->
+        <div class="question-img-svg">
+          <svg viewBox="0 0 280 90" xmlns="http://www.w3.org/2000/svg">
+            <rect width="280" height="70" rx="8" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+            <!-- Labels -->
+            <text x="70" y="14" text-anchor="middle" fill="#ffcc00" font-size="10" font-weight="bold" font-family="sans-serif">Refuelled ✓</text>
+            <text x="210" y="14" text-anchor="middle" fill="#888888" font-size="10" font-weight="bold" font-family="sans-serif">Waiting...</text>
+            <!-- 8 rockets (triangles): first 4 yellow, last 4 grey -->
+            <polygon points="17,55 27,30 37,55" fill="#ffcc00"/>
+            <polygon points="50,55 60,30 70,55" fill="#ffcc00"/>
+            <polygon points="83,55 93,30 103,55" fill="#ffcc00"/>
+            <polygon points="116,55 126,30 136,55" fill="#ffcc00"/>
+            <!-- Divider -->
+            <line x1="143" y1="20" x2="143" y2="60" stroke="#555577" stroke-width="2" stroke-dasharray="4,3"/>
+            <polygon points="149,55 159,30 169,55" fill="#445566"/>
+            <polygon points="182,55 192,30 202,55" fill="#445566"/>
+            <polygon points="215,55 225,30 235,55" fill="#445566"/>
+            <polygon points="248,55 258,30 268,55" fill="#445566"/>
+            <!-- Bottom label -->
+            <text x="140" y="82" text-anchor="middle" fill="#cc88ff" font-size="11" font-weight="bold" font-family="sans-serif">4 out of 8</text>
+          </svg>
+        </div>
         <div class="options">
-          <button class="opt-btn" onclick="answer(this,false,'q8')">1/3</button>
-          <button class="opt-btn" onclick="answer(this,true,'q8')">1/2</button>
           <button class="opt-btn" onclick="answer(this,false,'q8')">1/4</button>
-          <button class="opt-btn" onclick="answer(this,false,'q8')">2/3</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">3/8</button>
+          <button class="opt-btn" onclick="answer(this,true,'q8')">4/8 (= 1/2)</button>
+          <button class="opt-btn" onclick="answer(this,false,'q8')">3/4</button>
         </div>
         <div class="feedback" id="feedback-q8"></div>
         <button class="next-btn" id="next-q8" onclick="startTC(4)">⚡ Speed Challenge before the Final Chapter!</button>
@@ -591,16 +767,16 @@
         <h3>⚡ Speed Challenge!</h3>
         <p>Two ships need fuel — think fast!</p>
       </div>
-      <div class="tc-question" id="tc-q-4">Is <span>3/8</span> more or less than <span>1/2</span>?</div>
+      <div class="tc-question" id="tc-q-4">Is <span>3/4</span> more or less than <span>1/2</span>?</div>
       <div class="tc-timer-wrap">
         <div class="tc-timer-row"><span>Time remaining</span><span id="tc-time-4">8s</span></div>
         <div class="tc-timer-bar"><div class="tc-timer-fill" id="tc-fill-4"></div></div>
       </div>
       <div class="tc-options" id="tc-opts-4">
-        <button class="tc-btn" onclick="tcAnswer(4,this,false)">More than 1/2</button>
-        <button class="tc-btn" onclick="tcAnswer(4,this,true)">Less than 1/2</button>
-        <button class="tc-btn" onclick="tcAnswer(4,this,false)">Equal to 1/2</button>
-        <button class="tc-btn" onclick="tcAnswer(4,this,false)">Can't compare</button>
+        <button class="tc-btn" onclick="tcAnswer(4,this,true)">More than 1/2</button>
+        <button class="tc-btn" onclick="tcAnswer(4,this,false)">Less than 1/2</button>
+        <button class="tc-btn" onclick="tcAnswer(4,this,false)">Equal</button>
+        <button class="tc-btn" onclick="tcAnswer(4,this,false)">Can't tell</button>
       </div>
       <div class="tc-result" id="tc-result-4"></div>
       <div class="tc-score-line" id="tc-score-4"></div>
@@ -629,11 +805,52 @@
     </div>
     <div id="lock-q9" class="quiz-lock">🔒 Listen to the story to unlock this challenge!</div>
     <div class="quiz-box" id="quiz-q9">
-      <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Fractions · Year 3–4</span></div>
+      <div class="quiz-meta"><span class="difficulty diff-hard">⭐⭐⭐ Hard</span><span class="acara-tag">Fractions · Year 3</span></div>
       <span class="quiz-icon">🔎</span>
-      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 9 — Fractions × Whole Numbers</div>
-      <div class="question">Three tanks were each drained by <strong>1/4</strong>.<br><br>How many quarter-portions were taken in total?</div>
-      <img src="images/q9-issue001.png" alt="Three tanks each losing a quarter" class="question-img" />
+      <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 9 — Counting the Stolen Fuel</div>
+      <div class="question">Three tanks were each drained by <strong>1/4</strong>.<br><br>How many quarter-portions were taken in total?<br><br>Count the quarters: □ + □ + □ = ?</div>
+      <!-- Q9 SVG: 3 separate 4-section bars -->
+      <div class="question-img-svg">
+        <svg viewBox="0 0 280 110" xmlns="http://www.w3.org/2000/svg">
+          <!-- Tank 1 -->
+          <text x="40" y="12" text-anchor="middle" fill="#ffdd00" font-size="10" font-weight="bold" font-family="sans-serif">Tank 1 −1/4</text>
+          <rect x="2" y="16" width="78" height="26" rx="4" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+          <rect x="3" y="17" width="17" height="24" rx="3" fill="#ff3232"/>
+          <rect x="22" y="17" width="19" height="24" rx="0" fill="#2a1a50"/>
+          <rect x="43" y="17" width="19" height="24" rx="0" fill="#2a1a50"/>
+          <rect x="64" y="17" width="14" height="24" rx="3" fill="#2a1a50"/>
+          <line x1="21" y1="17" x2="21" y2="41" stroke="#7b2fff" stroke-width="1.5"/>
+          <line x1="42" y1="17" x2="42" y2="41" stroke="#7b2fff" stroke-width="1.5"/>
+          <line x1="63" y1="17" x2="63" y2="41" stroke="#7b2fff" stroke-width="1.5"/>
+
+          <!-- Tank 2 -->
+          <text x="140" y="12" text-anchor="middle" fill="#ffdd00" font-size="10" font-weight="bold" font-family="sans-serif">Tank 2 −1/4</text>
+          <rect x="101" y="16" width="78" height="26" rx="4" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+          <rect x="102" y="17" width="17" height="24" rx="3" fill="#ff3232"/>
+          <rect x="121" y="17" width="19" height="24" rx="0" fill="#2a1a50"/>
+          <rect x="142" y="17" width="19" height="24" rx="0" fill="#2a1a50"/>
+          <rect x="163" y="17" width="14" height="24" rx="3" fill="#2a1a50"/>
+          <line x1="120" y1="17" x2="120" y2="41" stroke="#7b2fff" stroke-width="1.5"/>
+          <line x1="141" y1="17" x2="141" y2="41" stroke="#7b2fff" stroke-width="1.5"/>
+          <line x1="162" y1="17" x2="162" y2="41" stroke="#7b2fff" stroke-width="1.5"/>
+
+          <!-- Tank 3 -->
+          <text x="240" y="12" text-anchor="middle" fill="#ffdd00" font-size="10" font-weight="bold" font-family="sans-serif">Tank 3 −1/4</text>
+          <rect x="200" y="16" width="78" height="26" rx="4" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+          <rect x="201" y="17" width="17" height="24" rx="3" fill="#ff3232"/>
+          <rect x="220" y="17" width="19" height="24" rx="0" fill="#2a1a50"/>
+          <rect x="241" y="17" width="19" height="24" rx="0" fill="#2a1a50"/>
+          <rect x="262" y="17" width="14" height="24" rx="3" fill="#2a1a50"/>
+          <line x1="219" y1="17" x2="219" y2="41" stroke="#7b2fff" stroke-width="1.5"/>
+          <line x1="240" y1="17" x2="240" y2="41" stroke="#7b2fff" stroke-width="1.5"/>
+          <line x1="261" y1="17" x2="261" y2="41" stroke="#7b2fff" stroke-width="1.5"/>
+
+          <!-- Equation below -->
+          <text x="140" y="62" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="sans-serif">1/4 + 1/4 + 1/4 = ?</text>
+          <text x="140" y="82" text-anchor="middle" fill="#ff9999" font-size="12" font-family="sans-serif">(red sections = stolen)</text>
+          <text x="140" y="100" text-anchor="middle" fill="#ffdd00" font-size="13" font-weight="bold" font-family="sans-serif">Total stolen: ___</text>
+        </svg>
+      </div>
       <div class="options">
         <button class="opt-btn" onclick="answer(this,false,'q9')">1/4</button>
         <button class="opt-btn" onclick="answer(this,false,'q9')">2/4</button>
@@ -658,16 +875,48 @@
       </div>
       <div id="lock-q10" class="quiz-lock">🔒 Listen to unlock the Boss Challenge!</div>
       <div class="quiz-box" id="quiz-q10">
-        <div class="quiz-meta"><span class="difficulty diff-boss">👑 Boss Challenge</span><span class="acara-tag">Fractions · Year 4</span></div>
+        <div class="quiz-meta"><span class="difficulty diff-boss">👑 Boss Challenge</span><span class="acara-tag">Fractions · Year 3</span></div>
         <span class="quiz-icon">👾</span>
-        <div class="quiz-label"><span class="yr-badge yr4">Y4</span> Question 10 — BOSS: Dividing Fractions</div>
-        <div class="question">The total missing fuel = <strong>3/4</strong> of a tank.<br>It was taken over <strong>3 nights</strong> — the same fraction each night.<br><br>What fraction was taken <strong>each night</strong>?</div>
-        <img src="images/q10-issue001.png" alt="Three nights of equal theft" class="question-img" />
+        <div class="quiz-label"><span class="yr-badge yr3">Y3</span> Question 10 — BOSS: The Phantom's Share</div>
+        <div class="question">The Phantom stole <strong>3/4</strong> of a tank over <strong>3 nights</strong> — the same amount each night.<br><br>What fraction was taken each night?<br><br>Hint: share 3/4 equally into 3 groups.</div>
+        <!-- Q10 SVG: single bar split into 3 -->
+        <div class="question-img-svg">
+          <svg viewBox="0 0 280 110" xmlns="http://www.w3.org/2000/svg">
+            <!-- 4-section bar, 3 filled -->
+            <rect x="2" y="8" width="276" height="36" rx="6" fill="#1a0f30" stroke="#7b2fff" stroke-width="2"/>
+            <!-- Section 1: Night 1 (green) -->
+            <rect x="3" y="9" width="67" height="34" rx="5" fill="#00aa88"/>
+            <!-- Section 2: Night 2 (blue) -->
+            <rect x="72" y="9" width="66" height="34" rx="0" fill="#0088cc"/>
+            <!-- Section 3: Night 3 (purple) -->
+            <rect x="140" y="9" width="66" height="34" rx="0" fill="#7700cc"/>
+            <!-- Section 4: empty -->
+            <rect x="208" y="9" width="68" height="34" rx="5" fill="#2a1a50"/>
+            <!-- Dividers -->
+            <line x1="70" y1="9" x2="70" y2="43" stroke="#ffffff" stroke-width="2"/>
+            <line x1="139" y1="9" x2="139" y2="43" stroke="#ffffff" stroke-width="2"/>
+            <line x1="207" y1="9" x2="207" y2="43" stroke="#7b2fff" stroke-width="2"/>
+            <!-- Bracket lines and labels for Night 1 -->
+            <line x1="36" y1="44" x2="36" y2="56" stroke="#00aa88" stroke-width="2"/>
+            <text x="36" y="67" text-anchor="middle" fill="#00aa88" font-size="10" font-weight="bold" font-family="sans-serif">Night 1</text>
+            <text x="36" y="80" text-anchor="middle" fill="#00aa88" font-size="10" font-family="sans-serif">= ?</text>
+            <!-- Night 2 -->
+            <line x1="105" y1="44" x2="105" y2="56" stroke="#0088cc" stroke-width="2"/>
+            <text x="105" y="67" text-anchor="middle" fill="#0088cc" font-size="10" font-weight="bold" font-family="sans-serif">Night 2</text>
+            <text x="105" y="80" text-anchor="middle" fill="#0088cc" font-size="10" font-family="sans-serif">= ?</text>
+            <!-- Night 3 -->
+            <line x1="173" y1="44" x2="173" y2="56" stroke="#aa44ff" stroke-width="2"/>
+            <text x="173" y="67" text-anchor="middle" fill="#aa44ff" font-size="10" font-weight="bold" font-family="sans-serif">Night 3</text>
+            <text x="173" y="80" text-anchor="middle" fill="#aa44ff" font-size="10" font-family="sans-serif">= ?</text>
+            <!-- Total -->
+            <text x="140" y="100" text-anchor="middle" fill="#ffdd00" font-size="12" font-weight="bold" font-family="sans-serif">3/4 shared equally over 3 nights = ?</text>
+          </svg>
+        </div>
         <div class="options">
           <button class="opt-btn" onclick="answer(this,false,'q10')">3/4</button>
-          <button class="opt-btn" onclick="answer(this,false,'q10')">1/3</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">2/4</button>
           <button class="opt-btn" onclick="answer(this,true,'q10')">1/4</button>
-          <button class="opt-btn" onclick="answer(this,false,'q10')">1/12</button>
+          <button class="opt-btn" onclick="answer(this,false,'q10')">1/3</button>
         </div>
         <div class="feedback" id="feedback-q10"></div>
         <button class="next-btn" id="next-q10" onclick="startTC(5)">⚡ Final Speed Challenge!</button>
@@ -680,16 +929,16 @@
         <h3>⚡ Final Speed Challenge!</h3>
         <p>The Phantom is watching. This is your last test!</p>
       </div>
-      <div class="tc-question" id="tc-q-5">3/4 stolen over <span>3 nights</span>.<br>What fraction each night?</div>
+      <div class="tc-question" id="tc-q-5">3 tanks each lost <span>1/4</span>.<br>How many quarters stolen in total?</div>
       <div class="tc-timer-wrap">
         <div class="tc-timer-row"><span>Time remaining</span><span id="tc-time-5">8s</span></div>
         <div class="tc-timer-bar"><div class="tc-timer-fill" id="tc-fill-5"></div></div>
       </div>
       <div class="tc-options" id="tc-opts-5">
-        <button class="tc-btn" onclick="tcAnswer(5,this,false)">3/4</button>
-        <button class="tc-btn" onclick="tcAnswer(5,this,false)">1/3</button>
-        <button class="tc-btn" onclick="tcAnswer(5,this,true)">1/4</button>
-        <button class="tc-btn" onclick="tcAnswer(5,this,false)">1/12</button>
+        <button class="tc-btn" onclick="tcAnswer(5,this,false)">1/4</button>
+        <button class="tc-btn" onclick="tcAnswer(5,this,false)">2/4</button>
+        <button class="tc-btn" onclick="tcAnswer(5,this,true)">3/4</button>
+        <button class="tc-btn" onclick="tcAnswer(5,this,false)">4/4</button>
       </div>
       <div class="tc-result" id="tc-result-5"></div>
       <div class="tc-score-line" id="tc-score-5"></div>
@@ -734,11 +983,11 @@
     <div class="win-summary">
       <h3>What You Mastered Today 🧠</h3>
       <ul>
-        <li>✅ <strong>Unit fractions</strong> — 1/4, 1/2 as parts of a whole (Fractions, Year 3)</li>
-        <li>✅ <strong>Other fractions</strong> — 3/8, 3/4 named and represented</li>
-        <li>✅ <strong>Comparing fractions</strong> — is 3/8 more or less than 1/2? (Year 3–4)</li>
-        <li>✅ <strong>Adding fractions</strong> — combining 1/2 + 3/4 (Year 4)</li>
-        <li>✅ <strong>Boss: Dividing fractions</strong> — 3/4 ÷ 3 = 1/4 (Year 4)</li>
+        <li>✅ <strong>Unit fractions</strong> — 1/4, 1/2 as parts of a whole (Year 3)</li>
+        <li>✅ <strong>Reading quarters</strong> — 3/4 named and represented (Year 3)</li>
+        <li>✅ <strong>Comparing fractions</strong> — is 3/4 more or less than 1/2? (Year 3)</li>
+        <li>✅ <strong>Fractions of a collection</strong> — sharing pods equally (Year 3)</li>
+        <li>✅ <strong>Boss: Adding quarter portions</strong> — 1/4 + 1/4 + 1/4 = 3/4 (Year 3)</li>
       </ul>
     </div>
     <p style="font-size:14px;color:#aa77ff;margin-bottom:16px;">Join us for Issue #2 — when Jake tracks the stolen fuel into <strong>the Fog Nebula</strong>! 🌌</p>
@@ -766,6 +1015,7 @@ for(let i=0;i<90;i++){
 
 // ── AUDIO ENGINE ───────────────────────────────────────────
 const BASE='sounds/issue001/';
+const BASE_Y3='sounds/issue001-Y3/';
 let muted=false, currentAudio=null, correctVariant=0, activePlayerId=null;
 const playerConfigs={};
 const triedWrong=new Set();
@@ -775,10 +1025,11 @@ function stopAll(){
   document.querySelectorAll('.nar-btn').forEach(b=>{if(b.textContent!=='✓')b.textContent='▶';});
 }
 
-function playFile(file,onEnd){
+function playFile(file,onEnd,useY3Base){
   if(muted){if(onEnd)setTimeout(onEnd,100);return null;}
   if(currentAudio){currentAudio.pause();currentAudio=null;}
-  const a=new Audio(BASE+file);
+  const base = useY3Base ? BASE_Y3 : BASE;
+  const a=new Audio(base+file);
   a.volume=1.0;
   currentAudio=a;
   a.play().catch(()=>{currentAudio=null;if(onEnd)onEnd();});
@@ -822,7 +1073,8 @@ function runPlayer(id){
       if(qId){const q=document.getElementById(qId);if(q){q.classList.add('show');setTimeout(()=>q.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}
       cfg.active=false;activePlayerId=null;return;
     }
-    if(fileIdx===cfg.unlockAtIndex){if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(quizId){const quiz=document.getElementById(quizId);if(quiz&&!quiz.classList.contains('show')){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}}const file=cfg.files[fileIdx];
+    if(fileIdx===cfg.unlockAtIndex){if(cfg.lockId){const lock=document.getElementById(cfg.lockId);if(lock)lock.style.display='none';}const quizId=cfg.lockId?cfg.lockId.replace('lock-','quiz-'):null;if(quizId){const quiz=document.getElementById(quizId);if(quiz&&!quiz.classList.contains('show')){quiz.classList.add('show');setTimeout(()=>quiz.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}}}
+    const file=cfg.files[fileIdx];
     const label=cfg.labels&&cfg.labels[fileIdx]?cfg.labels[fileIdx]:'🎙️ Narrating...';
     if(statusEl)statusEl.textContent=label;
     const s=fileIdx/cfg.files.length*100, e=(fileIdx+1)/cfg.files.length*100;
@@ -934,28 +1186,28 @@ let score=0, questionsAnswered=0;
 const totalQ=10;
 
 const correctMsg={
-  q1: '🚀 One out of four — that\'s 1/4. One quarter. The bottom number = total parts, top number = filled parts.',
-  q2: '🚀 One out of two — that\'s 1/2. One half. Tank A is half full.',
-  q3: '🚀 3/8 — and half of 8 is 4. We only have 3, so 3/8 is less than half. Larger denominator ≠ larger fraction!',
-  q4: '🚀 One section taken from four — that\'s 1/4. One quarter went missing from Tank C.',
-  q5: '🚀 1/4 was taken — same fraction as Tank C, but Tank D was only half full. Same fraction, different actual amounts. That\'s the key!',
-  q6: '🚀 1/2 = 2/4. So 2/4 + 3/4 = 5/4 — more than one full tank. Orion has enough!',
-  q7: '🚀 Half = 4/8. Tank B only has 3/8. Three eighths is LESS than four eighths. Lyra must wait.',
-  q8: '🚀 6 pods ÷ 2 ships = 3 pods each. Each ship gets 1/2 of the store.',
-  q9: '🚀 3 × 1/4 = 3/4. Three groups of one quarter equals three quarters total.',
-  q10: '🚀 BOSS CLEARED! 3/4 ÷ 3 = 1/4. One quarter was taken each night. Precise, calculated — the Phantom\'s signature.'
+  q1: '🚀 One out of four — that\'s 1/4. The bottom number tells us total parts, the top tells us how many are filled!',
+  q2: '🚀 One out of two — that\'s 1/2. One half of the tank is full!',
+  q3: '🚀 3 out of 4 — that\'s 3/4. Three quarters of the tank is full!',
+  q4: '🚀 One section taken from four — that\'s 1/4. One quarter went missing from Tank C!',
+  q5: '🚀 1/2 is bigger than 1/4! Think of a pizza — half a pizza is more than a quarter pizza.',
+  q6: '🚀 6 pods ÷ 2 ships = 3 pods each. Each ship gets 1/2 of the total pods!',
+  q7: '🚀 3/4 is bigger than 1/2! Half = 2/4. Three quarters is bigger than two quarters.',
+  q8: '🚀 4 out of 8 ships — that\'s 4/8, which is the same as 1/2. Half the fleet is done!',
+  q9: '🚀 1/4 + 1/4 + 1/4 = 3/4. Three groups of one quarter equals three quarters total!',
+  q10: '🚀 BOSS CLEARED! 3/4 shared equally over 3 nights = 1/4 each night. The Phantom is very precise!'
 };
 const wrongMsg={
-  q1: '❌ Not quite! Count the total sections (bottom number) and the filled sections (top number).',
-  q2: '❌ Try again! Tank A has 2 equal parts. One is filled. The fraction is: filled parts / total parts.',
-  q3: '❌ Not quite! 3/8 means 3 out of 8. Half of 8 is 4. Is 3 more or less than 4?',
-  q4: '❌ Try again! It was full (4/4) and now shows 3/4. How many sections disappeared?',
-  q5: '❌ Tricky! Before: 2/4 (half full). After: 1/4. How many quarters were removed?',
-  q6: '❌ Not quite! Convert to the same denominator first. 1/2 = 2/4. Now add 2/4 + 3/4.',
-  q7: '❌ Not quite! To compare, think of eighths. Half = 4/8. Does Tank B have 4 eighths?',
-  q8: '❌ Try again! 6 pods shared between 2 ships equally — how many does each get? What fraction is that of the 6?',
-  q9: '❌ Try again! Three tanks, each missing 1/4. That\'s 3 lots of 1/4. What does 3 × 1/4 equal?',
-  q10: '❌ Not quite! 3/4 shared equally over 3 nights. 3/4 ÷ 3 = one third of 3/4. What fraction is that?'
+  q1: '❌ Count the total sections (bottom number) and the filled sections (top number). Try again!',
+  q2: '❌ Tank A has 2 equal parts and 1 is filled. The fraction is: filled parts ÷ total parts.',
+  q3: '❌ Count carefully — how many sections are filled? How many total? Write filled/total.',
+  q4: '❌ It was full (4/4) and now shows 3/4. How many sections disappeared?',
+  q5: '❌ Which fraction is bigger — 1/2 or 1/4? Imagine cutting the same pizza into 2 pieces vs 4 pieces.',
+  q6: '❌ 6 pods shared equally between 2 ships — how many does each get? What fraction of 6 is that?',
+  q7: '❌ Convert 1/2 to quarters first. 1/2 = 2/4. Is 3/4 bigger or smaller than 2/4?',
+  q8: '❌ 4 ships refuelled out of 8 total. Write that as a fraction: 4/8.',
+  q9: '❌ Each tank lost 1/4. Count them up: one quarter, two quarters, three quarters...',
+  q10: '❌ Share 3 quarters equally between 3 nights. Each night gets one of those quarters — that\'s 1/4.'
 };
 
 function answer(btn,correct,qId){
@@ -965,7 +1217,7 @@ function answer(btn,correct,qId){
   const next=document.getElementById('next-'+qId);
   if(correct){
     btn.classList.add('correct');
-    if(!triedWrong.has(qId))score++;
+    if(!triedWrong.has(qId)){score++;addPts(10,btn);}
     questionsAnswered++;
     fb.className='feedback show good';fb.innerHTML=correctMsg[qId];
     updateProgress();next.classList.add('show');
@@ -999,8 +1251,6 @@ function updateProgress(){
 }
 
 function startGame(){
-  if (!selectedYear) { alert('Please select your year level first!'); return; }
-  renderQuestions();
   document.getElementById('title-screen').style.display='none';
   document.getElementById('progress-wrap').style.display='block';
   initPlayers();
@@ -1040,7 +1290,7 @@ function showWin(){
   document.getElementById('win-stars').textContent=score===10?'⭐⭐⭐':score>=7?'⭐⭐':score>=4?'⭐':'';
 
   // Engagement score summary
-  const maxPts = 250; // 10 quiz Qs × 10pts + 5 speed challenges × up to 20pts = 200 + 50 bonus
+  const maxPts = 250;
   const pct = Math.min(Math.round((engScore / maxPts) * 100), 100);
   document.getElementById('eng-score-big').textContent = engScore + ' pts';
   let grade;
@@ -1066,338 +1316,22 @@ function toggleMute(){
   if(muted)stopAll();
 }
 
-// ══ YEAR GROUP SELECTION ══════════════════════════════════
-let selectedYear = null;
-
-const YR_DESC = {
-  Y3: 'Unit fractions, halves, quarters — reading fraction symbols for the first time.',
-  Y4: 'Comparing fractions, equivalent fractions, adding same-denominator fractions.',
-  Y5: 'Adding & subtracting unlike fractions, mixed numbers, fractions of quantities.'
-};
-
-// Full question bank — 10 questions per year group
-// Each entry: { label, question, img, options[], correctIndex, feedback_correct, feedback_wrong }
-const QUESTION_BANKS = {
-
-  Y3: [
-    { label:'Question 1 — Unit Fractions',
-      question:'Jake\'s fuel tank is divided into <strong>4 equal sections</strong>. Exactly <strong>1 section</strong> is full.<br><br>What fraction of the tank is full?',
-      img:'images/q1-issue001.png', imgAlt:'Fuel tank gauge',
-      options:['1/2','1/4','1/3','3/4'], correct:1,
-      good:'🚀 One out of four — that\'s 1/4. The bottom number is total parts, the top is the filled parts.',
-      bad:'❌ Count the total sections (bottom number) and filled sections (top number). Try again!' },
-
-    { label:'Question 2 — Halves',
-      question:'<strong>Tank A</strong> is divided into <strong>2 equal parts</strong>. One part is full.<br><br>What fraction is Tank A?',
-      img:'images/q2-issue001.png', imgAlt:'Tank A gauge',
-      options:['1/4','1/2','2/3','3/4'], correct:1,
-      good:'🚀 One out of two — that\'s 1/2. One half!',
-      bad:'❌ Tank A has 2 equal parts. One is filled. Fraction = filled ÷ total.' },
-
-    { label:'Question 3 — Eighths',
-      question:'<strong>Tank B</strong> has <strong>8 equal sections</strong>. <strong>3 sections</strong> are full.<br><br>What fraction is Tank B?',
-      img:'images/q3-issue001.png', imgAlt:'Tank B gauge',
-      options:['3/8','5/8','4/8','1/8'], correct:0,
-      good:'🚀 3 out of 8 — that\'s 3/8. Three eighths!',
-      bad:'❌ 3 sections filled, 8 sections total. Write the filled number on top.' },
-
-    { label:'Question 4 — What Was Taken?',
-      question:'<strong>Tank C</strong> was completely full — all <strong>4 sections</strong> filled. Now it shows only <strong>3 sections</strong> full.<br><br>What fraction was taken?',
-      img:'images/q4-issue001.png', imgAlt:'Tank C before and after',
-      options:['1/2','3/4','1/4','2/4'], correct:2,
-      good:'🚀 One section taken from four — that\'s 1/4. One quarter went missing!',
-      bad:'❌ It was full (4/4) and now shows 3/4. How many sections disappeared?' },
-
-    { label:'Question 5 — Fractions of a Shape',
-      question:'Tank D has <strong>6 equal sections</strong>. <strong>2 sections</strong> are full.<br><br>What fraction is full?',
-      img:'images/q5-issue001.png', imgAlt:'Tank D',
-      options:['1/3','1/2','2/3','1/6'], correct:0,
-      good:'🚀 2 out of 6 — that simplifies to 1/3. One third!',
-      bad:'❌ 2 sections filled, 6 total. Write filled ÷ total as a fraction.' },
-
-    { label:'Question 6 — Comparing Fractions',
-      question:'Which is bigger — <strong>1/2</strong> or <strong>1/4</strong>?',
-      img:'images/q6-issue001.png', imgAlt:'Comparing fractions',
-      options:['1/4 is bigger','1/2 is bigger','They are equal','Cannot tell'], correct:1,
-      good:'🚀 1/2 is bigger! Imagine cutting a pizza — half is a bigger slice than a quarter.',
-      bad:'❌ Think of a pizza. Which is a bigger slice — 1/2 or 1/4?' },
-
-    { label:'Question 7 — More or Less?',
-      question:'Is <strong>3/4</strong> more than or less than <strong>1/2</strong>?',
-      img:'images/q7-issue001.png', imgAlt:'Comparing 3/4 and 1/2',
-      options:['3/4 is less than 1/2','3/4 is more than 1/2','They are equal','Cannot compare'], correct:1,
-      good:'🚀 3/4 is more than 1/2. Half = 2/4. Three quarters is bigger than two quarters!',
-      bad:'❌ Convert to the same denominator. Half = 2/4. Is 3/4 bigger or smaller than 2/4?' },
-
-    { label:'Question 8 — Fractions of a Collection',
-      question:'There are <strong>6 fuel pods</strong> to share equally between <strong>2 ships</strong>.<br><br>What fraction of the store does each ship get?',
-      img:'images/q8-issue001.png', imgAlt:'Sharing 6 fuel pods',
-      options:['1/3','1/2','1/4','2/3'], correct:1,
-      good:'🚀 6 pods ÷ 2 ships = 3 pods each. Each ship gets 1/2 of the store!',
-      bad:'❌ 6 pods shared between 2 ships equally — how many does each get? What fraction is that?' },
-
-    { label:'Question 9 — Counting Fractions',
-      question:'Three tanks were each drained by <strong>1/4</strong>.<br><br>How many quarter-portions were taken in total?',
-      img:'images/q9-issue001.png', imgAlt:'Three tanks each losing a quarter',
-      options:['1/4','2/4','3/4','4/4'], correct:2,
-      good:'🚀 3 × 1/4 = 3/4. Three groups of one quarter equals three quarters!',
-      bad:'❌ Three tanks, each missing 1/4. That\'s 3 lots of 1/4. Count them up!' },
-
-    { label:'Question 10 — Equal Sharing',
-      question:'12 fuel pods are shared equally between <strong>4 ships</strong>.<br><br>What fraction of the pods does each ship get?',
-      img:'images/q10-issue001.png', imgAlt:'Sharing fuel pods',
-      options:['1/3','1/4','1/2','1/6'], correct:1,
-      good:'🚀 12 ÷ 4 = 3 pods each. Each ship gets 1/4 of the collection!',
-      bad:'❌ 12 pods ÷ 4 ships. How many does each ship get? What fraction of 12 is that?' }
-  ],
-
-  Y4: [
-    { label:'Question 1 — Unit Fractions',
-      question:'Jake\'s fuel tank is divided into <strong>4 equal sections</strong>. Exactly <strong>1 section</strong> is full.<br><br>What fraction of the tank is full?',
-      img:'images/q1-issue001.png', imgAlt:'Fuel tank gauge',
-      options:['1/2','1/4','1/3','3/4'], correct:1,
-      good:'🚀 One out of four — that\'s 1/4. The bottom number is total parts, the top is the filled parts.',
-      bad:'❌ Count the total sections (bottom number) and filled sections (top number). Try again!' },
-
-    { label:'Question 2 — Halves',
-      question:'<strong>Tank A</strong> is divided into <strong>2 equal parts</strong>. One part is full.<br><br>What fraction is Tank A?',
-      img:'images/q2-issue001.png', imgAlt:'Tank A gauge',
-      options:['1/4','1/2','2/3','3/4'], correct:1,
-      good:'🚀 One out of two — that\'s 1/2. One half!',
-      bad:'❌ Tank A has 2 equal parts. One is filled. Fraction = filled ÷ total.' },
-
-    { label:'Question 3 — Eighths (more or less than ½?)',
-      question:'<strong>Tank B</strong> has <strong>8 equal sections</strong>. <strong>3 sections</strong> are full.<br><br>What fraction is Tank B? Is it more or less than half?',
-      img:'images/q3-issue001.png', imgAlt:'Tank B gauge',
-      options:['3/8 — more than ½','3/8 — less than ½','5/8 — more than ½','3/4 — more than ½'], correct:1,
-      good:'🚀 3/8 — and half of 8 is 4. We only have 3, so 3/8 is less than half. Larger denominator ≠ larger fraction!',
-      bad:'❌ Not quite! 3/8 means 3 out of 8. Half of 8 is 4. Is 3 more or less than 4?' },
-
-    { label:'Question 4 — What Was Taken?',
-      question:'<strong>Tank C</strong> was completely full — all <strong>4 sections</strong> filled. Now it shows only <strong>3 sections</strong> full.<br><br>What fraction was taken?',
-      img:'images/q4-issue001.png', imgAlt:'Tank C before and after',
-      options:['1/2','3/4','1/4','2/4'], correct:2,
-      good:'🚀 One section taken from four — that\'s 1/4. One quarter went missing from Tank C.',
-      bad:'❌ Try again! It was full (4/4) and now shows 3/4. How many sections disappeared?' },
-
-    { label:'Question 5 — Same Fraction, Different Amounts!',
-      question:'<strong>Tank D</strong> was <strong>half full</strong> (2 out of 4 sections). After the transfer it shows <strong>1 out of 4</strong> sections.<br><br>What fraction was taken from Tank D?',
-      img:'images/q5-issue001.png', imgAlt:'Tank D before and after',
-      options:['1/2','1/4','3/4','2/4'], correct:1,
-      good:'🚀 1/4 was taken — same fraction as Tank C, but Tank D was only half full. Same fraction, different actual amounts!',
-      bad:'❌ Tricky! Before: 2/4 (half full). After: 1/4. How many quarters were removed?' },
-
-    { label:'Question 6 — Adding Fractions',
-      question:'Ship Orion needs a <strong>full tank (4/4)</strong>.<br>Tank A has <strong>1/2</strong>. Tank C has <strong>3/4</strong>.<br><br>If we combine Tank A and Tank C, is there enough for Orion?',
-      img:'images/q6-issue001.png', imgAlt:'Combining tanks for Orion',
-      options:['No — only 4/6','No — only 4/8','Yes — 5/4 (more than 1 full tank)','Yes — exactly 4/4'], correct:2,
-      good:'🚀 1/2 = 2/4. So 2/4 + 3/4 = 5/4 — more than one full tank. Orion has enough!',
-      bad:'❌ Not quite! Convert to the same denominator first. 1/2 = 2/4. Now add 2/4 + 3/4.' },
-
-    { label:'Question 7 — Comparing Fractions',
-      question:'Ship Lyra needs <strong>1/2</strong> a tank. Tank B has <strong>3/8</strong>.<br><br>Is 3/8 more or less than 1/2? Does Lyra have enough?',
-      img:'images/q7-issue001.png', imgAlt:'Comparing 3/8 and 1/2',
-      options:['3/8 > 1/2 — yes, enough','3/8 < 1/2 — not enough','3/8 = 1/2 — exactly enough','Can\'t compare'], correct:1,
-      good:'🚀 Half = 4/8. Tank B only has 3/8. Three eighths is LESS than four eighths. Lyra must wait.',
-      bad:'❌ Not quite! To compare, think of eighths. Half = 4/8. Does Tank B have 4 eighths?' },
-
-    { label:'Question 8 — Fractions of a Collection',
-      question:'There are <strong>6 fuel pods</strong> to share equally between <strong>2 ships</strong>.<br><br>What fraction of the store does each ship get?',
-      img:'images/q8-issue001.png', imgAlt:'Sharing 6 fuel pods',
-      options:['1/3','1/2','1/4','2/3'], correct:1,
-      good:'🚀 6 pods ÷ 2 ships = 3 pods each. Each ship gets 1/2 of the store.',
-      bad:'❌ 6 pods shared between 2 ships equally — how many does each get? What fraction is that of the 6?' },
-
-    { label:'Question 9 — Fractions × Whole Numbers',
-      question:'Three tanks were each drained by <strong>1/4</strong>.<br><br>How many quarter-portions were taken in total?',
-      img:'images/q9-issue001.png', imgAlt:'Three tanks each losing a quarter',
-      options:['1/4','2/4','3/4','4/4'], correct:2,
-      good:'🚀 3 × 1/4 = 3/4. Three groups of one quarter equals three quarters total.',
-      bad:'❌ Three tanks, each missing 1/4. That\'s 3 lots of 1/4. What does 3 × 1/4 equal?' },
-
-    { label:'Question 10 — BOSS: Dividing Fractions',
-      question:'The total missing fuel = <strong>3/4</strong> of a tank. It was taken over <strong>3 nights</strong> — the same fraction each night.<br><br>What fraction was taken <strong>each night</strong>?',
-      img:'images/q10-issue001.png', imgAlt:'Three nights of equal theft',
-      options:['3/4','1/3','1/4','1/12'], correct:2,
-      good:'🚀 BOSS CLEARED! 3/4 ÷ 3 = 1/4. One quarter was taken each night. Precise, calculated — the Phantom\'s signature.',
-      bad:'❌ Not quite! 3/4 shared equally over 3 nights. 3/4 ÷ 3 = one third of 3/4. What fraction is that?' }
-  ],
-
-  Y5: [
-    { label:'Question 1 — Equivalent Fractions',
-      question:'Jake\'s tank shows <strong>1/4</strong> full.<br><br>Which fraction is <strong>equivalent</strong> to 1/4?',
-      img:'images/q1-issue001.png', imgAlt:'Fuel tank gauge',
-      options:['2/6','2/8','3/8','3/12'], correct:1,
-      good:'🚀 2/8 = 1/4. Multiply top and bottom by 2: 1×2 = 2, 4×2 = 8.',
-      bad:'❌ To find equivalent fractions, multiply numerator AND denominator by the same number.' },
-
-    { label:'Question 2 — Simplifying Fractions',
-      question:'<strong>Tank A</strong> shows <strong>4/8</strong> full.<br><br>What is this fraction in its <strong>simplest form</strong>?',
-      img:'images/q2-issue001.png', imgAlt:'Tank A gauge',
-      options:['2/4','1/2','4/8','3/6'], correct:1,
-      good:'🚀 4/8 simplifies to 1/2. Divide both by 4: 4÷4=1, 8÷4=2.',
-      bad:'❌ Find the highest common factor of 4 and 8. Then divide both numbers by it.' },
-
-    { label:'Question 3 — Adding Unlike Fractions',
-      question:'Tank B has <strong>3/8</strong>. Tank C has <strong>1/4</strong>.<br><br>How much fuel is there <strong>in total</strong>?',
-      img:'images/q3-issue001.png', imgAlt:'Tank B gauge',
-      options:['4/12','5/8','4/8','5/12'], correct:1,
-      good:'🚀 1/4 = 2/8. So 3/8 + 2/8 = 5/8. Convert to a common denominator first!',
-      bad:'❌ You can\'t add fractions with different denominators directly. Convert 1/4 to eighths first.' },
-
-    { label:'Question 4 — Subtracting Fractions',
-      question:'Tank C was <strong>full (4/4)</strong>. Now it shows <strong>3/4</strong>.<br><br>Express what was taken as a fraction with <strong>denominator 8</strong>.',
-      img:'images/q4-issue001.png', imgAlt:'Tank C before and after',
-      options:['1/8','2/8','3/8','4/8'], correct:1,
-      good:'🚀 1/4 was taken. Converting to eighths: 1/4 = 2/8. Same amount, different notation.',
-      bad:'❌ 1/4 was taken. Now convert 1/4 to an equivalent fraction with denominator 8.' },
-
-    { label:'Question 5 — Fractions of Quantities',
-      question:'Tank D holds <strong>240 litres</strong> when full. It is currently <strong>3/4</strong> full.<br><br>How many litres is that?',
-      img:'images/q5-issue001.png', imgAlt:'Tank D',
-      options:['120 litres','160 litres','180 litres','200 litres'], correct:2,
-      good:'🚀 3/4 of 240: first find 1/4 (240÷4=60), then multiply by 3 (60×3=180). 180 litres!',
-      bad:'❌ Find 1/4 of 240 first (divide by 4), then multiply by 3 to get 3/4.' },
-
-    { label:'Question 6 — Mixed Numbers',
-      question:'Combining Tank A (1/2) and Tank C (3/4) gives more than a full tank.<br><br>Write the total as a <strong>mixed number</strong>.',
-      img:'images/q6-issue001.png', imgAlt:'Combining tanks for Orion',
-      options:['1 and 1/4','1 and 1/2','1 and 3/4','2 and 1/4'], correct:0,
-      good:'🚀 1/2 + 3/4 = 2/4 + 3/4 = 5/4 = 1 and 1/4. One whole tank plus one quarter more!',
-      bad:'❌ Convert 1/2 to 2/4. Add 2/4 + 3/4 = 5/4. Now convert the improper fraction to a mixed number.' },
-
-    { label:'Question 7 — Ordering Fractions',
-      question:'Order these fractions from <strong>smallest to largest</strong>:<br><strong>3/8 · 1/2 · 5/8 · 1/4</strong>',
-      img:'images/q7-issue001.png', imgAlt:'Ordering fractions',
-      options:['1/4, 3/8, 1/2, 5/8','3/8, 1/4, 1/2, 5/8','1/2, 3/8, 5/8, 1/4','5/8, 1/2, 3/8, 1/4'], correct:0,
-      good:'🚀 Convert all to eighths: 1/4=2/8, 3/8, 1/2=4/8, 5/8. Order: 2/8, 3/8, 4/8, 5/8 ✓',
-      bad:'❌ Convert all to the same denominator (eighths). 1/4=2/8, 1/2=4/8. Then order from smallest.' },
-
-    { label:'Question 8 — Fractions of Larger Quantities',
-      question:'There are <strong>36 fuel pods</strong>. Ships get <strong>2/3</strong> of the total.<br><br>How many pods do the ships receive?',
-      img:'images/q8-issue001.png', imgAlt:'Fuel pods',
-      options:['12','18','24','27'], correct:2,
-      good:'🚀 2/3 of 36: find 1/3 first (36÷3=12), then multiply by 2 (12×2=24). 24 pods!',
-      bad:'❌ Find 1/3 of 36 first (divide by 3), then multiply by 2 to get 2/3.' },
-
-    { label:'Question 9 — Multiplying Fractions',
-      question:'Each of 3 tanks lost <strong>1/4</strong> per night for <strong>2 nights</strong>.<br><br>What fraction of a full tank was lost <strong>in total</strong>?',
-      img:'images/q9-issue001.png', imgAlt:'Tanks losing fuel over nights',
-      options:['3/4','6/4 (= 1½)','1/4','2/4'], correct:1,
-      good:'🚀 3 tanks × 1/4 × 2 nights = 6/4 = 1 and 1/2 full tanks. More than one whole tank stolen!',
-      bad:'❌ Work in steps: 1 tank loses 1/4 × 2 nights = 2/4. Three tanks = 3 × 2/4 = 6/4.' },
-
-    { label:'Question 10 — BOSS: Dividing Fractions',
-      question:'<strong>3/4</strong> of a tank was stolen over <strong>3 nights</strong>.<br><br>How many <strong>eighths</strong> were stolen each night?',
-      img:'images/q10-issue001.png', imgAlt:'Three nights of theft in eighths',
-      options:['1/8','2/8','3/8','4/8'], correct:1,
-      good:'🚀 BOSS CLEARED! 3/4 ÷ 3 = 1/4 per night. Converting to eighths: 1/4 = 2/8. Brilliant!',
-      bad:'❌ First find what fraction per night: 3/4 ÷ 3 = 1/4. Then convert 1/4 to eighths.' }
-  ]
-};
-
-// Also define year-appropriate speed challenge questions
-const TC_BANKS = {
-  Y3: [
-    { q:'A tank has <span>3 equal sections</span>. 1 is full. What fraction?', opts:['1/2','1/3','2/3','3/4'], correct:1 },
-    { q:'A tank has <span>8 equal parts</span>. 4 parts are full. What fraction?', opts:['3/8','4/8','5/8','4/4'], correct:1 },
-    { q:'A tank was <span>full (4/4)</span>. 1/4 was stolen. What\'s left?', opts:['1/4','2/4','3/4','4/4'], correct:2 },
-    { q:'Is <span>3/8</span> more or less than <span>1/2</span>?', opts:['More than 1/2','Less than 1/2','Equal to 1/2','Can\'t compare'], correct:1 },
-    { q:'3/4 stolen over <span>3 nights</span>. What fraction each night?', opts:['3/4','1/3','1/4','1/12'], correct:2 }
-  ],
-  Y4: [
-    { q:'A tank has <span>3 equal sections</span>. 1 is full. What fraction?', opts:['1/2','1/3','2/3','3/4'], correct:1 },
-    { q:'A tank has <span>8 equal parts</span>. 4 parts full. Simplest form?', opts:['4/8','2/4','1/2','3/4'], correct:2 },
-    { q:'Tank was <span>4/4 full</span>. Now shows 3/4. What fraction taken?', opts:['1/4','2/4','3/4','4/4'], correct:0 },
-    { q:'Is <span>3/8</span> more or less than <span>1/2</span>?', opts:['More than 1/2','Less than 1/2','Equal to 1/2','Can\'t compare'], correct:1 },
-    { q:'3/4 stolen over <span>3 nights</span>. What fraction per night?', opts:['3/4','1/3','1/4','1/12'], correct:2 }
-  ],
-  Y5: [
-    { q:'What is <span>equivalent</span> to 1/4?', opts:['2/6','2/8','3/8','3/12'], correct:1 },
-    { q:'3/8 + 1/4 = ? <span>(same denominator first)</span>', opts:['4/12','5/8','4/8','5/12'], correct:1 },
-    { q:'3/4 of <span>240 litres</span>?', opts:['120 L','160 L','180 L','200 L'], correct:2 },
-    { q:'1/2 + 3/4 as a <span>mixed number</span>?', opts:['1 and 1/4','1 and 1/2','1 and 3/4','2 and 1/4'], correct:0 },
-    { q:'3/4 ÷ 3 = ? Convert to <span>eighths</span>', opts:['1/8','2/8','3/8','4/8'], correct:1 }
-  ]
-};
-
-function selectYear(yr) {
-  selectedYear = yr;
-  document.querySelectorAll('.yr-sel-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('sel-' + yr).classList.add('selected');
-  document.getElementById('yr-desc').textContent = YR_DESC[yr];
-  document.getElementById('start-btn-main').style.display = 'inline-block';
-}
-
-function renderQuestions() {
-  const bank = QUESTION_BANKS[selectedYear];
-  const tcBank = TC_BANKS[selectedYear];
-  if (!bank) return;
-
-  // Render main quiz questions
-  for (let i = 0; i < bank.length; i++) {
-    const qId = 'q' + (i + 1);
-    const q = bank[i];
-    const box = document.getElementById('quiz-' + qId);
-    if (!box) continue;
-
-    // Update label
-    const lbl = box.querySelector('.quiz-label');
-    if (lbl) {
-      const badge = selectedYear === 'Y5' ? 'yr4' : selectedYear === 'Y4' ? 'yr4' : 'yr3';
-      lbl.innerHTML = `<span class="yr-badge ${badge}">${selectedYear}</span> ${q.label}`;
-    }
-
-    // Update question text
-    const qEl = box.querySelector('.question');
-    if (qEl) qEl.innerHTML = q.question;
-
-    // Update image alt
-    const img = box.querySelector('.question-img');
-    if (img && q.img) { img.src = q.img; img.alt = q.imgAlt; }
-
-    // Rebuild options
-    const optsEl = box.querySelector('.options');
-    if (optsEl) {
-      optsEl.innerHTML = '';
-      q.options.forEach((opt, idx) => {
-        const isCorrect = idx === q.correct;
-        const btn = document.createElement('button');
-        btn.className = 'opt-btn';
-        btn.onclick = function() { answer(this, isCorrect, qId); };
-        btn.innerHTML = opt;
-        optsEl.appendChild(btn);
-      });
-    }
-
-    // Store feedback messages for this question
-    correctMsg[qId] = q.good;
-    wrongMsg[qId] = q.bad;
-  }
-
-  // Render speed challenge questions
-  for (let n = 1; n <= 5; n++) {
-    const tc = tcBank[n - 1];
-    if (!tc) continue;
-    const qEl = document.getElementById('tc-q-' + n);
-    if (qEl) qEl.innerHTML = tc.q;
-    const optsEl = document.getElementById('tc-opts-' + n);
-    if (optsEl) {
-      optsEl.innerHTML = '';
-      tc.opts.forEach((opt, idx) => {
-        const isCorrect = idx === tc.correct;
-        const btn = document.createElement('button');
-        btn.className = 'tc-btn';
-        btn.onclick = function() { tcAnswer(n, this, isCorrect); };
-        btn.textContent = opt;
-        optsEl.appendChild(btn);
-      });
-    }
-  }
+function replayCurrent(){
+  const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};
+  const pid=playerMap[currentChapter];if(!pid)return;
+  stopAll();
+  const cfg=playerConfigs[pid];if(cfg)cfg.active=false;
+  const story=cfg&&cfg.storyId?document.getElementById(cfg.storyId):null;
+  if(story)story.classList.remove('playing','done');
+  const barFill=document.getElementById('bar-'+pid);if(barFill)barFill.style.width='0%';
+  const statusEl=document.getElementById('status-'+pid);if(statusEl)statusEl.textContent='Press ▶ to hear the story';
+  const btn=document.getElementById('btn-'+pid);if(btn)btn.textContent='▶';
+  setTimeout(()=>togglePlayer(pid),300);
 }
 
 // ══ SCORE TRACKING ════════════════════════════════════════
 let engScore = 0;
+
 function addPts(pts, el) {
   engScore += pts;
   document.getElementById('eng-score').textContent = engScore;
@@ -1416,27 +1350,16 @@ function addPts(pts, el) {
   }
 }
 
-// Hook into existing answer() to award points
-const _origAnswer = answer;
-answer = function(btn, correct, qId) {
-  _origAnswer(btn, correct, qId);
-  if (correct && !triedWrong.has(qId)) {
-    addPts(10, btn);
-  }
-};
-
 // ══ TIMED CHALLENGE ENGINE ════════════════════════════════
 const tcTimers = {};
 const TC_DURATION = 8; // seconds
 
 function startTC(n) {
-  // Scroll to challenge card
   const card = document.getElementById('tc-' + n);
   if (!card) return;
   card.classList.add('active');
   setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200);
 
-  // Start countdown
   let timeLeft = TC_DURATION;
   document.getElementById('tc-time-' + n).textContent = timeLeft + 's';
   document.getElementById('tc-fill-' + n).style.width = '100%';
@@ -1449,7 +1372,6 @@ function startTC(n) {
     const timeEl = document.getElementById('tc-time-' + n);
     if (fillEl) fillEl.style.width = pct + '%';
     if (timeEl) timeEl.textContent = Math.ceil(timeLeft) + 's';
-    // Colour shift when low
     if (pct < 30 && fillEl) fillEl.style.background = 'linear-gradient(90deg,#ff3232,#ff8800)';
     if (timeLeft <= 0) {
       clearInterval(tcTimers[n]);
@@ -1481,9 +1403,8 @@ function tcAnswer(n, btn, correct) {
   } else {
     btn.classList.add('tc-wrong');
     tcFlash(n, 'red');
-    // Reveal correct
     opts.querySelectorAll('.tc-btn').forEach(b => {
-      if (b.onclick.toString().includes('true')) b.classList.add('tc-reveal');
+      if (b.onclick && b.onclick.toString().includes('true')) b.classList.add('tc-reveal');
     });
     result.style.color = '#ff8888';
     result.textContent = '❌ Not this time — see the answer above.';
@@ -1500,7 +1421,7 @@ function tcTimeOut(n) {
   const opts = document.getElementById('tc-opts-' + n);
   opts.querySelectorAll('.tc-btn').forEach(b => {
     b.disabled = true;
-    if (b.onclick.toString().includes('true')) b.classList.add('tc-reveal');
+    if (b.onclick && b.onclick.toString().includes('true')) b.classList.add('tc-reveal');
   });
   tcFlash(n, 'red');
   const result = document.getElementById('tc-result-' + n);
@@ -1520,20 +1441,6 @@ function tcFlash(n, colour) {
   if (!flash) return;
   flash.className = 'tc-flash ' + colour + ' show';
   setTimeout(() => flash.classList.remove('show'), 500);
-}
-// ══════════════════════════════════════════════════════════
-
-function replayCurrent(){
-  const playerMap={1:'ch1',2:'ch2',3:'ch3',4:'ch4',5:'ch5'};
-  const pid=playerMap[currentChapter];if(!pid)return;
-  stopAll();
-  const cfg=playerConfigs[pid];if(cfg)cfg.active=false;
-  const story=cfg&&cfg.storyId?document.getElementById(cfg.storyId):null;
-  if(story)story.classList.remove('playing','done');
-  const barFill=document.getElementById('bar-'+pid);if(barFill)barFill.style.width='0%';
-  const statusEl=document.getElementById('status-'+pid);if(statusEl)statusEl.textContent='Press ▶ to hear the story';
-  const btn=document.getElementById('btn-'+pid);if(btn)btn.textContent='▶';
-  setTimeout(()=>togglePlayer(pid),300);
 }
 </script>
 </body>

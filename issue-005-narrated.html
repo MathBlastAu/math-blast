@@ -168,11 +168,44 @@
     #parent-guide { display:block!important; margin:0; border-top:2px solid #ccc; }
     .print-btn { display:none; }
   }
+
+  /* ── ENGAGEMENT MECHANICS ── */
+  #score-badge { position:fixed; top:12px; right:12px; z-index:1000; background:rgba(10,5,30,0.92); border:2px solid #ffcc00; color:#ffcc00; font-family:'Nunito',sans-serif; font-weight:900; font-size:15px; padding:7px 18px; border-radius:22px; backdrop-filter:blur(6px); transition:transform 0.15s, background 0.15s; }
+  #score-badge.pop { transform:scale(1.25); background:rgba(255,200,0,0.3); }
+  .float-pts { position:fixed; font-size:18px; font-weight:900; color:#ffcc00; pointer-events:none; z-index:9999; animation:floatup 1.1s ease forwards; }
+  @keyframes floatup { 0%{opacity:1;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-60px) scale(1.4)} }
+  #ctrl-bar { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); }
+  .timed-challenge { display:none; background:linear-gradient(135deg,#0a0230,#120440); border:3px solid #ffcc00; border-radius:20px; padding:24px 20px; margin:20px 0; }
+  .timed-challenge.active { display:block; animation:tc-pulse 1.5s ease-in-out infinite, fadeIn 0.4s ease; }
+  @keyframes tc-pulse { 0%,100%{box-shadow:0 0 12px rgba(255,200,0,0.25)} 50%{box-shadow:0 0 30px rgba(255,200,0,0.6)} }
+  .tc-header { text-align:center; margin-bottom:16px; }
+  .tc-header h3 { font-size:20px; font-weight:900; color:#ffcc00; text-shadow:0 0 16px rgba(255,200,0,0.6); margin-bottom:4px; }
+  .tc-header p { font-size:13px; color:#aa88cc; }
+  .tc-question { font-size:18px; font-weight:900; color:#fff; text-align:center; margin-bottom:14px; line-height:1.5; }
+  .tc-timer-wrap { margin-bottom:14px; }
+  .tc-timer-row { display:flex; justify-content:space-between; font-size:12px; color:#aa88cc; font-weight:700; margin-bottom:5px; }
+  .tc-timer-bar { height:10px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; }
+  .tc-timer-fill { height:100%; border-radius:10px; width:100%; background:linear-gradient(90deg,#ffcc00,#ff8800); transition:width 0.1s linear; }
+  .tc-options { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+  .tc-btn { background:rgba(255,200,0,0.08); border:2px solid rgba(255,200,0,0.3); color:#fff; font-family:'Nunito',Arial,sans-serif; font-size:20px; font-weight:900; padding:14px 10px; border-radius:12px; cursor:pointer; transition:all 0.12s; }
+  .tc-btn:hover:not(:disabled) { background:rgba(255,200,0,0.22); border-color:#ffcc00; transform:scale(1.04); }
+  .tc-btn.tc-correct { background:rgba(0,220,100,0.25)!important; border-color:#00dc64!important; color:#00ff88!important; }
+  .tc-btn.tc-wrong { animation:shake 0.4s; background:rgba(255,50,50,0.2)!important; border-color:#ff3232!important; }
+  .tc-btn.tc-reveal { background:rgba(0,180,200,0.25)!important; border-color:#00ccdd!important; color:#00eeff!important; }
+  .tc-flash { position:absolute; top:0; left:0; right:0; bottom:0; border-radius:17px; pointer-events:none; opacity:0; transition:opacity 0.1s; }
+  .tc-flash.green { background:rgba(0,255,100,0.18); }
+  .tc-flash.red { background:rgba(255,50,0,0.22); }
+  .tc-flash.show { opacity:1; }
+  .tc-result { text-align:center; font-size:15px; font-weight:700; min-height:22px; margin-bottom:8px; }
+  .tc-score-line { text-align:center; font-size:13px; color:#aa88cc; margin-bottom:12px; }
+  .tc-next-btn { display:none; width:100%; background:linear-gradient(135deg,#7b2fff,#ff2fff); color:white; font-family:'Nunito',Arial,sans-serif; font-size:17px; font-weight:900; padding:15px; border-radius:50px; border:none; cursor:pointer; box-shadow:0 4px 20px rgba(123,47,255,0.4); }
+  .tc-next-btn.show { display:block; animation:fadeIn 0.3s ease; }
 </style>
 </head>
 <body>
 
 <button id="mute-top" onclick="toggleMute()" title="Toggle sound">🔊</button>
+<div id="score-badge">⭐ <span id="eng-score">0</span> pts</div>
 <div class="starfield" id="starfield"></div>
 
 <div class="wrapper">
@@ -259,12 +292,36 @@
           <button class="opt-btn" onclick="answer(this,false,'q2')">5/8</button>
         </div>
         <div class="feedback" id="feedback-q2"></div>
-        <button class="next-btn" id="next-q2" onclick="nextChapter(2)">Next Chapter ➜</button>
+        <button class="next-btn" id="next-q2" onclick="startTC(1)">Next Chapter ➜</button>
       </div>
     </div>
   </div>
 
   <!-- ===== CHAPTER 2 ===== -->
+  
+  <!-- ══ TIMED CHALLENGE 1 ══ -->
+  <div class="timed-challenge" id="tc-1" style="position:relative;">
+    <div class="tc-flash" id="tc-flash-1"></div>
+    <div class="tc-header">
+      <h3>⚡ Speed Challenge!</h3>
+      <p>The Fraction Fair is about to close — answer before time runs out!</p>
+    </div>
+    <div class="tc-question" id="tc-q-1">Is 5/8 more or less than 1/2?</div>
+    <div class="tc-timer-wrap">
+      <div class="tc-timer-row"><span>Time remaining</span><span id="tc-time-1">8s</span></div>
+      <div class="tc-timer-bar"><div class="tc-timer-fill" id="tc-fill-1"></div></div>
+    </div>
+    <div class="tc-options" id="tc-opts-1">
+        <button class="tc-btn" data-correct="true" onclick="tcAnswer(1,this,true)">More than 1/2</button>
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(1,this,false)">Less than 1/2</button>
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(1,this,false)">Equal to 1/2</button>
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(1,this,false)">Can't tell</button>
+    </div>
+    <div class="tc-result" id="tc-result-1"></div>
+    <div class="tc-score-line" id="tc-score-1"></div>
+    <button class="tc-next-btn" id="tc-next-1" onclick="nextChapter(2)">Continue ➜</button>
+  </div>
+
   <div class="chapter" id="chapter-2">
     <div style="padding:20px 0 0">
       <div class="chapter-badge">👻 Chapter 2 — The Phantom's Stage Show</div>
@@ -325,12 +382,36 @@
           <button class="opt-btn" onclick="answer(this,false,'q4')">40 units</button>
         </div>
         <div class="feedback" id="feedback-q4"></div>
-        <button class="next-btn" id="next-q4" onclick="nextChapter(3)">Next Chapter ➜</button>
+        <button class="next-btn" id="next-q4" onclick="startTC(2)">Next Chapter ➜</button>
       </div>
     </div>
   </div>
 
   <!-- ===== CHAPTER 3 ===== -->
+  
+  <!-- ══ TIMED CHALLENGE 2 ══ -->
+  <div class="timed-challenge" id="tc-2" style="position:relative;">
+    <div class="tc-flash" id="tc-flash-2"></div>
+    <div class="tc-header">
+      <h3>⚡ Speed Challenge!</h3>
+      <p>The Fraction Fair is about to close — answer before time runs out!</p>
+    </div>
+    <div class="tc-question" id="tc-q-2">What is 3/8 + 3/8?</div>
+    <div class="tc-timer-wrap">
+      <div class="tc-timer-row"><span>Time remaining</span><span id="tc-time-2">8s</span></div>
+      <div class="tc-timer-bar"><div class="tc-timer-fill" id="tc-fill-2"></div></div>
+    </div>
+    <div class="tc-options" id="tc-opts-2">
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(2,this,false)">3/8</button>
+        <button class="tc-btn" data-correct="true" onclick="tcAnswer(2,this,true)">6/8</button>
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(2,this,false)">6/16</button>
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(2,this,false)">3/16</button>
+    </div>
+    <div class="tc-result" id="tc-result-2"></div>
+    <div class="tc-score-line" id="tc-score-2"></div>
+    <button class="tc-next-btn" id="tc-next-2" onclick="nextChapter(3)">Continue ➜</button>
+  </div>
+
   <div class="chapter" id="chapter-3">
     <div style="padding:20px 0 0">
       <div class="chapter-badge">🏁 Chapter 3 — The Ordering Race</div>
@@ -389,12 +470,36 @@
         <button class="opt-btn" onclick="answer(this,false,'q6')">7/8, 5/8, 3/8, 1/8</button>
         </div>
         <div class="feedback" id="feedback-q6"></div>
-        <button class="next-btn" id="next-q6" onclick="nextChapter(4)">Next Chapter ➜</button>
+        <button class="next-btn" id="next-q6" onclick="startTC(3)">Next Chapter ➜</button>
       </div>
     </div>
   </div>
 
   <!-- ===== CHAPTER 4 ===== -->
+  
+  <!-- ══ TIMED CHALLENGE 3 ══ -->
+  <div class="timed-challenge" id="tc-3" style="position:relative;">
+    <div class="tc-flash" id="tc-flash-3"></div>
+    <div class="tc-header">
+      <h3>⚡ Speed Challenge!</h3>
+      <p>The Fraction Fair is about to close — answer before time runs out!</p>
+    </div>
+    <div class="tc-question" id="tc-q-3">Which is bigger — 2/3 or 3/4?</div>
+    <div class="tc-timer-wrap">
+      <div class="tc-timer-row"><span>Time remaining</span><span id="tc-time-3">8s</span></div>
+      <div class="tc-timer-bar"><div class="tc-timer-fill" id="tc-fill-3"></div></div>
+    </div>
+    <div class="tc-options" id="tc-opts-3">
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(3,this,false)">2/3</button>
+        <button class="tc-btn" data-correct="true" onclick="tcAnswer(3,this,true)">3/4</button>
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(3,this,false)">Equal</button>
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(3,this,false)">Can't compare</button>
+    </div>
+    <div class="tc-result" id="tc-result-3"></div>
+    <div class="tc-score-line" id="tc-score-3"></div>
+    <button class="tc-next-btn" id="tc-next-3" onclick="nextChapter(4)">Continue ➜</button>
+  </div>
+
   <div class="chapter" id="chapter-4">
     <div style="padding:20px 0 0">
       <div class="chapter-badge">🧩 Chapter 4 — Collection Challenge</div>
@@ -454,12 +559,36 @@
           <button class="opt-btn" onclick="answer(this,false,'q8')">1/8</button>
           </div>
         <div class="feedback" id="feedback-q8"></div>
-        <button class="next-btn" id="next-q8" onclick="nextChapter(5)">Final Chapter ➜</button>
+        <button class="next-btn" id="next-q8" onclick="startTC(4)">Final Chapter ➜</button>
       </div>
     </div>
   </div>
 
   <!-- ===== CHAPTER 5 ===== -->
+  
+  <!-- ══ TIMED CHALLENGE 4 ══ -->
+  <div class="timed-challenge" id="tc-4" style="position:relative;">
+    <div class="tc-flash" id="tc-flash-4"></div>
+    <div class="tc-header">
+      <h3>⚡ Speed Challenge!</h3>
+      <p>The Fraction Fair is about to close — answer before time runs out!</p>
+    </div>
+    <div class="tc-question" id="tc-q-4">5/8 − 2/8 = ?</div>
+    <div class="tc-timer-wrap">
+      <div class="tc-timer-row"><span>Time remaining</span><span id="tc-time-4">8s</span></div>
+      <div class="tc-timer-bar"><div class="tc-timer-fill" id="tc-fill-4"></div></div>
+    </div>
+    <div class="tc-options" id="tc-opts-4">
+        <button class="tc-btn" data-correct="true" onclick="tcAnswer(4,this,true)">3/8</button>
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(4,this,false)">3/16</button>
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(4,this,false)">7/8</button>
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(4,this,false)">2/8</button>
+    </div>
+    <div class="tc-result" id="tc-result-4"></div>
+    <div class="tc-score-line" id="tc-score-4"></div>
+    <button class="tc-next-btn" id="tc-next-4" onclick="nextChapter(5)">Continue ➜</button>
+  </div>
+
   <div class="chapter" id="chapter-5">
     <div style="padding:20px 0 0">
       <div class="chapter-badge">💻 Chapter 5 — The Control Terminal</div>
@@ -519,12 +648,36 @@
           <button class="opt-btn" onclick="answer(this,false,'q10')">8/8</button>
         </div>
         <div class="feedback" id="feedback-q10"></div>
-        <button class="next-btn" id="next-q10" onclick="showCliffhanger()">🌌 MISSION COMPLETE!</button>
+        <button class="next-btn" id="next-q10" onclick="startTC(5)">🌌 MISSION COMPLETE!</button>
       </div>
     </div>
   </div>
 
   <!-- CLIFFHANGER SCREEN -->
+  
+  <!-- ══ TIMED CHALLENGE 5 ══ -->
+  <div class="timed-challenge" id="tc-5" style="position:relative;">
+    <div class="tc-flash" id="tc-flash-5"></div>
+    <div class="tc-header">
+      <h3>⚡ Speed Challenge!</h3>
+      <p>The Fraction Fair is about to close — answer before time runs out!</p>
+    </div>
+    <div class="tc-question" id="tc-q-5">What fraction of 12 is 3?</div>
+    <div class="tc-timer-wrap">
+      <div class="tc-timer-row"><span>Time remaining</span><span id="tc-time-5">8s</span></div>
+      <div class="tc-timer-bar"><div class="tc-timer-fill" id="tc-fill-5"></div></div>
+    </div>
+    <div class="tc-options" id="tc-opts-5">
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(5,this,false)">1/6</button>
+        <button class="tc-btn" data-correct="true" onclick="tcAnswer(5,this,true)">1/4</button>
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(5,this,false)">1/3</button>
+        <button class="tc-btn" data-correct="false" onclick="tcAnswer(5,this,false)">1/2</button>
+    </div>
+    <div class="tc-result" id="tc-result-5"></div>
+    <div class="tc-score-line" id="tc-score-5"></div>
+    <button class="tc-next-btn" id="tc-next-5" onclick="showCliffhanger()">Continue ➜</button>
+  </div>
+
   <div id="cliffhanger-screen" style="display:none;text-align:center;padding:32px 24px 24px;animation:fadeIn 0.6s ease;">
     <div class="issue-label">📖 Issue #5 — Cliffhanger</div>
     <h2 style="font-size:28px;font-weight:900;color:#aa77ff;margin-bottom:20px;line-height:1.3;">The Terminal Opens —<br>The Fraction Core Awaits</h2>
@@ -557,6 +710,15 @@
       </ul>
     </div>
     <p style="font-size:14px;color:#6655aa;margin-bottom:8px;">Issue #6 coming next — <strong>Into the Fraction Core!</strong> Jake travels to the heart of the Zephyr Nebula for a final showdown with the Phantom! 🌌</p>
+        <div id="eng-score-final" style="background:rgba(255,200,0,0.12);border:2px solid #ffcc00;border-radius:16px;padding:18px 24px;margin:12px 0 20px;text-align:center;">
+      <div style="font-size:13px;font-weight:900;color:#ffcc00;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">⚡ Total Score</div>
+      <div id="eng-score-big" style="font-size:48px;font-weight:900;color:#ffcc00;text-shadow:0 0 20px rgba(255,200,0,0.6);">0 pts</div>
+      <div id="eng-score-grade" style="font-size:16px;color:#ffee88;margin-top:6px;font-weight:700;"></div>
+      <div style="height:12px;background:rgba(255,255,255,0.1);border-radius:10px;margin-top:14px;overflow:hidden;">
+        <div id="eng-score-bar" style="height:100%;background:linear-gradient(90deg,#ffcc00,#ff8800);border-radius:10px;width:0%;transition:width 1s ease;"></div>
+      </div>
+      <div style="font-size:11px;color:#aa88cc;margin-top:6px;">Max possible: 250 pts</div>
+    </div>
     <button class="replay-btn" onclick="location.reload()">🔄 Play Again</button><br>
     <button class="print-btn" onclick="showParentGuide()">📋 Parent Guide</button>
   </div>
@@ -889,7 +1051,20 @@ function showChapter(n){
 function nextChapter(n){ showChapter(n); }
 
 function showCliffhanger(){stopAll();document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));document.getElementById('progress-wrap').style.display='none';const cf=document.getElementById('cliffhanger-screen');cf.style.display='block';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>{playFile('cliff-george.mp3',()=>{setTimeout(()=>playFile('cliff-phantom.mp3',()=>{setTimeout(()=>playFile('cliff-george-end.mp3',null),400);}),400);});},700);}
-function showWin(){document.getElementById('cliffhanger-screen').style.display='none';const win=document.getElementById('win-screen');win.style.display='block';document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+' on the first try!';document.getElementById('win-stars').textContent=score>=9?'⭐⭐⭐':score>=6?'⭐⭐':'⭐';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>playFile('win.mp3',null),500);}
+function showWin(){
+
+  const maxPts = 250;
+  const pct = Math.min(Math.round((engScore / maxPts) * 100), 100);
+  const bigEl = document.getElementById('eng-score-big');
+  if (bigEl) bigEl.textContent = engScore + ' pts';
+  let grade;
+  if (engScore >= 200)      { grade = '🏆 Ace Inspector — Outstanding!'; }
+  else if (engScore >= 150) { grade = '🌟 Sharp Thinker — Great work!'; }
+  else if (engScore >= 100) { grade = '🚀 Good mission — keep practising!'; }
+  else                      { grade = '⭐ Nice effort — try again for more points!'; }
+  const gradeEl = document.getElementById('eng-score-grade');
+  if (gradeEl) gradeEl.textContent = grade;
+  setTimeout(() => { const bar = document.getElementById('eng-score-bar'); if (bar) bar.style.width = pct + '%'; }, 400);document.getElementById('cliffhanger-screen').style.display='none';const win=document.getElementById('win-screen');win.style.display='block';document.getElementById('win-score').textContent='You scored '+score+' / '+totalQ+' on the first try!';document.getElementById('win-stars').textContent=score>=9?'⭐⭐⭐':score>=6?'⭐⭐':'⭐';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>playFile('win.mp3',null),500);}
 
 function showParentGuide(){
   document.getElementById('parent-guide').style.display='block';
@@ -923,6 +1098,96 @@ function replayCurrent(){
   if(btn) btn.textContent='▶';
   setTimeout(()=>togglePlayer(pid),300);
 }
+
+// ── ENGAGEMENT MECHANICS ────────────────────────────────────
+let engScore = 0;
+function addPts(pts, el) {
+  engScore += pts;
+  document.getElementById('eng-score').textContent = engScore;
+  const badge = document.getElementById('score-badge');
+  badge.classList.add('pop');
+  setTimeout(() => badge.classList.remove('pop'), 350);
+  if (el) {
+    const rect = el.getBoundingClientRect();
+    const div = document.createElement('div');
+    div.className = 'float-pts';
+    div.textContent = '+' + pts + ' pts';
+    div.style.left = (rect.left + rect.width/2 - 30) + 'px';
+    div.style.top = (rect.top + window.scrollY - 10) + 'px';
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 1200);
+  }
+}
+const _origAnswer = answer;
+answer = function(btn, correct, qId) {
+  const firstTry = !triedWrong.has(qId);
+  _origAnswer(btn, correct, qId);
+  if (correct && firstTry) addPts(10, btn);
+};
+const tcTimers = {};
+function startTC(n) {
+  const card = document.getElementById('tc-' + n);
+  if (!card) return;
+  card.classList.add('active');
+  setTimeout(() => card.scrollIntoView({ behavior:'smooth', block:'center' }), 200);
+  let timeLeft = 8;
+  document.getElementById('tc-time-' + n).textContent = '8s';
+  document.getElementById('tc-fill-' + n).style.width = '100%';
+  tcTimers[n] = setInterval(() => {
+    timeLeft -= 0.1; if (timeLeft < 0) timeLeft = 0;
+    const pct = (timeLeft / 8) * 100;
+    const fillEl = document.getElementById('tc-fill-' + n);
+    const timeEl = document.getElementById('tc-time-' + n);
+    if (fillEl) fillEl.style.width = pct + '%';
+    if (timeEl) timeEl.textContent = Math.ceil(timeLeft) + 's';
+    if (pct < 30 && fillEl) fillEl.style.background = 'linear-gradient(90deg,#ff3232,#ff8800)';
+    if (timeLeft <= 0) { clearInterval(tcTimers[n]); tcTimeOut(n); }
+  }, 100);
+}
+function tcAnswer(n, btn, correct) {
+  if (tcTimers[n]) clearInterval(tcTimers[n]);
+  const opts = document.getElementById('tc-opts-' + n);
+  opts.querySelectorAll('.tc-btn').forEach(b => b.disabled = true);
+  const result = document.getElementById('tc-result-' + n);
+  const scoreLine = document.getElementById('tc-score-' + n);
+  const nextBtn = document.getElementById('tc-next-' + n);
+  const fill = document.getElementById('tc-fill-' + n);
+  const timeEl = document.getElementById('tc-time-' + n);
+  if (correct) {
+    btn.classList.add('tc-correct'); tcFlash(n,'green');
+    const tl = parseFloat(timeEl ? timeEl.textContent : '0');
+    const pts = tl > 5 ? 20 : tl > 2 ? 15 : 10;
+    addPts(pts, btn);
+    result.style.color = '#00ff88'; result.textContent = '⚡ Correct!';
+    scoreLine.textContent = '+' + pts + ' pts';
+    if (fill) fill.style.background = 'linear-gradient(90deg,#00dc64,#00ff88)';
+  } else {
+    btn.classList.add('tc-wrong'); tcFlash(n,'red');
+    opts.querySelectorAll('.tc-btn').forEach(b => { if (b.dataset.correct==='true') b.classList.add('tc-reveal'); });
+    result.style.color = '#ff8888'; result.textContent = '❌ Not this time — see the answer above.';
+    scoreLine.textContent = '+0 pts';
+  }
+  setTimeout(() => { if (nextBtn) { nextBtn.classList.add('show'); setTimeout(() => nextBtn.scrollIntoView({behavior:'smooth',block:'nearest'}),200); } }, 1400);
+}
+function tcTimeOut(n) {
+  const opts = document.getElementById('tc-opts-' + n);
+  if (!opts) return;
+  opts.querySelectorAll('.tc-btn').forEach(b => { b.disabled = true; if (b.dataset.correct==='true') b.classList.add('tc-reveal'); });
+  tcFlash(n,'red');
+  const result = document.getElementById('tc-result-' + n);
+  const scoreLine = document.getElementById('tc-score-' + n);
+  if (result) { result.style.color='#ff8888'; result.textContent='⏱ Time\'s up! See the answer above.'; }
+  if (scoreLine) scoreLine.textContent = '+0 pts';
+  const nextBtn = document.getElementById('tc-next-' + n);
+  setTimeout(() => { if (nextBtn) { nextBtn.classList.add('show'); setTimeout(() => nextBtn.scrollIntoView({behavior:'smooth',block:'nearest'}),200); } }, 1600);
+}
+function tcFlash(n, colour) {
+  const flash = document.getElementById('tc-flash-' + n);
+  if (!flash) return;
+  flash.className = 'tc-flash ' + colour + ' show';
+  setTimeout(() => flash.classList.remove('show'), 500);
+}
+// ────────────────────────────────────────────────────────────
 </script>
 </body>
 </html>
